@@ -1,0 +1,6 @@
+@CoffeeScoutBackend.Api_HostAddress = http://localhost:5105
+
+GET {{CoffeeScoutBackend.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
