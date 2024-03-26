@@ -1,0 +1,22 @@
+﻿services:
+  coffeescoutbackend.api:
+    depends_on:
+      - database
+    restart:
+      no
+    image: coffee-scout-backend.api
+    build:
+      context: .
+      dockerfile: CoffeeScoutBackend.Api/Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "8000:8080"
+  database:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${DATABASESETTINGS__USERID}
+      POSTGRES_PASSWORD: ${DATABASESETTINGS__PASSWORD}
+      POSTGRES_DB: ${DATABASESETTINGS__DATABASE}
+    ports:
+      - "5432:5432"
