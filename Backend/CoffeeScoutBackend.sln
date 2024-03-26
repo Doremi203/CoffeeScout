@@ -4,6 +4,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeScoutBackend.Api", "C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeScoutBackend.Domain", "CoffeeScoutBackend.Domain\CoffeeScoutBackend.Domain.csproj", "{349508B6-AE5C-4DDB-8BAA-BB8A928E3A1C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeScoutBackend.Dal", "CoffeeScoutBackend.Dal\CoffeeScoutBackend.Dal.csproj", "{5859FEC0-1AF1-4111-8797-1EF505D5B316}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3FC01402-ED5F-4A3B-B672-440194C914B1}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+		.env = .env
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +27,9 @@ Global
 		{349508B6-AE5C-4DDB-8BAA-BB8A928E3A1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{349508B6-AE5C-4DDB-8BAA-BB8A928E3A1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{349508B6-AE5C-4DDB-8BAA-BB8A928E3A1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5859FEC0-1AF1-4111-8797-1EF505D5B316}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5859FEC0-1AF1-4111-8797-1EF505D5B316}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5859FEC0-1AF1-4111-8797-1EF505D5B316}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5859FEC0-1AF1-4111-8797-1EF505D5B316}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
