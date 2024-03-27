@@ -4,7 +4,7 @@
       - database
     restart:
       no
-    image: coffee-scout-backend.api
+    image: doreml/coffee-scout-backend.api:dev
     build:
       context: .
       dockerfile: CoffeeScoutBackend.Api/Dockerfile
