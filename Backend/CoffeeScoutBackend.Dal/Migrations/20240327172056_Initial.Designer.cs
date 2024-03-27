@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CoffeeScoutBackend.Dal.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240327144118_Initial")]
+    [Migration("20240327172056_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -89,7 +89,7 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.Category", b =>
+            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.CategoryEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -106,27 +106,17 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.Customer", b =>
+            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.CustomerEntity", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasKey("UserId");
 
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.MenuItem", b =>
+            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.MenuItemEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -151,15 +141,15 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     b.ToTable("MenuItems");
                 });
 
-            modelBuilder.Entity("CustomerMenuItem", b =>
+            modelBuilder.Entity("CustomerEntityMenuItemEntity", b =>
                 {
-                    b.Property<long>("CustomersFavoredById")
-                        .HasColumnType("bigint");
+                    b.Property<string>("CustomersFavoredByUserId")
+                        .HasColumnType("text");
 
                     b.Property<long>("FavoriteItemsId")
                         .HasColumnType("bigint");
 
-                    b.HasKey("CustomersFavoredById", "FavoriteItemsId");
+                    b.HasKey("CustomersFavoredByUserId", "FavoriteItemsId");
 
                     b.HasIndex("FavoriteItemsId");
 
@@ -298,37 +288,37 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.Customer", b =>
+            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.CustomerEntity", b =>
                 {
                     b.HasOne("CoffeeScoutBackend.Dal.Entities.AppUser", "User")
                         .WithOne()
-                        .HasForeignKey("CoffeeScoutBackend.Dal.Entities.Customer", "UserId")
+                        .HasForeignKey("CoffeeScoutBackend.Dal.Entities.CustomerEntity", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.MenuItem", b =>
+            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.MenuItemEntity", b =>
                 {
-                    b.HasOne("CoffeeScoutBackend.Dal.Entities.Category", "Category")
+                    b.HasOne("CoffeeScoutBackend.Dal.Entities.CategoryEntity", "CategoryEntity")
                         .WithMany("MenuItems")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Category");
+                    b.Navigation("CategoryEntity");
                 });
 
-            modelBuilder.Entity("CustomerMenuItem", b =>
+            modelBuilder.Entity("CustomerEntityMenuItemEntity", b =>
                 {
-                    b.HasOne("CoffeeScoutBackend.Dal.Entities.Customer", null)
+                    b.HasOne("CoffeeScoutBackend.Dal.Entities.CustomerEntity", null)
                         .WithMany()
-                        .HasForeignKey("CustomersFavoredById")
+                        .HasForeignKey("CustomersFavoredByUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CoffeeScoutBackend.Dal.Entities.MenuItem", null)
+                    b.HasOne("CoffeeScoutBackend.Dal.Entities.MenuItemEntity", null)
                         .WithMany()
                         .HasForeignKey("FavoriteItemsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -386,7 +376,7 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.Category", b =>
+            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.CategoryEntity", b =>
                 {
                     b.Navigation("MenuItems");
                 });

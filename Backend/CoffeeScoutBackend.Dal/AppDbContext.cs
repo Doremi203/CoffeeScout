@@ -1,4 +1,5 @@
 using CoffeeScoutBackend.Dal.Entities;
+using CoffeeScoutBackend.Dal.Extensions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,20 +16,10 @@ public class AppDbContext(
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.Entity<CustomerEntity>()
-            .HasMany(c => c.FavoriteItems)
-            .WithMany(m => m.CustomersFavoredBy)
-            .UsingEntity(j => j.ToTable("CustomerFavoriteItems"))
-            .HasOne(c => c.User)
-            .WithOne()
-            .HasForeignKey<CustomerEntity>(c => c.UserId);
-        modelBuilder.Entity<MenuItemEntity>()
-            .HasOne(m => m.CategoryEntity)
-            .WithMany(c => c.MenuItems)
-            .HasForeignKey(m => m.CategoryId);
-        modelBuilder.Entity<CategoryEntity>()
-            .HasMany(c => c.MenuItems)
-            .WithOne(m => m.CategoryEntity)
-            .HasForeignKey(m => m.CategoryId);
+        
+        modelBuilder
+            .ConfigureCustomerEntity()
+            .ConfigureMenuItemEntity()
+            .ConfigureCategoryEntity();
     }
 }

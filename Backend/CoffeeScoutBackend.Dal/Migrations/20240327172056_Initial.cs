@@ -174,13 +174,11 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 name: "Customers",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Customers", x => x.Id);
+                    table.PrimaryKey("PK_Customers", x => x.UserId);
                     table.ForeignKey(
                         name: "FK_Customers_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -214,17 +212,17 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 name: "CustomerFavoriteItems",
                 columns: table => new
                 {
-                    CustomersFavoredById = table.Column<long>(type: "bigint", nullable: false),
+                    CustomersFavoredByUserId = table.Column<string>(type: "text", nullable: false),
                     FavoriteItemsId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CustomerFavoriteItems", x => new { x.CustomersFavoredById, x.FavoriteItemsId });
+                    table.PrimaryKey("PK_CustomerFavoriteItems", x => new { x.CustomersFavoredByUserId, x.FavoriteItemsId });
                     table.ForeignKey(
-                        name: "FK_CustomerFavoriteItems_Customers_CustomersFavoredById",
-                        column: x => x.CustomersFavoredById,
+                        name: "FK_CustomerFavoriteItems_Customers_CustomersFavoredByUserId",
+                        column: x => x.CustomersFavoredByUserId,
                         principalTable: "Customers",
-                        principalColumn: "Id",
+                        principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CustomerFavoriteItems_MenuItems_FavoriteItemsId",
@@ -275,12 +273,6 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 name: "IX_CustomerFavoriteItems_FavoriteItemsId",
                 table: "CustomerFavoriteItems",
                 column: "FavoriteItemsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Customers_UserId",
-                table: "Customers",
-                column: "UserId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_MenuItems_CategoryId",
