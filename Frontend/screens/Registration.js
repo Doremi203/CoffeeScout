@@ -1,8 +1,51 @@
-import React from 'react';
-import {SafeAreaView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View} from 'react-native';
+import React, {useState} from 'react';
+import {Alert, SafeAreaView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View} from 'react-native';
 import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
+import axios from 'axios';
 
 export default function Registration({navigation}) {
+    //const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    console.log(`Email: ${email}, Password: ${password}`); // Добавьте эту
+    const register = () => {
+        axios.post("http://192.168.1.124:8000/api/v1/account/customRegister", {
+            //name: name,
+            email: email,
+            password: password
+        })
+            .then(response => {
+                console.log(`RESPONSE ${response.status}`);
+                navigation.navigate('main');
+                axios.post("http://192.168.1.124:8000/api/v1/account/login", {
+                    //name: name,
+                    email: email,
+                    password: password
+                }).then(response => {
+                    console.log(`RESPONSE ${response.status}`);
+                })
+                    .catch(error => {
+                        Alert.alert('Ошибка второго запроса', error.message);
+                    });
+            })
+            .catch(error => {
+                let errors = "";
+
+                Object.keys(error.response.data.errors).forEach(key => {
+                    error.response.data.errors[key].forEach(err => {
+                        errors += err + "\n";
+                        //Alert.alert('Ошибка', err);
+                        //console.log(err)
+                    });
+                });
+
+                Alert.alert('Ошибка регистрации', errors);
+
+            });
+    };
+
+
   return (
     <SafeAreaView style={styles.container}>
         <Text style={styles.header}>регистрация</Text>
@@ -11,24 +54,27 @@ export default function Registration({navigation}) {
             <View style={[styles.box, {top: '10%'}]}>
                 <TextInput style={styles.input}
                            placeholder="имя"
-                           placeholderTextColor="gray"/>
+                           placeholderTextColor="gray"
+                           />
             </View>
             <View style={[styles.box, {top: '40%'}]}>
                 <TextInput style={styles.input}
                            placeholder="e-mail"
-                           placeholderTextColor="gray"/>
+                           placeholderTextColor="gray"
+                           onChangeText={text => setEmail(text)}/>
             </View>
             <View style={[styles.box, {top: '70%'}]}>
                 <TextInput style={styles.input}
                            placeholder="пароль"
-                           placeholderTextColor="gray"/>
+                           placeholderTextColor="gray"
+                           onChangeText={text => setPassword(text)}/>
             </View>
         </View>
 
 
 
         <View style={styles.button}>
-            <TouchableWithoutFeedback onPress={() => navigation.navigate('main')} >
+            <TouchableWithoutFeedback onPress={register}  >
                 <Text style={styles.buttonText}>зарегистрироваться</Text>
             </TouchableWithoutFeedback>
         </View>

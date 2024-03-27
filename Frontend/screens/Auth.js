@@ -1,6 +1,7 @@
-import React from 'react';
-import {SafeAreaView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View} from 'react-native';
+import React, {useState} from 'react';
+import {Alert, SafeAreaView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View} from 'react-native';
 import {RFValue} from "react-native-responsive-fontsize";
+import axios from "axios";
 
 /*
 
@@ -12,6 +13,32 @@ addCustomFonts(customFonts);*/
 
 export default function Auth({navigation}) {
 
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    console.log(`Email: ${email}, Password: ${password}`);
+    const auth = () => {
+        axios.post("http://192.168.1.124:8000/api/v1/account/login", {
+            //name: name,
+            email: email,
+            password: password
+        })
+            .then(response => {
+                console.log(`RESPONSE ${response.status}`);
+                navigation.navigate('main');
+            })
+            .catch(error => {
+                switch(error.response.status) {
+                    case 401:
+                        Alert.alert('Ошибка', 'Неверный логин или пароль');
+                        break;
+                    default:
+                        Alert.alert('Ошибка', 'Что-то пошло не так');
+                }
+            });
+    };
+
+
     return (
         <SafeAreaView>
             <Text style={styles.header}>войти</Text>
@@ -20,19 +47,21 @@ export default function Auth({navigation}) {
                 <View style={[styles.box, {top: '10%'}]}>
                     <TextInput style={styles.input}
                                placeholder="e-mail"
-                               placeholderTextColor="gray"/>
+                               placeholderTextColor="gray"
+                               onChangeText={text => setEmail(text)}/>
                 </View>
 
                 <View style={[styles.box, {top: '25%'}]}>
                     <TextInput style={styles.input}
                                placeholder="пароль"
-                               placeholderTextColor="gray"/>
+                               placeholderTextColor="gray"
+                               onChangeText={text => setPassword(text)}/>
                 </View>
             </View>
 
 
             <View style={styles.button}>
-                <TouchableWithoutFeedback onPress={() => navigation.navigate('main')} >
+                <TouchableWithoutFeedback onPress={auth} >
                     <Text style={styles.buttonText}> войти </Text>
                 </TouchableWithoutFeedback>
             </View>
