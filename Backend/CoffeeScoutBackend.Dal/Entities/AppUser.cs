@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace CoffeeScoutBackend.Api.Identity;
+namespace CoffeeScoutBackend.Dal.Entities;
 
 public class AppUser : IdentityUser
 {

@@ -1,5 +1,4 @@
-using CoffeeScoutBackend.Domain.Interfaces;
-using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CoffeeScoutBackend.Dal;
@@ -8,8 +7,12 @@ public static class DalServiceExtensions
 {
     public static IServiceCollection AddDalServices(
         this IServiceCollection services, 
-        IConfiguration configuration)
+        DatabaseSettings databaseSettings)
     {
+        services.AddDbContext<AppDbContext>(options =>
+        {
+            options.UseNpgsql(databaseSettings.ConnectionString);
+        });
         return services;
     }
 }
