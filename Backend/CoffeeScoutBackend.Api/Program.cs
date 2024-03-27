@@ -1,8 +1,11 @@
 using CoffeeScoutBackend.Api.Config;
 using CoffeeScoutBackend.Api.Identity;
 using CoffeeScoutBackend.Api.Middlewares;
+using CoffeeScoutBackend.Bll;
 using CoffeeScoutBackend.Dal;
 using CoffeeScoutBackend.Dal.Entities;
+using FluentValidation;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,8 +26,13 @@ var databaseSettings = builder.Configuration
     .GetRequiredSection(nameof(DatabaseSettings))
     .Get<DatabaseSettings>()!;
 
-builder.Services.AddIdentityServices(databaseSettings);
-builder.Services.AddDalServices(databaseSettings);
+builder.Services
+    .AddIdentityServices(databaseSettings)
+    .AddBllServices()
+    .AddDalServices(databaseSettings);
+
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+builder.Services.AddFluentValidationAutoValidation();
 
 var app = builder.Build();
 

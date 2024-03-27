@@ -1,5 +1,7 @@
-using CoffeeScoutBackend.Bll.Interfaces;
+using System.Data;
+using System.Transactions;
 using CoffeeScoutBackend.Dal.Entities;
+using CoffeeScoutBackend.Domain.Exceptions;
 using CoffeeScoutBackend.Domain.Interfaces;
 using CoffeeScoutBackend.Domain.Models;
 using Microsoft.AspNetCore.Identity;
@@ -11,10 +13,45 @@ public class CustomerService(
     UserManager<AppUser> userManager
 ) : ICustomerService
 {
-    public async Task<Customer> CreateAsync(Customer customer)
+    public async Task RegisterCustomerAsync(RegistrationData registrationData)
     {
-        await userManager.FindByIdAsync(customer.UserId);
-        throw new NotImplementedException();
+        var errors = new Dictionary<string, string[]>();
+        using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+        
+        var userName = registrationData.UserName;
+        var email = registrationData.Email;
+        var password = registrationData.Password;
+        var newUser = new AppUser { UserName = userName, Email = email };
+        var result = await userManager.CreateAsync(newUser, password);
+        
+        if (result.Succeeded)
+        {
+            var roleResult = await userManager.AddToRoleAsync(newUser, Roles.Customer.ToString());
+            var user = await userManager.FindByEmailAsync(email);
+            if (user is null)
+                throw new UserNotFoundException("User was not present, but should have been created");
+            if (roleResult.Succeeded)
+            {
+                await customerRepository.AddAsync(new Customer
+                {
+                    UserId = user.Id,
+                });
+                scope.Complete();
+                return;
+            }
+            AddRegistrationErrors(roleResult, errors);
+        }
+        AddRegistrationErrors(result, errors);
+        
+        throw new RegistrationException("Customer registration failed", errors);
+    }
+
+    private static void AddRegistrationErrors(IdentityResult result, Dictionary<string, string[]> errors)
+    {
+        foreach (var error in result.Errors)
+        {
+            errors[error.Code] = [error.Description];
+        }
     }
 
     public Task<Customer> GetByUserIdAsync(string userId)
