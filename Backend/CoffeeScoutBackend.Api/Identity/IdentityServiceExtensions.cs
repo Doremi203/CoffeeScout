@@ -1,4 +1,5 @@
 using CoffeeScoutBackend.Dal;
+using CoffeeScoutBackend.Dal.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,19 +9,11 @@ public static class IdentityServiceExtensions
 {
     public static IServiceCollection AddIdentityServices(
         this IServiceCollection services,
-        IConfiguration configuration)
+        DatabaseSettings databaseSettings)
     {
-        services.AddDbContext<AppUserDbContext>(options =>
-        {
-            var databaseSettings = configuration
-                .GetRequiredSection(nameof(DatabaseSettings))
-                .Get<DatabaseSettings>()!;
-            options.UseNpgsql(databaseSettings.ConnectionString);
-        });
-
         services.AddIdentityCore<AppUser>()
             .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<AppUserDbContext>();
+            .AddEntityFrameworkStores<AppDbContext>();
         services.AddIdentityApiEndpoints<AppUser>();
 
         services.Configure<IdentityOptions>(options =>

@@ -1,6 +1,8 @@
 using System.Net;
 using System.Transactions;
 using CoffeeScoutBackend.Api.Identity;
+using CoffeeScoutBackend.Dal;
+using CoffeeScoutBackend.Dal.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 

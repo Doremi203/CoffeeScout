@@ -1,6 +1,8 @@
 using CoffeeScoutBackend.Api.Config;
 using CoffeeScoutBackend.Api.Identity;
+using CoffeeScoutBackend.Api.Middlewares;
 using CoffeeScoutBackend.Dal;
+using CoffeeScoutBackend.Dal.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,11 +19,17 @@ builder.Services.AddControllers();
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorizationBuilder();
 
-builder.Services.AddIdentityServices(builder.Configuration);
+var databaseSettings = builder.Configuration
+    .GetRequiredSection(nameof(DatabaseSettings))
+    .Get<DatabaseSettings>()!;
+
+builder.Services.AddIdentityServices(databaseSettings);
+builder.Services.AddDalServices(databaseSettings);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseMiddleware<RequestResponseLoggingMiddleware>();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

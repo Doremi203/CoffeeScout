@@ -1,4 +1,6 @@
+using System.Transactions;
 using CoffeeScoutBackend.Api.Config;
+using CoffeeScoutBackend.Dal.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
@@ -24,6 +26,7 @@ public static class DbSeederExtensions
         this IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
+        using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
         var adminSettings = scope.ServiceProvider.GetRequiredService<IOptions<AdminSettings>>();
         var adminEmail = adminSettings.Value.Email;
@@ -43,6 +46,7 @@ public static class DbSeederExtensions
             if (result.Succeeded)
             {
                 await userManager.AddToRoleAsync(admin, Roles.SuperAdmin.ToString());
+                transaction.Complete();
             }
         }
     }

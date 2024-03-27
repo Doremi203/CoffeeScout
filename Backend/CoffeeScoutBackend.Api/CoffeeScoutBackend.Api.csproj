@@ -5,12 +5,11 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <ContainerDevelopmentMode>Regular</ContainerDevelopmentMode>
         <UserSecretsId>35358668-f38a-4d2c-a876-1849f4162539</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.3" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.3" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.2"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.3">
           <PrivateAssets>all</PrivateAssets>
@@ -26,8 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CoffeeScoutBackend.Dal\CoffeeScoutBackend.Dal.csproj" />
-      <ProjectReference Include="..\CoffeeScoutBackend.Domain\CoffeeScoutBackend.Domain.csproj" />
+      <ProjectReference Include="..\CoffeeScoutBackend.Bll\CoffeeScoutBackend.Bll.csproj" />
     </ItemGroup>
 
 </Project>
