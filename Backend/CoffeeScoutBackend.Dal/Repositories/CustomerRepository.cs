@@ -1,3 +1,4 @@
+using CoffeeScoutBackend.Dal.Entities;
 using CoffeeScoutBackend.Domain.Interfaces;
 using CoffeeScoutBackend.Domain.Models;
 using Mapster;
@@ -14,9 +15,10 @@ public class CustomerRepository(
         return customer.Adapt<Customer>();
     }
 
-    public Task AddAsync(Customer customer)
+    public async Task AddAsync(Customer customer)
     {
-        throw new NotImplementedException();
+        await dbContext.Customers.AddAsync(customer.Adapt<CustomerEntity>());
+        await dbContext.SaveChangesAsync();
     }
 
     public Task UpdateAsync(string userId, Customer customer)
