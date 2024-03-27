@@ -1,9 +1,8 @@
-using System.Net;
-using System.Transactions;
-using CoffeeScoutBackend.Api.Identity;
-using CoffeeScoutBackend.Dal;
-using CoffeeScoutBackend.Dal.Entities;
-using Microsoft.AspNetCore.Identity;
+using CoffeeScoutBackend.Api.Requests;
+using CoffeeScoutBackend.Domain.Exceptions;
+using CoffeeScoutBackend.Domain.Interfaces;
+using CoffeeScoutBackend.Domain.Models;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoffeeScoutBackend.Api.Controllers;
@@ -11,45 +10,28 @@ namespace CoffeeScoutBackend.Api.Controllers;
 [ApiController]
 [Route("api/v1/account")]
 public class AccountController(
-    UserManager<AppUser> userManager
+    ICustomerService customerService
 ) : ControllerBase
 {
     [HttpPost("customRegister")]
-    public async Task<IActionResult> Register(RegisterModel model)
+    public async Task<IActionResult> Register(CustomRegisterRequest request)
     {
-        using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-        var user = new AppUser { UserName = model.Email, Email = model.Email };
-        var result = await userManager.CreateAsync(user, model.Password);
-
-        if (result.Succeeded)
+        try
         {
-            var roleResult = await userManager.AddToRoleAsync(user, "User");
-
-            if (roleResult.Succeeded)
-            {
-                scope.Complete();
-                return Ok();
-            }
-
-            AddErrors(roleResult);
+            await customerService.RegisterCustomerAsync(
+                request.Adapt<RegistrationData>());
+            return Ok();
         }
-        AddErrors(result);
-        
-        var validationProblemDetails = new ValidationProblemDetails(ModelState)
+        catch (RegistrationException e)
         {
-            Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
-            Status = StatusCodes.Status400BadRequest,
-            Title = "One or more validation errors occurred."
-        };
+            var validationProblemDetails = new ValidationProblemDetails(e.RegistrationErrors)
+            {
+                Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+                Status = StatusCodes.Status400BadRequest,
+                Title = "One or more validation errors occurred."
+            };
 
-        return BadRequest(validationProblemDetails);
-    }
-
-    private void AddErrors(IdentityResult roleResult)
-    {
-        foreach (var error in roleResult.Errors)
-        {
-            ModelState.AddModelError(error.Code, error.Description);
+            return BadRequest(validationProblemDetails);
         }
     }
 }

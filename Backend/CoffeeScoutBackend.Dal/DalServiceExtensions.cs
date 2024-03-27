@@ -1,3 +1,5 @@
+using CoffeeScoutBackend.Dal.Repositories;
+using CoffeeScoutBackend.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +15,8 @@ public static class DalServiceExtensions
         {
             options.UseNpgsql(databaseSettings.ConnectionString);
         });
+        
+        services.AddScoped<ICustomerRepository, CustomerRepository>();
         return services;
     }
 }

@@ -1,6 +1,7 @@
 using System.Transactions;
 using CoffeeScoutBackend.Api.Config;
 using CoffeeScoutBackend.Dal.Entities;
+using CoffeeScoutBackend.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
