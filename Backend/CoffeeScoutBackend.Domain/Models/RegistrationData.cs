@@ -1,7 +1,7 @@
 namespace CoffeeScoutBackend.Domain.Models;
 
 public record RegistrationData(
-    string UserName,
+    string FirstName,
     string Email,
     string Password
 );

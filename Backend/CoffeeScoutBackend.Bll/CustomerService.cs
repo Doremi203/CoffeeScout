@@ -1,4 +1,3 @@
-using System.Data;
 using System.Transactions;
 using CoffeeScoutBackend.Dal.Entities;
 using CoffeeScoutBackend.Domain.Exceptions;
@@ -18,10 +17,10 @@ public class CustomerService(
         var errors = new Dictionary<string, string[]>();
         using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
         
-        var userName = registrationData.UserName;
+        var firstName = registrationData.FirstName;
         var email = registrationData.Email;
         var password = registrationData.Password;
-        var newUser = new AppUser { UserName = userName, Email = email };
+        var newUser = new AppUser { UserName = email, Email = email };
         var result = await userManager.CreateAsync(newUser, password);
         
         if (result.Succeeded)
@@ -35,6 +34,7 @@ public class CustomerService(
                 await customerRepository.AddAsync(new Customer
                 {
                     UserId = user.Id,
+                    FirstName = firstName
                 });
                 scope.Complete();
                 return;
@@ -48,10 +48,15 @@ public class CustomerService(
 
     private static void AddRegistrationErrors(IdentityResult result, Dictionary<string, string[]> errors)
     {
-        foreach (var error in result.Errors)
+        foreach (var error in result.Errors.Where(SkipExtraErrors))
         {
             errors[error.Code] = [error.Description];
         }
+    }
+
+    private static bool SkipExtraErrors(IdentityError arg)
+    {
+        return arg.Code != "DuplicateUserName";
     }
 
     public Task<Customer> GetByUserIdAsync(string userId)

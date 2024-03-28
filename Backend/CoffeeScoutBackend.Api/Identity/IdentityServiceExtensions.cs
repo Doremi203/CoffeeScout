@@ -1,15 +1,13 @@
 using CoffeeScoutBackend.Dal;
 using CoffeeScoutBackend.Dal.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeScoutBackend.Api.Identity;
 
 public static class IdentityServiceExtensions
 {
     public static IServiceCollection AddIdentityServices(
-        this IServiceCollection services,
-        DatabaseSettings databaseSettings)
+        this IServiceCollection services)
     {
         services.AddIdentityCore<AppUser>()
             .AddRoles<IdentityRole>()

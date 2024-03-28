@@ -27,7 +27,7 @@ var databaseSettings = builder.Configuration
     .Get<DatabaseSettings>()!;
 
 builder.Services
-    .AddIdentityServices(databaseSettings)
+    .AddIdentityServices()
     .AddBllServices()
     .AddDalServices(databaseSettings);
 

@@ -11,7 +11,7 @@ public class AppDbContext(
 {
     public required DbSet<CustomerEntity> Customers { get; set; }
     public required DbSet<MenuItemEntity> MenuItems { get; set; }
-    public required DbSet<CategoryEntity> Categories { get; set; }
+    public required DbSet<BeverageTypeEntity> Categories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
