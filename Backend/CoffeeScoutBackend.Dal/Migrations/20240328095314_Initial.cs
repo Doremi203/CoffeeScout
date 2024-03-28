@@ -52,7 +52,7 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Categories",
+                name: "BeverageTypes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -61,7 +61,7 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.Id);
+                    table.PrimaryKey("PK_BeverageTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -202,9 +202,9 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 {
                     table.PrimaryKey("PK_MenuItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MenuItems_Categories_CategoryId",
+                        name: "FK_MenuItems_BeverageTypes_CategoryId",
                         column: x => x.CategoryId,
-                        principalTable: "Categories",
+                        principalTable: "BeverageTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -271,8 +271,8 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Categories_Name",
-                table: "Categories",
+                name: "IX_BeverageTypes_Name",
+                table: "BeverageTypes",
                 column: "Name",
                 unique: true);
 
@@ -321,7 +321,7 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "BeverageTypes");
         }
     }
 }
