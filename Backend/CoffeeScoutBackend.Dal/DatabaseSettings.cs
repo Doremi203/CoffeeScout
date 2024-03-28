@@ -7,12 +7,12 @@ public record DatabaseSettings
     public required string Host { get; init; }
     public required string Database { get; init; }
     public required string Options { get; init; }
-    
+
     public string ConnectionString => $"""
-                                        User ID={UserId};
-                                        Password={Password};
-                                        Host={Host};
-                                        Database={Database};
-                                        {Options}
-                                        """;
+                                       User ID={UserId};
+                                       Password={Password};
+                                       Host={Host};
+                                       Database={Database};
+                                       {Options}
+                                       """;
 }

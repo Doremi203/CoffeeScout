@@ -15,14 +15,10 @@ public static class DbSeederExtensions
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
         foreach (var role in Enum.GetNames<Roles>())
-        {
             if (!await roleManager.RoleExistsAsync(role))
-            {
                 await roleManager.CreateAsync(new IdentityRole(role));
-            }
-        }
     }
-    
+
     public static async Task SeedSuperAdminAsync(
         this IServiceProvider serviceProvider)
     {
@@ -32,12 +28,12 @@ public static class DbSeederExtensions
         var adminSettings = scope.ServiceProvider.GetRequiredService<IOptions<AdminSettings>>();
         var adminEmail = adminSettings.Value.Email;
         var adminPassword = adminSettings.Value.Password;
-        
+
         if (await userManager.FindByEmailAsync(adminEmail) == null)
         {
             var admin = new AppUser
             {
-                UserName = adminEmail, 
+                UserName = adminEmail,
                 Email = adminEmail,
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true

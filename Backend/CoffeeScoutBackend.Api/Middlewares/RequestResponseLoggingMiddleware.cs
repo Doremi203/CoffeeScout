@@ -12,7 +12,7 @@ public class RequestResponseLoggingMiddleware(
         var path = context.Request.Path;
         var queryString = context.Request.QueryString;
         logger.LogInformation($"Request: {method} {path} {queryString}");
-        
+
         var code = context.Response.StatusCode;
         logger.LogInformation($"Response: {code}");
     }

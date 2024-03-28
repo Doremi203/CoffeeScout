@@ -1,8 +1,8 @@
 namespace CoffeeScoutBackend.Domain.Exceptions;
 
-public class RegistrationException(
+public class CustomerRegistrationException(
     string? message,
-    IDictionary<String, String[]> registrationErrors
+    IDictionary<string, string[]> registrationErrors
 ) : Exception(message)
 {
     public IDictionary<string, string[]> RegistrationErrors { get; init; } = registrationErrors;

@@ -194,7 +194,7 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CategoryId = table.Column<int>(type: "integer", nullable: false),
+                    BeverageTypeEntityId = table.Column<int>(type: "integer", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Price = table.Column<decimal>(type: "numeric", nullable: false)
                 },
@@ -202,8 +202,8 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 {
                     table.PrimaryKey("PK_MenuItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MenuItems_BeverageTypes_CategoryId",
-                        column: x => x.CategoryId,
+                        name: "FK_MenuItems_BeverageTypes_BeverageTypeEntityId",
+                        column: x => x.BeverageTypeEntityId,
                         principalTable: "BeverageTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -282,9 +282,9 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 column: "FavoriteItemsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MenuItems_CategoryId",
+                name: "IX_MenuItems_BeverageTypeEntityId",
                 table: "MenuItems",
-                column: "CategoryId");
+                column: "BeverageTypeEntityId");
         }
 
         /// <inheritdoc />
