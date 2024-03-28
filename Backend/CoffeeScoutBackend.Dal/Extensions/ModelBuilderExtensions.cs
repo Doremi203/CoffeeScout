@@ -35,7 +35,7 @@ public static class ModelBuilderExtensions
         return modelBuilder;
     }
 
-    public static ModelBuilder ConfigureCategoryEntity(this ModelBuilder modelBuilder)
+    public static ModelBuilder ConfigureBeverageTypeEntity(this ModelBuilder modelBuilder)
     {
         var entity = modelBuilder.Entity<BeverageTypeEntity>();
         entity

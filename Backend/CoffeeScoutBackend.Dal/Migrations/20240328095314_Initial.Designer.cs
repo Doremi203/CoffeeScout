@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CoffeeScoutBackend.Dal.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240328094654_Initial")]
+    [Migration("20240328095314_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -106,7 +106,7 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Categories");
+                    b.ToTable("BeverageTypes");
                 });
 
             modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.CustomerEntity", b =>

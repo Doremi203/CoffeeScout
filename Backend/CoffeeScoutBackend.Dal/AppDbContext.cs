@@ -11,7 +11,7 @@ public class AppDbContext(
 {
     public required DbSet<CustomerEntity> Customers { get; set; }
     public required DbSet<MenuItemEntity> MenuItems { get; set; }
-    public required DbSet<BeverageTypeEntity> Categories { get; set; }
+    public required DbSet<BeverageTypeEntity> BeverageTypes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -20,6 +20,6 @@ public class AppDbContext(
         modelBuilder
             .ConfigureCustomerEntity()
             .ConfigureMenuItemEntity()
-            .ConfigureCategoryEntity();
+            .ConfigureBeverageTypeEntity();
     }
 }

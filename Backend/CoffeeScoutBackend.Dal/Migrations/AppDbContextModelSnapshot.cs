@@ -103,7 +103,7 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Categories");
+                    b.ToTable("BeverageTypes");
                 });
 
             modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.CustomerEntity", b =>
