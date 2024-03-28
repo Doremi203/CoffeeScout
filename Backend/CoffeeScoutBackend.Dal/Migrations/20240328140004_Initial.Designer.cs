@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CoffeeScoutBackend.Dal.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240328095314_Initial")]
+    [Migration("20240328140004_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -131,7 +131,7 @@ namespace CoffeeScoutBackend.Dal.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<int>("CategoryId")
+                    b.Property<int>("BeverageTypeEntityId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
@@ -143,7 +143,7 @@ namespace CoffeeScoutBackend.Dal.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("BeverageTypeEntityId");
 
                     b.ToTable("MenuItems");
                 });
@@ -310,7 +310,7 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 {
                     b.HasOne("CoffeeScoutBackend.Dal.Entities.BeverageTypeEntity", "BeverageTypeEntity")
                         .WithMany("MenuItems")
-                        .HasForeignKey("CategoryId")
+                        .HasForeignKey("BeverageTypeEntityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

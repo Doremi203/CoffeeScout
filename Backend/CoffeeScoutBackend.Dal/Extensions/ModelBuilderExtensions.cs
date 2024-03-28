@@ -30,7 +30,7 @@ public static class ModelBuilderExtensions
         entity
             .HasOne(m => m.BeverageTypeEntity)
             .WithMany(c => c.MenuItems)
-            .HasForeignKey(m => m.CategoryId);
+            .HasForeignKey(m => m.BeverageTypeEntityId);
 
         return modelBuilder;
     }
@@ -41,7 +41,7 @@ public static class ModelBuilderExtensions
         entity
             .HasMany(c => c.MenuItems)
             .WithOne(m => m.BeverageTypeEntity)
-            .HasForeignKey(m => m.CategoryId);
+            .HasForeignKey(m => m.BeverageTypeEntityId);
         entity
             .HasIndex(c => c.Name)
             .IsUnique();

@@ -22,7 +22,7 @@ public class AccountController(
                 request.Adapt<RegistrationData>());
             return Ok();
         }
-        catch (RegistrationException e)
+        catch (CustomerRegistrationException e)
         {
             var validationProblemDetails = new ValidationProblemDetails(e.RegistrationErrors)
             {

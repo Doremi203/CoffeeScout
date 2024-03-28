@@ -8,15 +8,14 @@ namespace CoffeeScoutBackend.Dal;
 public static class DalServiceExtensions
 {
     public static IServiceCollection AddDalServices(
-        this IServiceCollection services, 
+        this IServiceCollection services,
         DatabaseSettings databaseSettings)
     {
-        services.AddDbContext<AppDbContext>(options =>
-        {
-            options.UseNpgsql(databaseSettings.ConnectionString);
-        });
-        
-        services.AddScoped<ICustomerRepository, CustomerRepository>();
+        services.AddDbContext<AppDbContext>(options => { options.UseNpgsql(databaseSettings.ConnectionString); });
+
+        services
+            .AddScoped<ICustomerRepository, CustomerRepository>()
+            .AddScoped<IMenuItemRepository, MenuItemRepository>();
         return services;
     }
 }
