@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CoffeeScoutBackend.Dal.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240327172056_Initial")]
+    [Migration("20240328094654_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -89,7 +89,7 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.CategoryEntity", b =>
+            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.BeverageTypeEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -103,12 +103,19 @@ namespace CoffeeScoutBackend.Dal.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.CustomerEntity", b =>
                 {
                     b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("UserId");
@@ -301,13 +308,13 @@ namespace CoffeeScoutBackend.Dal.Migrations
 
             modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.MenuItemEntity", b =>
                 {
-                    b.HasOne("CoffeeScoutBackend.Dal.Entities.CategoryEntity", "CategoryEntity")
+                    b.HasOne("CoffeeScoutBackend.Dal.Entities.BeverageTypeEntity", "BeverageTypeEntity")
                         .WithMany("MenuItems")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CategoryEntity");
+                    b.Navigation("BeverageTypeEntity");
                 });
 
             modelBuilder.Entity("CustomerEntityMenuItemEntity", b =>
@@ -376,7 +383,7 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.CategoryEntity", b =>
+            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.BeverageTypeEntity", b =>
                 {
                     b.Navigation("MenuItems");
                 });

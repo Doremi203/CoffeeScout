@@ -7,6 +7,6 @@ public record MenuItemEntity
     public required string Name { get; set; }
     public decimal Price { get; set; }
     
-    public required CategoryEntity CategoryEntity { get; set; }
+    public required BeverageTypeEntity BeverageTypeEntity { get; set; }
     public required ICollection<CustomerEntity> CustomersFavoredBy { get; set; }
 }

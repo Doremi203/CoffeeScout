@@ -174,7 +174,8 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 name: "Customers",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "text", nullable: false)
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    FirstName = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -267,6 +268,12 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Categories_Name",
+                table: "Categories",
+                column: "Name",
                 unique: true);
 
             migrationBuilder.CreateIndex(

@@ -28,7 +28,7 @@ public static class ModelBuilderExtensions
     {
         var entity = modelBuilder.Entity<MenuItemEntity>();
         entity
-            .HasOne(m => m.CategoryEntity)
+            .HasOne(m => m.BeverageTypeEntity)
             .WithMany(c => c.MenuItems)
             .HasForeignKey(m => m.CategoryId);
 
@@ -37,11 +37,14 @@ public static class ModelBuilderExtensions
 
     public static ModelBuilder ConfigureCategoryEntity(this ModelBuilder modelBuilder)
     {
-        var entity = modelBuilder.Entity<CategoryEntity>();
+        var entity = modelBuilder.Entity<BeverageTypeEntity>();
         entity
             .HasMany(c => c.MenuItems)
-            .WithOne(m => m.CategoryEntity)
+            .WithOne(m => m.BeverageTypeEntity)
             .HasForeignKey(m => m.CategoryId);
+        entity
+            .HasIndex(c => c.Name)
+            .IsUnique();
 
         return modelBuilder;
     }

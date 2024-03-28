@@ -1,6 +1,6 @@
 namespace CoffeeScoutBackend.Dal.Entities;
 
-public record CategoryEntity
+public record BeverageTypeEntity
 {
     public int Id { get; set; }
     public required string Name { get; set; }

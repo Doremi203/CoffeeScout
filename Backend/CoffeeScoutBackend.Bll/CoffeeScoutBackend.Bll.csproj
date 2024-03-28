@@ -10,8 +10,4 @@
       <ProjectReference Include="..\CoffeeScoutBackend.Dal\CoffeeScoutBackend.Dal.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Interfaces\" />
-    </ItemGroup>
-
 </Project>
