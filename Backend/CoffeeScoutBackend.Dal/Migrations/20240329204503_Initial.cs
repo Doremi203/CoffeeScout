@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -12,6 +13,9 @@ namespace CoffeeScoutBackend.Dal.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("Npgsql:PostgresExtension:postgis", ",,");
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -62,6 +66,20 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BeverageTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Cafes",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Location = table.Column<Point>(type: "geometry", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cafes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -189,12 +207,37 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CafeAdmins",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    CafeId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CafeAdmins", x => x.UserId);
+                    table.ForeignKey(
+                        name: "FK_CafeAdmins_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CafeAdmins_Cafes_CafeId",
+                        column: x => x.CafeId,
+                        principalTable: "Cafes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MenuItems",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    BeverageTypeEntityId = table.Column<int>(type: "integer", nullable: false),
+                    BeverageTypeId = table.Column<int>(type: "integer", nullable: false),
+                    CafeId = table.Column<long>(type: "bigint", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Price = table.Column<decimal>(type: "numeric", nullable: false)
                 },
@@ -202,9 +245,15 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 {
                     table.PrimaryKey("PK_MenuItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MenuItems_BeverageTypes_BeverageTypeEntityId",
-                        column: x => x.BeverageTypeEntityId,
+                        name: "FK_MenuItems_BeverageTypes_BeverageTypeId",
+                        column: x => x.BeverageTypeId,
                         principalTable: "BeverageTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MenuItems_Cafes_CafeId",
+                        column: x => x.CafeId,
+                        principalTable: "Cafes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -277,14 +326,24 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_CafeAdmins_CafeId",
+                table: "CafeAdmins",
+                column: "CafeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CustomerFavoriteItems_FavoriteMenuItemsId",
                 table: "CustomerFavoriteItems",
                 column: "FavoriteMenuItemsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MenuItems_BeverageTypeEntityId",
+                name: "IX_MenuItems_BeverageTypeId",
                 table: "MenuItems",
-                column: "BeverageTypeEntityId");
+                column: "BeverageTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MenuItems_CafeId",
+                table: "MenuItems",
+                column: "CafeId");
         }
 
         /// <inheritdoc />
@@ -306,6 +365,9 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "CafeAdmins");
+
+            migrationBuilder.DropTable(
                 name: "CustomerFavoriteItems");
 
             migrationBuilder.DropTable(
@@ -322,6 +384,9 @@ namespace CoffeeScoutBackend.Dal.Migrations
 
             migrationBuilder.DropTable(
                 name: "BeverageTypes");
+
+            migrationBuilder.DropTable(
+                name: "Cafes");
         }
     }
 }
