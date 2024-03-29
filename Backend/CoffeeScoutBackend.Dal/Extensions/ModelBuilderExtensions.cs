@@ -24,15 +24,60 @@ public static class ModelBuilderExtensions
 
         return modelBuilder;
     }
+    
+    public static ModelBuilder ConfigureCafeAdminEntity(this ModelBuilder modelBuilder)
+    {
+        var entity = modelBuilder.Entity<CafeAdminEntity>();
+        entity
+            .HasKey(c => c.UserId);
+
+        entity
+            .HasOne(c => c.User)
+            .WithOne(u => u.CafeAdmin)
+            .HasForeignKey<CafeAdminEntity>(c => c.UserId)
+            .IsRequired();
+
+        entity
+            .HasOne(c => c.Cafe)
+            .WithMany(c => c.Admins)
+            .HasForeignKey(c => c.CafeId)
+            .IsRequired();
+
+        return modelBuilder;
+    }
+    
+    public static ModelBuilder ConfigureCafeEntity(this ModelBuilder modelBuilder)
+    {
+        var entity = modelBuilder.Entity<CafeEntity>();
+
+        entity
+            .HasMany(c => c.MenuItems)
+            .WithOne(m => m.Cafe)
+            .HasForeignKey(m => m.CafeId);
+        
+        entity
+            .HasMany(c => c.Admins)
+            .WithOne(a => a.Cafe)
+            .HasForeignKey(a => a.CafeId);
+
+        return modelBuilder;
+    }
 
     public static ModelBuilder ConfigureMenuItemEntity(this ModelBuilder modelBuilder)
     {
         var entity = modelBuilder.Entity<MenuItemEntity>();
         entity
-            .HasOne(m => m.BeverageTypeEntity)
+            .HasOne(m => m.BeverageType)
             .WithMany(c => c.MenuItems)
-            .HasForeignKey(m => m.BeverageTypeEntityId);
-
+            .HasForeignKey(m => m.BeverageTypeId)
+            .IsRequired();
+        
+        entity
+            .HasOne(m => m.Cafe)
+            .WithMany(c => c.MenuItems)
+            .HasForeignKey(m => m.CafeId)
+            .IsRequired();
+        
         return modelBuilder;
     }
 
@@ -41,8 +86,8 @@ public static class ModelBuilderExtensions
         var entity = modelBuilder.Entity<BeverageTypeEntity>();
         entity
             .HasMany(c => c.MenuItems)
-            .WithOne(m => m.BeverageTypeEntity)
-            .HasForeignKey(m => m.BeverageTypeEntityId);
+            .WithOne(m => m.BeverageType)
+            .HasForeignKey(m => m.BeverageTypeId);
         entity
             .HasIndex(c => c.Name)
             .IsUnique();

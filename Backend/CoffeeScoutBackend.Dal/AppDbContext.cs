@@ -10,8 +10,10 @@ public class AppDbContext(
 ) : IdentityDbContext<AppUser>(options)
 {
     public required DbSet<CustomerEntity> Customers { get; set; }
+    public required DbSet<CafeAdminEntity> CafeAdmins { get; set; }
     public required DbSet<MenuItemEntity> MenuItems { get; set; }
     public required DbSet<BeverageTypeEntity> BeverageTypes { get; set; }
+    public required DbSet<CafeEntity> Cafes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -20,6 +22,8 @@ public class AppDbContext(
         modelBuilder
             .ConfigureCustomerEntity()
             .ConfigureMenuItemEntity()
-            .ConfigureBeverageTypeEntity();
+            .ConfigureBeverageTypeEntity()
+            .ConfigureCafeEntity()
+            .ConfigureCafeAdminEntity();
     }
 }

@@ -4,5 +4,5 @@ namespace CoffeeScoutBackend.Domain.Interfaces;
 
 public interface ICafeService
 {
-    Task AddMenuItemAsync(MenuItem menuItem);
+    Task AddMenuItemAsync(string adminId, MenuItem menuItem);
 }
