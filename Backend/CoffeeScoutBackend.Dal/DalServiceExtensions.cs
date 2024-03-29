@@ -31,5 +31,9 @@ public static class DalServiceExtensions
                 src => src.BeverageType)
             .Map(dest => dest.BeverageTypeEntityId, 
                 src => src.BeverageType.Id);
+
+        TypeAdapterConfig<MenuItemEntity, MenuItem>.NewConfig()
+            .Map(dest => dest.BeverageType,
+                src => src.BeverageTypeEntity);
     }
 }

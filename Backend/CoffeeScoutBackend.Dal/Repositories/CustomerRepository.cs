@@ -13,8 +13,9 @@ public class CustomerRepository(
     public async Task<Customer?> GetByIdAsync(string userId)
     {
         var customer = await dbContext.Customers
-            .Include(c => c.FavoriteMenuItems)
             .Include(c => c.User)
+            .Include(c => c.FavoriteMenuItems)
+            .ThenInclude(mi => mi.BeverageTypeEntity)
             .FirstOrDefaultAsync(c => c.UserId == userId);
         return customer?.Adapt<Customer>();
     }
@@ -36,6 +37,23 @@ public class CustomerRepository(
 
         customerEntity.FavoriteMenuItems.Add(menuItemEntity);
         await dbContext.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<BeverageType>> GetFavoredBeverageTypesAsync(string userId)
+    {
+        var customer = await dbContext.Customers
+            .Include(c => c.FavoriteMenuItems)
+            .ThenInclude(mi => mi.BeverageTypeEntity)
+            .FirstOrDefaultAsync(c => c.UserId == userId);
+        if (customer is null)
+            return Enumerable.Empty<BeverageType>();
+
+        var beverageTypes =
+            customer.FavoriteMenuItems
+                .Select(mi => mi.BeverageTypeEntity)
+                .Distinct();
+
+        return beverageTypes.Adapt<IEnumerable<BeverageType>>();
     }
 
     public Task UpdateAsync(string userId, Customer customer)
