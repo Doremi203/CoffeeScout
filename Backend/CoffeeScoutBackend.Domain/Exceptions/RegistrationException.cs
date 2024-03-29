@@ -1,6 +1,6 @@
 namespace CoffeeScoutBackend.Domain.Exceptions;
 
-public class CustomerRegistrationException(
+public class RegistrationException(
     string? message,
     IDictionary<string, string[]> registrationErrors
 ) : Exception(message)

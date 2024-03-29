@@ -6,5 +6,5 @@ public record CustomerEntity
     public string FirstName { get; set; } = string.Empty;
 
     public required AppUser User { get; set; }
-    public required ICollection<MenuItemEntity> FavoriteItems { get; set; }
+    public required ICollection<MenuItemEntity> FavoriteMenuItems { get; set; }
 }

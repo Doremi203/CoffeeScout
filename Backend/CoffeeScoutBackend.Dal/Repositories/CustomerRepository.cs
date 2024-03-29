@@ -2,6 +2,7 @@ using CoffeeScoutBackend.Dal.Entities;
 using CoffeeScoutBackend.Domain.Interfaces;
 using CoffeeScoutBackend.Domain.Models;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeScoutBackend.Dal.Repositories;
 
@@ -11,7 +12,10 @@ public class CustomerRepository(
 {
     public async Task<Customer?> GetByIdAsync(string userId)
     {
-        var customer = await dbContext.Customers.FindAsync(userId);
+        var customer = await dbContext.Customers
+            .Include(c => c.FavoriteMenuItems)
+            .Include(c => c.User)
+            .FirstOrDefaultAsync(c => c.UserId == userId);
         return customer?.Adapt<Customer>();
     }
 
@@ -23,12 +27,14 @@ public class CustomerRepository(
 
     public async Task AddFavoredMenuItemAsync(Customer customer, MenuItem menuItem)
     {
-        var customerEntity = await dbContext.Customers.FindAsync(customer.UserId);
+        var customerEntity = await dbContext.Customers
+            .Include(c => c.FavoriteMenuItems)
+            .FirstOrDefaultAsync(c => c.UserId == customer.UserId);
         var menuItemEntity = await dbContext.MenuItems.FindAsync(menuItem.Id);
         if (customerEntity is null || menuItemEntity is null)
             return;
 
-        customerEntity.FavoriteItems.Add(menuItemEntity);
+        customerEntity.FavoriteMenuItems.Add(menuItemEntity);
         await dbContext.SaveChangesAsync();
     }
 

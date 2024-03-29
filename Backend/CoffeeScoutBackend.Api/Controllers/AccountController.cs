@@ -14,15 +14,15 @@ public class AccountController(
 ) : ControllerBase
 {
     [HttpPost("customRegister")]
-    public async Task<IActionResult> Register(CustomRegisterRequest request)
+    public async Task<IActionResult> Register(CustomerRegisterRequest request)
     {
         try
         {
             await customerService.RegisterCustomerAsync(
-                request.Adapt<RegistrationData>());
+                request.Adapt<CustomerRegistrationData>());
             return Ok();
         }
-        catch (CustomerRegistrationException e)
+        catch (RegistrationException e)
         {
             var validationProblemDetails = new ValidationProblemDetails(e.RegistrationErrors)
             {
