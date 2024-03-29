@@ -17,7 +17,7 @@ public class CafeService(
                            ?? throw new BeverageTypeNotFoundException(
                                $"Beverage type with name {beverageName} not found",
                                beverageName);
-        var cafe = await cafeRepository.GetCafeByAdminIdAsync(adminId);
+        var cafe = await cafeRepository.GetByAdminIdAsync(adminId);
 
         var newMenuItem = new MenuItem
         {
@@ -28,5 +28,19 @@ public class CafeService(
         };
 
         await menuItemRepository.AddAsync(newMenuItem);
+    }
+
+    public async Task AssignNewCafeAdminAsync(string adminId, long cafeId)
+    {
+        var cafe = await cafeRepository.GetByIdAsync(cafeId)
+                   ?? throw new CafeNotFoundException(
+                       $"Cafe with id {cafeId} not found",
+                       cafeId);
+
+        await cafeRepository.CreateCafeAdminAsync(new CafeAdmin
+        {
+            UserId = adminId,
+            Cafe = cafe
+        });
     }
 }

@@ -2,6 +2,8 @@ namespace CoffeeScoutBackend.Domain.Exceptions;
 
 public class UserNotFoundException : NotFoundException
 {
+    public string? UserId { get; init; }
+    
     public UserNotFoundException(string? message) : base(message)
     {
     }
@@ -16,6 +18,4 @@ public class UserNotFoundException : NotFoundException
     {
         UserId = userId;
     }
-
-    public string? UserId { get; init; }
 }

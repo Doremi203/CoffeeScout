@@ -2,6 +2,8 @@ namespace CoffeeScoutBackend.Domain.Exceptions;
 
 public class MenuItemNotFoundException : NotFoundException
 {
+    public long? Id { get; init; }
+    
     public MenuItemNotFoundException(long id)
     {
         Id = id;
@@ -17,6 +19,4 @@ public class MenuItemNotFoundException : NotFoundException
     {
         Id = id;
     }
-
-    public long? Id { get; init; }
 }

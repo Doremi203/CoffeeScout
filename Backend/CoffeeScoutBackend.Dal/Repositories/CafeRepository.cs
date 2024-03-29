@@ -1,3 +1,4 @@
+using CoffeeScoutBackend.Dal.Entities;
 using CoffeeScoutBackend.Domain.Interfaces;
 using CoffeeScoutBackend.Domain.Models;
 using Mapster;
@@ -9,11 +10,31 @@ public class CafeRepository(
     AppDbContext dbContext
 ) : ICafeRepository
 {
-    public async Task<Cafe> GetCafeByAdminIdAsync(string adminId)
+    public async Task<Cafe?> GetByIdAsync(long id)
+    {
+        var cafeEntity = await dbContext.Cafes
+            .Include(ca => ca.Admins)
+            .FirstOrDefaultAsync(ca => ca.Id == id);
+        
+        return cafeEntity?.Adapt<Cafe>();
+    }
+
+    public async Task<Cafe> GetByAdminIdAsync(string adminId)
     {
         var admin = await dbContext.CafeAdmins
             .Include(ca => ca.Cafe)
             .FirstAsync(ca => ca.UserId == adminId);
+        
         return admin.Cafe.Adapt<Cafe>();
+    }
+
+    public async Task CreateCafeAdminAsync(CafeAdmin admin)
+    {
+        var adminEntity = admin.Adapt<CafeAdminEntity>();
+        adminEntity.Cafe = await dbContext.Cafes
+            .FirstAsync(ca => ca.Id == admin.Cafe.Id);
+        
+        dbContext.CafeAdmins.Add(adminEntity);
+        await dbContext.SaveChangesAsync();
     }
 }

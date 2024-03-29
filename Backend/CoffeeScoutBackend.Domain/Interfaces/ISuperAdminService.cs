@@ -5,5 +5,5 @@ namespace CoffeeScoutBackend.Domain.Interfaces;
 public interface ISuperAdminService
 {
     Task AddBeverageTypeAsync(BeverageType beverageType);
-    Task AddCafeAdminAsync(string requestEmail, string requestPassword);
+    Task AddCafeAdminAsync(CafeAdminRegistrationData registrationData);
 }
