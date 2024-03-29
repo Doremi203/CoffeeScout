@@ -1,30 +1,41 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
+import {StyleSheet, Text, TouchableWithoutFeedback, View, Image, ScrollView} from 'react-native';
 import Footer from "./Footer";
 import {RFValue} from "react-native-responsive-fontsize";
+import OrderComponent from "../components/OrderComponent";
 
 
 export default function Profile({navigation}) {
     return (
         <View style={styles.container}>
             <View style={styles.main}>
-                <Text style={styles.name}>Майя</Text>
-                <View style={[styles.line, {top: RFValue(100)}]} />
-                <Text style={[styles.text, { top: RFValue(110)}]}> Личные данные </Text>
-                <View style={[styles.line, {top: RFValue(120)}]} />
-                <Text style={[styles.text, { top: RFValue(130)}]}> История заказов </Text>
-                <View style={[styles.line, {top: RFValue(140)}]} />
-                <Text style={[styles.text, { top: RFValue(150)}]}> Настройки </Text>
-                <View style={[styles.line, {top: RFValue(160)}]} />
-                <Text style={[styles.text, { top: RFValue(170)}]}> Управление аккаунтом </Text>
-                <TouchableWithoutFeedback onPress={() => navigation.navigate('main')}>
-                    <Text style={styles.out}> Выйти </Text>
+
+                <TouchableWithoutFeedback onPress={() => navigation.navigate('settings')}>
+                    <View style={styles.profile}>
+                        <Image source={require('../assets/icons/user.png')} style={styles.image}/>
+                        <Text style={styles.name}>Майя</Text>
+                        <Text style={styles.email}>
+                            maiya.ifraimova@yandex.ru
+                        </Text>
+                        <Image source={require('../assets/icons/right-arrow.png')} style={styles.arrow}/>
+                    </View>
                 </TouchableWithoutFeedback>
+
+
+                <Text style={styles.historyHeader}> История заказов </Text>
+
+                <ScrollView style={styles.scroll}>
+                    <OrderComponent navigation={navigation}/>
+                    <OrderComponent navigation={navigation}/>
+                    <OrderComponent navigation={navigation}/>
+                    <OrderComponent navigation={navigation}/>
+                    <OrderComponent navigation={navigation}/>
+                    <OrderComponent navigation={navigation}/>
+                </ScrollView>
+
             </View>
 
-
             <Footer navigation={navigation}/>
-
         </View>
     );
 }
@@ -34,42 +45,59 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
         minHeight: '100%',
-       // alignItems: 'center',
+        // alignItems: 'center',
+
     },
-    main : {
+    main: {
         flex: 1,
+        alignItems: 'center',
+    },
+    profile: {
+        //backgroundColor: '#AEC09A',
+        //backgroundColor: '#D5E2DD',
+        backgroundColor: '#E2E9E6',
+        width: '90%',
+        height: RFValue(100),
+        top: '25%',
+        flexDirection: 'row',
+        borderRadius: 15,
+
+    },
+
+    image: {
+        width: RFValue(70),
+        height: RFValue(70),
+        marginTop: RFValue(17),
+        marginLeft: RFValue(15),
     },
 
     name: {
-        fontSize: RFValue(36),
-        //position: 'absolute',
-        top: RFValue(84),
-        left: 38,
+        fontSize: RFValue(22),
         fontFamily: 'MontserratAlternatesMedium',
+        marginTop: RFValue(26),
+        marginLeft: RFValue(20),
     },
-    line: {
-        //position: 'absolute',
-        left: 0,
-        right: 0,
-        borderBottomWidth: 1,
-        borderBottomColor: 'black'
-    },
-    text: {
-        fontSize: RFValue(20),
-       // position: 'absolute',
-        left: 27,
+    email: {
+
+        marginTop: RFValue(60),
+        right: RFValue(62),
         fontFamily: 'MontserratAlternates',
+        fontSize: RFValue(12),
     },
-    out: {
+    arrow: {
+        width: RFValue(15),
+        height: RFValue(15),
+        marginTop: RFValue(42),
+        right: RFValue(45),
+    },
+    historyHeader: {
         fontSize: RFValue(20),
-        color: '#05704A',
-       // position:'absolute',
-        top: RFValue(190),
-        //fontWeight: 'bold',
         fontFamily: 'MontserratAlternates',
-        textAlign: 'center'
-    }
+        marginTop: '30%',
+        right: '16%',
+    },
+
+    orders: {},
+    scroll: {}
 
 });
-
-//export de
