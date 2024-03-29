@@ -1,11 +1,8 @@
 import React, {useState} from 'react';
-import {Dimensions, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 
-//<Image source={require('../assets/image.svg')} />
 const ProductInCart = () => {
     const [quantity, setQuantity] = useState(1);
 
@@ -20,27 +17,38 @@ const ProductInCart = () => {
     };
 
 
+    const [isVisible, setIsVisible] = useState(true);
+
+    const handleDelete = () => {
+        setIsVisible(false);
+    };
+
+
     return (
-        <View style={styles.square}>
-            <Image source={require('../assets/icons/coffee.png')} style={styles.image} />
-            <Text style={styles.label}>капучино</Text>
-            <View style={styles.plusminus}>
-                <TouchableOpacity onPress={decrementQuantity} style={styles.button}>
-                    <View style={styles.box}><Text style={styles.buttonText}>-</Text></View>
-                </TouchableOpacity>
-                <Text style={styles.quantity}>{quantity}</Text>
-                <TouchableOpacity onPress={incrementQuantity} style={styles.button}>
-                    <View style={styles.box}><Text style={styles.buttonText}>+</Text></View>
-                </TouchableOpacity>
-            </View>
+        <View>
+            {isVisible && <View style={styles.square}>
+                <Image source={require('../assets/icons/coffee.png')} style={styles.image} />
+                <Text style={styles.label}>капучино</Text>
+                <View style={styles.plusminus}>
+                    <TouchableOpacity onPress={decrementQuantity} style={styles.button}>
+                        <View style={styles.box}><Text style={styles.buttonText}>-</Text></View>
+                    </TouchableOpacity>
+                    <Text style={styles.quantity}>{quantity}</Text>
+                    <TouchableOpacity onPress={incrementQuantity} style={styles.button}>
+                        <View style={styles.box}><Text style={styles.buttonText}>+</Text></View>
+                    </TouchableOpacity>
+                </View>
 
 
-                <Image source={require('../assets/icons/trash8.png')} style={styles.trash}/>
+                <TouchableOpacity onPress={handleDelete}>
+                    <Image source={require('../assets/icons/trash8.png')} style={styles.trash}/>
+                </TouchableOpacity>
+
                 <Text style={styles.price}> 100 ₽</Text>
 
-
-
+            </View>}
         </View>
+
     );
 };
 
