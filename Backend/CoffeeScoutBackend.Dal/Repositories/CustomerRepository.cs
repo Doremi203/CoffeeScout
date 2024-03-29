@@ -15,7 +15,7 @@ public class CustomerRepository(
         var customer = await dbContext.Customers
             .Include(c => c.User)
             .Include(c => c.FavoriteMenuItems)
-            .ThenInclude(mi => mi.BeverageTypeEntity)
+            .ThenInclude(mi => mi.BeverageType)
             .FirstOrDefaultAsync(c => c.UserId == userId);
         return customer?.Adapt<Customer>();
     }
@@ -43,14 +43,14 @@ public class CustomerRepository(
     {
         var customer = await dbContext.Customers
             .Include(c => c.FavoriteMenuItems)
-            .ThenInclude(mi => mi.BeverageTypeEntity)
+            .ThenInclude(mi => mi.BeverageType)
             .FirstOrDefaultAsync(c => c.UserId == userId);
         if (customer is null)
             return Enumerable.Empty<BeverageType>();
 
         var beverageTypes =
             customer.FavoriteMenuItems
-                .Select(mi => mi.BeverageTypeEntity)
+                .Select(mi => mi.BeverageType)
                 .Distinct();
 
         return beverageTypes.Adapt<IEnumerable<BeverageType>>();

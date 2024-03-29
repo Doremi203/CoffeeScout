@@ -13,7 +13,7 @@ public class MenuItemRepository(
     public async Task<MenuItem?> GetByIdAsync(long id)
     {
         var menuItem = await dbContext.MenuItems
-            .Include(m => m.BeverageTypeEntity)
+            .Include(m => m.BeverageType)
             .FirstOrDefaultAsync(m => m.Id == id);
         return menuItem?.Adapt<MenuItem>();
     }
@@ -28,8 +28,11 @@ public class MenuItemRepository(
     public async Task AddAsync(MenuItem menuItem)
     {
         var entity = menuItem.Adapt<MenuItemEntity>();
-        entity.BeverageTypeEntity = await dbContext.BeverageTypes
-            .FirstAsync(bt => bt.Id == entity.BeverageTypeEntityId);
+        entity.BeverageType = await dbContext.BeverageTypes
+            .FirstAsync(bt => bt.Id == entity.BeverageTypeId);
+        entity.Cafe = await dbContext.Cafes
+            .FirstAsync(c => c.Id == entity.CafeId);
+        
         await dbContext.MenuItems.AddAsync(entity);
         await dbContext.SaveChangesAsync();
     }

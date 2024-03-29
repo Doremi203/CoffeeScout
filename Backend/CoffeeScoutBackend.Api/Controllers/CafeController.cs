@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using CoffeeScoutBackend.Api.Requests;
 using CoffeeScoutBackend.Domain.Interfaces;
 using CoffeeScoutBackend.Domain.Models;
@@ -13,6 +14,10 @@ public class CafeController(
     ICafeService cafeService
 ) : ControllerBase
 {
+    private string CurrentCafeAdminId =>
+        User.FindFirstValue(ClaimTypes.NameIdentifier)
+        ?? throw new InvalidOperationException("Cafe admin ID not found");
+        
     [HttpPost("menu-items")]
     public async Task<IActionResult> AddMenuItemAsync(AddMenuItemRequest request)
     {
@@ -25,7 +30,7 @@ public class CafeController(
                 Name = request.BeverageTypeName
             }
         };
-        await cafeService.AddMenuItemAsync(newMenuItem);
+        await cafeService.AddMenuItemAsync(CurrentCafeAdminId, newMenuItem);
         return Ok();
     }
 }

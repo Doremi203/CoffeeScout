@@ -5,10 +5,11 @@ using CoffeeScoutBackend.Domain.Models;
 namespace CoffeeScoutBackend.Bll;
 
 public class CafeService(
-    IMenuItemRepository menuItemRepository
+    IMenuItemRepository menuItemRepository,
+    ICafeRepository cafeRepository
 ) : ICafeService
 {
-    public async Task AddMenuItemAsync(MenuItem menuItem)
+    public async Task AddMenuItemAsync(string adminId, MenuItem menuItem)
     {
         var beverageName = menuItem.BeverageType.Name;
         var beverageType = await menuItemRepository
@@ -16,12 +17,14 @@ public class CafeService(
                            ?? throw new BeverageTypeNotFoundException(
                                $"Beverage type with name {beverageName} not found",
                                beverageName);
+        var cafe = await cafeRepository.GetCafeByAdminIdAsync(adminId);
 
         var newMenuItem = new MenuItem
         {
             Name = menuItem.Name,
             Price = menuItem.Price,
-            BeverageType = beverageType
+            BeverageType = beverageType,
+            Cafe = cafe
         };
 
         await menuItemRepository.AddAsync(newMenuItem);

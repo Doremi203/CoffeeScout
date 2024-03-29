@@ -4,7 +4,9 @@ using CoffeeScoutBackend.Dal;
 using CoffeeScoutBackend.Dal.Entities;
 using CoffeeScoutBackend.Domain.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using NetTopologySuite.Geometries;
 
 namespace CoffeeScoutBackend.Api.Identity;
 
@@ -17,6 +19,7 @@ public class TestDbSeeder(
         await SeedRolesAsync();
         await SeedSuperAdminAsync();
         await SeedBeverageTypesAsync();
+        await SeedCafeAsync();
         await SeedMenuItemsAsync();
         await SeedCafeAdminAsync();
     }
@@ -26,6 +29,7 @@ public class TestDbSeeder(
         using var scope = serviceProvider.CreateScope();
         using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         var adminEmail = "cafeAdmin@gmail.com";
         var adminPassword = "CafeAdminPro@1";
 
@@ -43,6 +47,15 @@ public class TestDbSeeder(
             if (result.Succeeded)
             {
                 await userManager.AddToRoleAsync(admin, Roles.CafeAdmin.ToString());
+                var cafe = await dbContext.Cafes.FirstAsync();
+                await dbContext.CafeAdmins.AddAsync(new CafeAdminEntity
+                {
+                    User = admin,
+                    UserId = admin.Id,
+                    Cafe = cafe,
+                    CafeId = cafe.Id
+                });
+                await dbContext.SaveChangesAsync();
                 transaction.Complete();
             }
         }
@@ -65,11 +78,29 @@ public class TestDbSeeder(
         }
     }
     
-    private async Task SeedMenuItemsAsync()
+    private async Task SeedCafeAsync()
     {
         using var scope = serviceProvider.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
+        if (!dbContext.Cafes.Any())
+        {
+            var cafe = new CafeEntity
+            {
+                Name = "Cafe 1",
+                Location = new Point(0, 0)
+            };
+            await dbContext.Cafes.AddAsync(cafe);
+            await dbContext.SaveChangesAsync();
+        }
+    }
+    
+    private async Task SeedMenuItemsAsync()
+    {
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var cafe = dbContext.Cafes.First();
+        
         if (!dbContext.MenuItems.Any())
         {
             foreach (var beverageType in dbContext.BeverageTypes)
@@ -78,8 +109,10 @@ public class TestDbSeeder(
                 {
                     Name = $"{beverageType.Name} 0.2l",
                     Price = 2.5m,
-                    BeverageTypeEntity = beverageType,
-                    BeverageTypeEntityId = beverageType.Id
+                    BeverageType = beverageType,
+                    BeverageTypeId = beverageType.Id,
+                    Cafe = cafe,
+                    CafeId = cafe.Id
                 });
             }
             await dbContext.SaveChangesAsync();
