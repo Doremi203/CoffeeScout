@@ -1,6 +1,7 @@
 using CoffeeScoutBackend.Api.Requests;
 using CoffeeScoutBackend.Domain.Interfaces;
 using CoffeeScoutBackend.Domain.Models;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +17,8 @@ public class SuperAdminController(
     [HttpPost("cafe-admins")]
     public async Task<IActionResult> AddCafeAdminAsync(AddCafeAdminRequest request)
     {
-        await superAdminService.AddCafeAdminAsync(request.Email, request.Password);
+        await superAdminService.AddCafeAdminAsync(
+            request.Adapt<CafeAdminRegistrationData>());
         return Ok();
     }
     
