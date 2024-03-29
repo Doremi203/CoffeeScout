@@ -214,11 +214,11 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 columns: table => new
                 {
                     CustomersFavoredByUserId = table.Column<string>(type: "text", nullable: false),
-                    FavoriteItemsId = table.Column<long>(type: "bigint", nullable: false)
+                    FavoriteMenuItemsId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CustomerFavoriteItems", x => new { x.CustomersFavoredByUserId, x.FavoriteItemsId });
+                    table.PrimaryKey("PK_CustomerFavoriteItems", x => new { x.CustomersFavoredByUserId, x.FavoriteMenuItemsId });
                     table.ForeignKey(
                         name: "FK_CustomerFavoriteItems_Customers_CustomersFavoredByUserId",
                         column: x => x.CustomersFavoredByUserId,
@@ -226,8 +226,8 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CustomerFavoriteItems_MenuItems_FavoriteItemsId",
-                        column: x => x.FavoriteItemsId,
+                        name: "FK_CustomerFavoriteItems_MenuItems_FavoriteMenuItemsId",
+                        column: x => x.FavoriteMenuItemsId,
                         principalTable: "MenuItems",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -277,9 +277,9 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_CustomerFavoriteItems_FavoriteItemsId",
+                name: "IX_CustomerFavoriteItems_FavoriteMenuItemsId",
                 table: "CustomerFavoriteItems",
-                column: "FavoriteItemsId");
+                column: "FavoriteMenuItemsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MenuItems_BeverageTypeEntityId",

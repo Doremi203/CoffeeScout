@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace CoffeeScoutBackend.Api.Validators;
 
-public class RegisterRequestValidator : AbstractValidator<CustomRegisterRequest>
+public class RegisterRequestValidator : AbstractValidator<CustomerRegisterRequest>
 {
     public RegisterRequestValidator()
     {

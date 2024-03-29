@@ -13,11 +13,12 @@ public static class ModelBuilderExtensions
 
         entity
             .HasOne(c => c.User)
-            .WithOne()
-            .HasForeignKey<CustomerEntity>(c => c.UserId);
+            .WithOne(u => u.Customer)
+            .HasForeignKey<CustomerEntity>(c => c.UserId)
+            .IsRequired();
 
         entity
-            .HasMany(c => c.FavoriteItems)
+            .HasMany(c => c.FavoriteMenuItems)
             .WithMany(m => m.CustomersFavoredBy)
             .UsingEntity(j => j.ToTable("CustomerFavoriteItems"));
 

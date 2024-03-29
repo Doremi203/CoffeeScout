@@ -1,6 +1,6 @@
 namespace CoffeeScoutBackend.Api.Requests;
 
-public record CustomRegisterRequest(
+public record CustomerRegisterRequest(
     string FirstName,
     string Email,
     string Password

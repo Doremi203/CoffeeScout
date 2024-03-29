@@ -5,6 +5,7 @@ using CoffeeScoutBackend.Bll;
 using CoffeeScoutBackend.Dal;
 using CoffeeScoutBackend.Dal.Entities;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using Swashbuckle.AspNetCore.Filters;
@@ -16,6 +17,7 @@ builder.Services
         builder.Configuration.GetSection(nameof(AdminSettings)))
     .Configure<DatabaseSettings>(
         builder.Configuration.GetSection(nameof(DatabaseSettings)));
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
     {
@@ -37,6 +39,7 @@ var databaseSettings = builder.Configuration
     .GetRequiredSection(nameof(DatabaseSettings))
     .Get<DatabaseSettings>()!;
 
+builder.Services.AddTransient<IDbSeeder, TestDbSeeder>();
 builder.Services
     .AddIdentityServices()
     .AddBllServices()
@@ -48,9 +51,12 @@ builder.Services.AddFluentValidationAutoValidation();
 var app = builder.Build();
 
 app.UseMiddleware<RequestResponseLoggingMiddleware>();
-
 if (app.Environment.IsDevelopment())
 {
+    using var scope = app.Services.CreateScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await dbContext.Database.EnsureDeletedAsync();
+    await dbContext.Database.MigrateAsync();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
@@ -63,7 +69,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-await app.Services.SeedRolesAsync();
-await app.Services.SeedSuperAdminAsync();
+var dbSeeder = app.Services.GetRequiredService<IDbSeeder>();
+await dbSeeder.SeedDbAsync();
 
 app.Run();

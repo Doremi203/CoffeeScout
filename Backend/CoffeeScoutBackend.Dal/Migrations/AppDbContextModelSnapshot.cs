@@ -150,12 +150,12 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     b.Property<string>("CustomersFavoredByUserId")
                         .HasColumnType("text");
 
-                    b.Property<long>("FavoriteItemsId")
+                    b.Property<long>("FavoriteMenuItemsId")
                         .HasColumnType("bigint");
 
-                    b.HasKey("CustomersFavoredByUserId", "FavoriteItemsId");
+                    b.HasKey("CustomersFavoredByUserId", "FavoriteMenuItemsId");
 
-                    b.HasIndex("FavoriteItemsId");
+                    b.HasIndex("FavoriteMenuItemsId");
 
                     b.ToTable("CustomerFavoriteItems", (string)null);
                 });
@@ -295,7 +295,7 @@ namespace CoffeeScoutBackend.Dal.Migrations
             modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.CustomerEntity", b =>
                 {
                     b.HasOne("CoffeeScoutBackend.Dal.Entities.AppUser", "User")
-                        .WithOne()
+                        .WithOne("Customer")
                         .HasForeignKey("CoffeeScoutBackend.Dal.Entities.CustomerEntity", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -324,7 +324,7 @@ namespace CoffeeScoutBackend.Dal.Migrations
 
                     b.HasOne("CoffeeScoutBackend.Dal.Entities.MenuItemEntity", null)
                         .WithMany()
-                        .HasForeignKey("FavoriteItemsId")
+                        .HasForeignKey("FavoriteMenuItemsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -378,6 +378,11 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.AppUser", b =>
+                {
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.BeverageTypeEntity", b =>

@@ -1,52 +1,34 @@
 using System.Transactions;
+using CoffeeScoutBackend.Bll.Interfaces;
 using CoffeeScoutBackend.Dal.Entities;
 using CoffeeScoutBackend.Domain.Exceptions;
 using CoffeeScoutBackend.Domain.Interfaces;
 using CoffeeScoutBackend.Domain.Models;
-using Microsoft.AspNetCore.Identity;
 
 namespace CoffeeScoutBackend.Bll;
 
 public class CustomerService(
     ICustomerRepository customerRepository,
     IMenuItemRepository menuItemRepository,
-    UserManager<AppUser> userManager
+    IRoleRegistrationService roleRegistrationService
 ) : ICustomerService
 {
-    public async Task RegisterCustomerAsync(RegistrationData registrationData)
+    public async Task RegisterCustomerAsync(CustomerRegistrationData customerRegistrationData)
     {
-        var errors = new Dictionary<string, string[]>();
         using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-
-        var firstName = registrationData.FirstName;
-        var email = registrationData.Email;
-        var password = registrationData.Password;
-        var newUser = new AppUser { UserName = email, Email = email };
-        var result = await userManager.CreateAsync(newUser, password);
-
-        if (result.Succeeded)
+        
+        var newUser = new AppUser
         {
-            var roleResult = await userManager.AddToRoleAsync(newUser, Roles.Customer.ToString());
-            var user = await userManager.FindByEmailAsync(email);
-            if (user is null)
-                throw new UserNotFoundException("User was not present, but should have been created");
-            if (roleResult.Succeeded)
-            {
-                await customerRepository.AddAsync(new Customer
-                {
-                    UserId = user.Id,
-                    FirstName = firstName
-                });
-                scope.Complete();
-                return;
-            }
+            UserName = customerRegistrationData.Email, 
+            Email = customerRegistrationData.Email,
+        };
 
-            AddRegistrationErrors(roleResult, errors);
-        }
+        var user = await roleRegistrationService
+            .RegisterUserAsync(newUser, customerRegistrationData.Password, Roles.Customer);
+        var customer = new Customer { UserId = user.Id, FirstName = customerRegistrationData.FirstName };
 
-        AddRegistrationErrors(result, errors);
-
-        throw new CustomerRegistrationException("Customer registration failed", errors);
+        await customerRepository.AddAsync(customer);
+        scope.Complete();
     }
 
     public async Task<Customer> GetByUserIdAsync(string userId)
@@ -65,7 +47,11 @@ public class CustomerService(
                        ?? throw new MenuItemNotFoundException(
                            $"Menu item with id:{menuItemId} not found",
                            menuItemId);
-
+        if (customer.FavoriteMenuItems.Contains(menuItem))
+            throw new MenuItemAlreadyFavoredException(
+                $"Menu item with id:{menuItemId} is already favored by customer with id:{currentUserId}",
+                menuItemId,
+                currentUserId);
         await customerRepository.AddFavoredMenuItemAsync(customer, menuItem);
     }
 
@@ -81,15 +67,5 @@ public class CustomerService(
                 .Distinct();
 
         return favoredBeverageTypes;
-    }
-
-    private static void AddRegistrationErrors(IdentityResult result, Dictionary<string, string[]> errors)
-    {
-        foreach (var error in result.Errors.Where(SkipExtraErrors)) errors[error.Code] = [error.Description];
-    }
-
-    private static bool SkipExtraErrors(IdentityError arg)
-    {
-        return arg.Code != "DuplicateUserName";
     }
 }
