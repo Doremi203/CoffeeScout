@@ -1,30 +1,25 @@
 import React, {useState} from 'react';
-import {SafeAreaView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View} from 'react-native';
+import {
+    SafeAreaView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
+} from 'react-native';
 import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
 
 import {register} from "../http/userApi";
 
 
 export default function Registration({navigation}) {
-    //const [name, setName] = useState('');
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    console.log(`Email: ${email}, Password: ${password}`); // Добавьте эту
-
-
     const click = () => {
-        //await register(email, password, navigation);
-        register(email, password, navigation);
-        //clearInput();
-
+        register(name, email, password, navigation);
     }
-
-
-    /*const clearInput = () => {
-        setEmail('');
-        setPassword('');
-    };*/
 
     return (
         <SafeAreaView style={styles.container}>
@@ -35,6 +30,8 @@ export default function Registration({navigation}) {
                     <TextInput style={styles.input}
                                placeholder="имя"
                                placeholderTextColor="gray"
+                               onChangeText={text => setName(text)}
+                               value={name}
                     />
                 </View>
                 <View style={[styles.box, {top: '40%'}]}>
@@ -56,14 +53,14 @@ export default function Registration({navigation}) {
 
 
             <View style={styles.button}>
-                <TouchableWithoutFeedback onPress={click}>
+                <TouchableOpacity onPress={click}>
                     <Text style={styles.buttonText}>зарегистрироваться</Text>
-                </TouchableWithoutFeedback>
+                </TouchableOpacity>
             </View>
-            <TouchableWithoutFeedback onPress={() => navigation.navigate('auth')}>
+            <TouchableOpacity onPress={() => navigation.navigate('auth')} style={{marginTop: '1%'}}>
                 <Text style={styles.text}> уже есть аккаунт? <Text
                     style={{fontFamily: 'MontserratAlternatesSemiBold'}}> войти </Text> </Text>
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
         </SafeAreaView>
     );
 }

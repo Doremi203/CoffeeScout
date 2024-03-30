@@ -3,7 +3,6 @@ import {Alert} from "react-native";
 
 import * as SecureStore from 'expo-secure-store';
 
-//Сохранение токенов
 const saveTokens = async (accessToken, refreshToken) => {
     try {
         await SecureStore.setItemAsync('accessToken', accessToken);
@@ -14,7 +13,6 @@ const saveTokens = async (accessToken, refreshToken) => {
     }
 };
 
-// Загрузка токенов
 const loadTokens = async () => {
     try {
         const accessToken = await SecureStore.getItemAsync('accessToken');
@@ -33,17 +31,14 @@ const loadTokens = async () => {
 };
 
 
-export const register = (email, password, navigation) => {
+export const register = (name, email, password, navigation) => {
     axios.post("http://192.168.1.124:8000/api/v1/account/customRegister", {
-        //name: name,
+        firstName: name,
         email: email,
         password: password
     })
         .then(response => {
-            console.log(`RESPONSE ${response.status}`);
-            //navigation.navigate('main');
             axios.post("http://192.168.1.124:8000/api/v1/account/login", {
-                //name: name,
                 email: email,
                 password: password
             }).then(response => {
@@ -54,9 +49,6 @@ export const register = (email, password, navigation) => {
                 let refreshToken = response.data[refreshTokenName];
 
                 saveTokens(accessToken, refreshToken).then(() => navigation.navigate('main'));
-
-
-                //navigation.navigate('main');
             })
                 .catch(error => {
                     Alert.alert('Ошибка второго запроса', error.message);
@@ -68,8 +60,6 @@ export const register = (email, password, navigation) => {
             Object.keys(error.response.data.errors).forEach(key => {
                 error.response.data.errors[key].forEach(err => {
                     errors += err + "\n";
-                    //Alert.alert('Ошибка', err);
-                    //console.log(err)
                 });
             });
 
