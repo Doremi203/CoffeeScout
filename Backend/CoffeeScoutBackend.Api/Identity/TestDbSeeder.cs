@@ -82,13 +82,13 @@ public class TestDbSeeder(
     {
         using var scope = serviceProvider.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
+        var locationProvider = scope.ServiceProvider.GetRequiredService<ILocationProvider>();
         if (!dbContext.Cafes.Any())
         {
             var cafe = new CafeEntity
             {
                 Name = "Cafe 1",
-                Location = new Point(0, 0)
+                Location = locationProvider.CreatePoint(55.754172, 37.635143),
             };
             await dbContext.Cafes.AddAsync(cafe);
             await dbContext.SaveChangesAsync();

@@ -6,4 +6,5 @@ public record Cafe
     public string? Name { get; set; }
     public Location Location { get; set; }
     public ICollection<MenuItem> MenuItems { get; set; } = new HashSet<MenuItem>();
+    public ICollection<CafeAdmin> Admins { get; set; } = new HashSet<CafeAdmin>();
 }

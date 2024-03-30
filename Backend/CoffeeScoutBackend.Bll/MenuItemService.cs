@@ -11,18 +11,30 @@ public class MenuItemService(
     public async Task<MenuItem> GetByIdAsync(long id)
     {
         return await menuItemRepository.GetByIdAsync(id)
-            ?? throw new MenuItemNotFoundException(
-                $"Menu item with id:{id} not found",
-                id);
+               ?? throw new MenuItemNotFoundException(
+                   $"Menu item with id:{id} not found",
+                   id);
+    }
+
+    public async Task<IEnumerable<MenuItem>> GetAllInAreaByBeverageTypeAsync(
+        Location location,
+        double radiusInMeters,
+        string beverageTypeName
+    )
+    {
+        var beverageType = await GetBeverageTypeByNameAsync(beverageTypeName);
+        
+        return await menuItemRepository.GetAllInAreaByBeverageTypeAsync(
+            location, radiusInMeters, beverageType);
     }
 
     public async Task<BeverageType> GetBeverageTypeByNameAsync(string name)
     {
         return await menuItemRepository
-                .GetBeverageTypeByNameAsync(name)
-            ?? throw new BeverageTypeNotFoundException(
-                $"Beverage type with name {name} not found",
-                name);
+                   .GetBeverageTypeByNameAsync(name)
+               ?? throw new BeverageTypeNotFoundException(
+                   $"Beverage type with name {name} not found",
+                   name);
     }
 
     public async Task AddAsync(MenuItem menuItem)

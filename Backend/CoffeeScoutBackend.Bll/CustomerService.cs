@@ -53,17 +53,15 @@ public class CustomerService(
         await customerRepository.AddFavoredMenuItemAsync(customer, menuItem);
     }
 
-    public async Task<IEnumerable<BeverageType>> GetFavoredBeverageTypesAsync(string userId)
+    public async Task<IReadOnlyCollection<BeverageType>> GetFavoredBeverageTypesAsync(string userId)
     {
-        var customer = await customerRepository.GetByIdAsync(userId);
-        if (customer is null)
-            throw new CustomerNotFoundException($"Customer with id:{userId} not found", userId);
+        var customer = await GetByUserIdAsync(userId);
 
         var favoredBeverageTypes =
             customer.FavoriteMenuItems
                 .Select(mi => mi.BeverageType)
                 .Distinct();
 
-        return favoredBeverageTypes;
+        return favoredBeverageTypes.ToList()!;
     }
 }

@@ -17,6 +17,7 @@ public class AppDbContext(
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasPostgresExtension("postgis");
         base.OnModelCreating(modelBuilder);
         
         modelBuilder
