@@ -1,6 +1,6 @@
 namespace CoffeeScoutBackend.Domain.Models;
 
-public record struct Location
+public record Location
 {
     public double Latitude { get; init; }
     public double Longitude { get; init; }

@@ -12,7 +12,7 @@
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
   database:
-    image: postgis/postgis
+    image: postgis/postgis:16-3.4
     environment:
       POSTGRES_USER: ${DATABASESETTINGS__USERID}
       POSTGRES_PASSWORD: ${DATABASESETTINGS__PASSWORD}

@@ -5,7 +5,6 @@ using CoffeeScoutBackend.Domain.Models;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using NetTopologySuite.Geometries;
 using Location = CoffeeScoutBackend.Domain.Models.Location;
 
 namespace CoffeeScoutBackend.Dal;
@@ -25,29 +24,33 @@ public static class DalServiceExtensions
                 .UseSnakeCaseNamingConvention();
         });
 
-        ConfigureMapping();
-
         services
+            .AddSingleton<ILocationProvider, GpsLocationProvider>()
             .AddScoped<ICustomerRepository, CustomerRepository>()
             .AddScoped<IMenuItemRepository, MenuItemRepository>()
             .AddScoped<ICafeRepository, CafeRepository>();
+        
+        var locationProvider = services.BuildServiceProvider().GetRequiredService<ILocationProvider>();
+        ConfigureMapping(locationProvider);
+        
         return services;
     }
 
-    private static void ConfigureMapping()
+    private static void ConfigureMapping(ILocationProvider locationProvider)
     {
         TypeAdapterConfig<Cafe, CafeEntity>.NewConfig()
+            .PreserveReference(true)
             .MapWith(dest => new CafeEntity
             {
                 Id = dest.Id,
                 Name = dest.Name,
-                Location = GeometryFactory.Default.CreatePoint(
-                    new Coordinate(
-                        dest.Location.Longitude,
-                        dest.Location.Latitude)
-                ),
+                Location = locationProvider.CreatePoint(
+                    dest.Location.Latitude, dest.Location.Longitude),
+                Admins = dest.Admins.Adapt<ICollection<CafeAdminEntity>>(),
+                MenuItems = dest.MenuItems.Adapt<ICollection<MenuItemEntity>>()
             });
         TypeAdapterConfig<CafeEntity, Cafe>.NewConfig()
+            .PreserveReference(true)
             .Map(dest => dest.Location,
                 src => new Location
                 {
@@ -56,6 +59,7 @@ public static class DalServiceExtensions
                 }
             );
         TypeAdapterConfig<MenuItem, MenuItemEntity>.NewConfig()
+            .PreserveReference(true)
             .Map(dest => dest.BeverageTypeId,
                 src => src.BeverageType.Id);
     }
