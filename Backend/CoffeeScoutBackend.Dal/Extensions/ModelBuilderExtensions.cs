@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using CoffeeScoutBackend.Dal.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -5,6 +6,25 @@ namespace CoffeeScoutBackend.Dal.Extensions;
 
 public static class ModelBuilderExtensions
 {
+public static ModelBuilder ConfigureTablesNaming(this ModelBuilder modelBuilder)
+    {
+        foreach (var entity in modelBuilder.Model.GetEntityTypes())
+        {
+            entity.SetTableName(ToSnakeCase(entity.GetTableName()));
+        }
+
+        return modelBuilder;
+    }
+
+    private static string? ToSnakeCase(string? tableName)
+    {
+        if (tableName == null)
+            return null;
+
+        var startUnderscores = Regex.Match(tableName, @"^_+");
+        return startUnderscores + Regex.Replace(tableName, @"([a-z0-9])([A-Z])", "$1_$2").ToLower();
+    }
+
     public static ModelBuilder ConfigureCustomerEntity(this ModelBuilder modelBuilder)
     {
         var entity = modelBuilder.Entity<CustomerEntity>();
@@ -20,7 +40,7 @@ public static class ModelBuilderExtensions
         entity
             .HasMany(c => c.FavoriteMenuItems)
             .WithMany(m => m.CustomersFavoredBy)
-            .UsingEntity(j => j.ToTable("CustomerFavoriteItems"));
+            .UsingEntity(j => j.ToTable("customer_favorite_items"));
 
         return modelBuilder;
     }

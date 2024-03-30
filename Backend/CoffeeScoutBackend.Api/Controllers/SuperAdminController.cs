@@ -11,7 +11,8 @@ namespace CoffeeScoutBackend.Api.Controllers;
 [Route("api/v1/[controller]")]
 [Authorize(Roles = nameof(Roles.SuperAdmin))]
 public class SuperAdminController(
-    ISuperAdminService superAdminService
+    ISuperAdminService superAdminService,
+    IMenuItemService menuItemService
 ) : ControllerBase
 {
     [HttpPost("cafe-admins")]
@@ -19,6 +20,7 @@ public class SuperAdminController(
     {
         await superAdminService.AddCafeAdminAsync(
             request.Adapt<CafeAdminRegistrationData>());
+        
         return Ok();
     }
     
@@ -29,7 +31,8 @@ public class SuperAdminController(
         {
             Name = name
         };
-        await superAdminService.AddBeverageTypeAsync(newBeverageType);
+        await menuItemService.AddBeverageTypeAsync(newBeverageType);
+        
         return Ok();
     }
 }

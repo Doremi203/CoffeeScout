@@ -7,16 +7,10 @@ using CoffeeScoutBackend.Domain.Models;
 namespace CoffeeScoutBackend.Bll;
 
 public class SuperAdminService(
-    IMenuItemRepository menuItemRepository,
     IRoleRegistrationService roleRegistrationService,
     ICafeService cafeService
 ) : ISuperAdminService
 {
-    public async Task AddBeverageTypeAsync(BeverageType beverageType)
-    {
-        await menuItemRepository.AddBeverageTypeAsync(beverageType);
-    }
-
     public async Task AddCafeAdminAsync(
         CafeAdminRegistrationData registrationData
     )

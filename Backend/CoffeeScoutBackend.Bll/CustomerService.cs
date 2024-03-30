@@ -9,7 +9,7 @@ namespace CoffeeScoutBackend.Bll;
 
 public class CustomerService(
     ICustomerRepository customerRepository,
-    IMenuItemRepository menuItemRepository,
+    IMenuItemService menuItemService,
     IRoleRegistrationService roleRegistrationService
 ) : ICustomerService
 {
@@ -43,10 +43,8 @@ public class CustomerService(
                        ?? throw new CustomerNotFoundException(
                            $"Customer with id:{currentUserId} not found",
                            currentUserId);
-        var menuItem = await menuItemRepository.GetByIdAsync(menuItemId)
-                       ?? throw new MenuItemNotFoundException(
-                           $"Menu item with id:{menuItemId} not found",
-                           menuItemId);
+        var menuItem = await menuItemService.GetByIdAsync(menuItemId);
+        
         if (customer.FavoriteMenuItems.Contains(menuItem))
             throw new MenuItemAlreadyFavoredException(
                 $"Menu item with id:{menuItemId} is already favored by customer with id:{currentUserId}",
