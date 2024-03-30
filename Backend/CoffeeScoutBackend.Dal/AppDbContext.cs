@@ -18,8 +18,9 @@ public class AppDbContext(
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
+        
         modelBuilder
+            .ConfigureTablesNaming()
             .ConfigureCustomerEntity()
             .ConfigureMenuItemEntity()
             .ConfigureBeverageTypeEntity()

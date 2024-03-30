@@ -5,9 +5,6 @@
     restart:
       no
     image: doreml/coffee-scout-backend.api:dev
-    build:
-      context: .
-      dockerfile: CoffeeScoutBackend.Api/Dockerfile
     env_file:
       - .env
     ports:

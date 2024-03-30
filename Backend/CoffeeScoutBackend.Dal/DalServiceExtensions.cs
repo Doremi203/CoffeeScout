@@ -18,10 +18,11 @@ public static class DalServiceExtensions
     {
         services.AddDbContext<AppDbContext>(options =>
         {
-            options.UseNpgsql(
-                databaseSettings.ConnectionString,
-                o => o.UseNetTopologySuite()
-            );
+            options
+                .UseNpgsql(
+                    databaseSettings.ConnectionString,
+                    o => o.UseNetTopologySuite())
+                .UseSnakeCaseNamingConvention();
         });
 
         ConfigureMapping();
