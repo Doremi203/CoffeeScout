@@ -26,7 +26,7 @@ public class SuperAdminController(
     }
 
     [HttpPost("beverage-types")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> AddBeverageTypeAsync(string name)
     {
         var newBeverageType = new BeverageType

@@ -8,6 +8,7 @@ namespace CoffeeScoutBackend.Bll.Services;
 public class OrderService(
     ICustomerService customerService,
     IMenuItemService menuItemService,
+    ICafeService cafeService,
     IOrderRepository orderRepository,
     IDateTimeProvider dateTimeProvider
 ) : IOrderService
@@ -20,14 +21,34 @@ public class OrderService(
         {
             Customer = customer,
             OrderDate = dateTimeProvider.UtcNow,
-            OrderItems = await GetOrderItems(orderData.MenuItems),
+            OrderItems = await FormOrderItems(orderData.MenuItems),
             Status = OrderStatus.Pending
         };
-        
+
         return await orderRepository.AddAsync(order);
     }
 
-    private async Task<List<OrderItem>> GetOrderItems(IReadOnlyCollection<CreateOrderData.MenuItemData> orderDataMenuItems)
+    public async Task<IReadOnlyCollection<Order>> GetCafeOrdersAsync(
+        string currentCafeAdminId,
+        OrderStatus status,
+        DateTime from
+    )
+    {
+        var cafe = await cafeService.GetByAdminIdAsync(currentCafeAdminId);
+        var orders = await orderRepository.GetOrdersAsync(status, from);
+
+        foreach (var order in orders)
+        {
+            order.OrderItems = order.OrderItems
+                .Where(oi => oi.MenuItem.Cafe.Id == cafe.Id)
+                .ToList();
+        }
+        
+        return orders;
+    }
+
+    private async Task<List<OrderItem>> FormOrderItems(
+        IReadOnlyCollection<CreateOrderData.MenuItemData> orderDataMenuItems)
     {
         var orderItems = new List<OrderItem>();
 

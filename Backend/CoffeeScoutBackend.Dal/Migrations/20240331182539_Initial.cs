@@ -192,15 +192,15 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 name: "customers",
                 columns: table => new
                 {
-                    user_id = table.Column<string>(type: "text", nullable: false),
+                    id = table.Column<string>(type: "text", nullable: false),
                     first_name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_customers", x => x.user_id);
+                    table.PrimaryKey("pk_customers", x => x.id);
                     table.ForeignKey(
-                        name: "fk_customers_users_user_id",
-                        column: x => x.user_id,
+                        name: "fk_customers_users_id",
+                        column: x => x.id,
                         principalTable: "asp_net_users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -265,8 +265,9 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     customer_id = table.Column<string>(type: "text", nullable: false),
+                    status_id = table.Column<long>(type: "bigint", nullable: false),
                     order_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    status_entity = table.Column<int>(type: "integer", nullable: false)
+                    status = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -275,7 +276,7 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         name: "fk_orders_customers_customer_id",
                         column: x => x.customer_id,
                         principalTable: "customers",
-                        principalColumn: "user_id",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -283,17 +284,17 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 name: "customer_favorite_items",
                 columns: table => new
                 {
-                    customers_favored_by_user_id = table.Column<string>(type: "text", nullable: false),
+                    customers_favored_by_id = table.Column<string>(type: "text", nullable: false),
                     favorite_menu_items_id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_customer_favorite_items", x => new { x.customers_favored_by_user_id, x.favorite_menu_items_id });
+                    table.PrimaryKey("pk_customer_favorite_items", x => new { x.customers_favored_by_id, x.favorite_menu_items_id });
                     table.ForeignKey(
-                        name: "fk_customer_favorite_items_customers_customers_favored_by_user",
-                        column: x => x.customers_favored_by_user_id,
+                        name: "fk_customer_favorite_items_customers_customers_favored_by_id",
+                        column: x => x.customers_favored_by_id,
                         principalTable: "customers",
-                        principalColumn: "user_id",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "fk_customer_favorite_items_menu_items_favorite_menu_items_id",

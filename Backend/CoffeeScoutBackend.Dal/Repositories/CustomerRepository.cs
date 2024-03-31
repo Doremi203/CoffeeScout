@@ -16,7 +16,7 @@ public class CustomerRepository(
             .Include(c => c.User)
             .Include(c => c.FavoriteMenuItems)
             .ThenInclude(mi => mi.BeverageType)
-            .FirstOrDefaultAsync(c => c.UserId == userId);
+            .FirstOrDefaultAsync(c => c.Id == userId);
         return customer?.Adapt<Customer>();
     }
 
@@ -30,7 +30,7 @@ public class CustomerRepository(
     {
         var customerEntity = await dbContext.Customers
             .Include(c => c.FavoriteMenuItems)
-            .FirstOrDefaultAsync(c => c.UserId == customer.UserId);
+            .FirstOrDefaultAsync(c => c.Id == customer.Id);
         var menuItemEntity = await dbContext.MenuItems.FindAsync(menuItem.Id);
         if (customerEntity is null || menuItemEntity is null)
             return;

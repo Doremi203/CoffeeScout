@@ -173,16 +173,16 @@ namespace CoffeeScoutBackend.Dal.Migrations
 
             modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.CustomerEntity", b =>
                 {
-                    b.Property<string>("UserId")
+                    b.Property<string>("Id")
                         .HasColumnType("text")
-                        .HasColumnName("user_id");
+                        .HasColumnName("id");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("first_name");
 
-                    b.HasKey("UserId")
+                    b.HasKey("Id")
                         .HasName("pk_customers");
 
                     b.ToTable("customers", (string)null);
@@ -244,9 +244,13 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("order_date");
 
-                    b.Property<int>("StatusEntity")
+                    b.Property<int>("Status")
                         .HasColumnType("integer")
-                        .HasColumnName("status_entity");
+                        .HasColumnName("status");
+
+                    b.Property<long>("StatusId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("status_id");
 
                     b.HasKey("Id")
                         .HasName("pk_orders");
@@ -290,15 +294,15 @@ namespace CoffeeScoutBackend.Dal.Migrations
 
             modelBuilder.Entity("CustomerEntityMenuItemEntity", b =>
                 {
-                    b.Property<string>("CustomersFavoredByUserId")
+                    b.Property<string>("CustomersFavoredById")
                         .HasColumnType("text")
-                        .HasColumnName("customers_favored_by_user_id");
+                        .HasColumnName("customers_favored_by_id");
 
                     b.Property<long>("FavoriteMenuItemsId")
                         .HasColumnType("bigint")
                         .HasColumnName("favorite_menu_items_id");
 
-                    b.HasKey("CustomersFavoredByUserId", "FavoriteMenuItemsId")
+                    b.HasKey("CustomersFavoredById", "FavoriteMenuItemsId")
                         .HasName("pk_customer_favorite_items");
 
                     b.HasIndex("FavoriteMenuItemsId")
@@ -496,10 +500,10 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 {
                     b.HasOne("CoffeeScoutBackend.Dal.Entities.AppUser", "User")
                         .WithOne("Customer")
-                        .HasForeignKey("CoffeeScoutBackend.Dal.Entities.CustomerEntity", "UserId")
+                        .HasForeignKey("CoffeeScoutBackend.Dal.Entities.CustomerEntity", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_customers_users_user_id");
+                        .HasConstraintName("fk_customers_users_id");
 
                     b.Navigation("User");
                 });
@@ -562,10 +566,10 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 {
                     b.HasOne("CoffeeScoutBackend.Dal.Entities.CustomerEntity", null)
                         .WithMany()
-                        .HasForeignKey("CustomersFavoredByUserId")
+                        .HasForeignKey("CustomersFavoredById")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_customer_favorite_items_customers_customers_favored_by_user");
+                        .HasConstraintName("fk_customer_favorite_items_customers_customers_favored_by_id");
 
                     b.HasOne("CoffeeScoutBackend.Dal.Entities.MenuItemEntity", null)
                         .WithMany()

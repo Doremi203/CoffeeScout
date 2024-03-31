@@ -85,12 +85,22 @@ public class TestDbSeeder(
         var locationProvider = scope.ServiceProvider.GetRequiredService<ILocationProvider>();
         if (!dbContext.Cafes.Any())
         {
-            var cafe = new CafeEntity
+            var cafes = new List<CafeEntity>
             {
-                Name = "Cafe 1",
-                Location = locationProvider.CreatePoint(55.754172, 37.635143)
+                new()
+                {
+                    Name = "Cafe 1",
+                    Location = locationProvider.CreatePoint(
+                        55.754172, 37.635143)
+                },
+                new()
+                {
+                    Name = "Cafe 2",
+                    Location = locationProvider.CreatePoint(
+                        55.760742, 37.626232)
+                }
             };
-            await dbContext.Cafes.AddAsync(cafe);
+            await dbContext.Cafes.AddRangeAsync(cafes);
             await dbContext.SaveChangesAsync();
         }
     }
@@ -99,11 +109,13 @@ public class TestDbSeeder(
     {
         using var scope = serviceProvider.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        var cafe = dbContext.Cafes.First();
+        var cafes = await dbContext.Cafes.ToListAsync();
 
         if (!dbContext.MenuItems.Any())
         {
             foreach (var beverageType in dbContext.BeverageTypes)
+            {
+                var cafe = cafes[Random.Shared.Next(0, cafes.Count)];
                 await dbContext.MenuItems.AddAsync(new MenuItemEntity
                 {
                     Name = $"{beverageType.Name} 0.2l",
@@ -113,6 +125,8 @@ public class TestDbSeeder(
                     Cafe = cafe,
                     CafeId = cafe.Id,
                 });
+            }
+
             await dbContext.SaveChangesAsync();
         }
     }
