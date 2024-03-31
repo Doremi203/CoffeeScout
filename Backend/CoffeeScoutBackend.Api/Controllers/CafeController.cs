@@ -19,6 +19,7 @@ public class CafeController(
         ?? throw new InvalidOperationException("Cafe admin ID not found");
 
     [HttpPost("menu-items")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> AddMenuItemAsync(AddMenuItemRequest request)
     {
         var newMenuItem = new MenuItem
@@ -31,6 +32,6 @@ public class CafeController(
             }
         };
         await cafeService.AddMenuItemAsync(CurrentCafeAdminId, newMenuItem);
-        return Ok();
+        return Created();
     }
 }

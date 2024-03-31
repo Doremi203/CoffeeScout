@@ -14,6 +14,8 @@ public class AccountController(
 ) : ControllerBase
 {
     [HttpPost("customRegister")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Register(CustomerRegisterRequest request)
     {
         try

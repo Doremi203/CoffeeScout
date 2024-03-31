@@ -16,15 +16,17 @@ public class SuperAdminController(
 ) : ControllerBase
 {
     [HttpPost("cafe-admins")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> AddCafeAdminAsync(AddCafeAdminRequest request)
     {
         await superAdminService.AddCafeAdminAsync(
             request.Adapt<CafeAdminRegistrationData>());
 
-        return Ok();
+        return Created();
     }
 
     [HttpPost("beverage-types")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> AddBeverageTypeAsync(string name)
     {
         var newBeverageType = new BeverageType
@@ -33,6 +35,6 @@ public class SuperAdminController(
         };
         await menuItemService.AddBeverageTypeAsync(newBeverageType);
 
-        return Ok();
+        return Created();
     }
 }

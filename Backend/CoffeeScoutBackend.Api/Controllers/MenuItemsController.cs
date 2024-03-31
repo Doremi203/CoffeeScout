@@ -15,6 +15,7 @@ public class MenuItemsController(
 ) : ControllerBase
 {
     [HttpGet]
+    [ProducesResponseType<List<MenuItemResponse>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetMenuItemsInAsync(
         [FromQuery] double latitude,
         [FromQuery] double longitude,

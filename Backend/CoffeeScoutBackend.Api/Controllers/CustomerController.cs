@@ -21,13 +21,15 @@ public class CustomerController(
         ?? throw new InvalidOperationException("User ID not found");
 
     [HttpPost("favored-menu-items")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> AddFavoredMenuItemAsync(long menuItemId)
     {
         await customerService.AddFavoredMenuItemAsync(CurrentUserId, menuItemId);
-        return Ok();
+        return Created($"api/v1/customers/favored-menu-items/{menuItemId}", null);
     }
 
     [HttpGet("favored-beverage-types")]
+    [ProducesResponseType<IReadOnlyCollection<BeverageType>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetFavoredBeverageTypesAsync()
     {
         var favoredBeverageTypes =
@@ -36,6 +38,7 @@ public class CustomerController(
     }
 
     [HttpPost("orders")]
+    [ProducesResponseType<long>(StatusCodes.Status201Created)]
     public async Task<IActionResult> PlaceOrderAsync(PlaceOrderRequest request)
     {
         var orderData = new CreateOrderData
@@ -45,6 +48,6 @@ public class CustomerController(
                 .Adapt<IReadOnlyCollection<CreateOrderData.MenuItemData>>()
         };
         var id = await orderService.CreateOrderAsync(orderData);
-        return Ok(id);
+        return Created($"api/v1/orders/{id}", id);
     }
 }
