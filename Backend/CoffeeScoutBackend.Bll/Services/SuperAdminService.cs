@@ -1,10 +1,10 @@
 using System.Transactions;
 using CoffeeScoutBackend.Bll.Interfaces;
 using CoffeeScoutBackend.Dal.Entities;
-using CoffeeScoutBackend.Domain.Interfaces;
+using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
 
-namespace CoffeeScoutBackend.Bll;
+namespace CoffeeScoutBackend.Bll.Services;
 
 public class SuperAdminService(
     IRoleRegistrationService roleRegistrationService,
@@ -26,7 +26,7 @@ public class SuperAdminService(
 
         await roleRegistrationService.RegisterUserAsync(
             admin, registrationData.Password, Roles.CafeAdmin);
-        
+
         await cafeService.AssignNewCafeAdminAsync(admin.Id, registrationData.CafeId);
 
         transaction.Complete();

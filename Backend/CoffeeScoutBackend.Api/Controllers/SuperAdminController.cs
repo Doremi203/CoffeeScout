@@ -1,5 +1,5 @@
 using CoffeeScoutBackend.Api.Requests;
-using CoffeeScoutBackend.Domain.Interfaces;
+using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
@@ -20,10 +20,10 @@ public class SuperAdminController(
     {
         await superAdminService.AddCafeAdminAsync(
             request.Adapt<CafeAdminRegistrationData>());
-        
+
         return Ok();
     }
-    
+
     [HttpPost("beverage-types")]
     public async Task<IActionResult> AddBeverageTypeAsync(string name)
     {
@@ -32,7 +32,7 @@ public class SuperAdminController(
             Name = name
         };
         await menuItemService.AddBeverageTypeAsync(newBeverageType);
-        
+
         return Ok();
     }
 }

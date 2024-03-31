@@ -1,5 +1,6 @@
 using System.Security.Claims;
-using CoffeeScoutBackend.Domain.Interfaces;
+using CoffeeScoutBackend.Api.Requests;
+using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,8 @@ namespace CoffeeScoutBackend.Api.Controllers;
 [Route("api/v1/[controller]")]
 [Authorize(Roles = nameof(Roles.Customer))]
 public class CustomerController(
-    ICustomerService customerService
+    ICustomerService customerService,
+    IOrderService orderService
 ) : ControllerBase
 {
     private string CurrentUserId =>
@@ -30,5 +32,12 @@ public class CustomerController(
         var favoredBeverageTypes =
             await customerService.GetFavoredBeverageTypesAsync(CurrentUserId);
         return Ok(favoredBeverageTypes);
+    }
+
+    [HttpPost("orders")]
+    public async Task<IActionResult> PlaceOrderAsync(PlaceOrderRequest request)
+    {
+        //await orderService.CreateOrderAsync();
+        return Ok();
     }
 }

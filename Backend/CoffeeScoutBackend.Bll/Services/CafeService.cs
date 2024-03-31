@@ -1,8 +1,9 @@
 using CoffeeScoutBackend.Domain.Exceptions;
-using CoffeeScoutBackend.Domain.Interfaces;
+using CoffeeScoutBackend.Domain.Interfaces.Repositories;
+using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
 
-namespace CoffeeScoutBackend.Bll;
+namespace CoffeeScoutBackend.Bll.Services;
 
 public class CafeService(
     IMenuItemService menuItemService,
@@ -17,11 +18,18 @@ public class CafeService(
                    id);
     }
 
+    public async Task<Cafe> GetByAdminIdAsync(string adminId)
+    {
+        return await cafeRepository.GetByAdminIdAsync(adminId)
+               ?? throw new CafeNotFoundException(
+                   $"Cafe for admin with id: {adminId} not found");
+    }
+
     public async Task AddMenuItemAsync(string adminId, MenuItem menuItem)
     {
         var beverageName = menuItem.BeverageType.Name;
         var beverageType = await menuItemService.GetBeverageTypeByNameAsync(beverageName);
-        var cafe = await cafeRepository.GetByAdminIdAsync(adminId);
+        var cafe = await GetByAdminIdAsync(adminId);
 
         var newMenuItem = new MenuItem
         {
@@ -37,10 +45,10 @@ public class CafeService(
     public async Task AssignNewCafeAdminAsync(string adminId, long cafeId)
     {
         var cafe = await GetByIdAsync(cafeId);
-            await cafeRepository.CreateCafeAdminAsync(new CafeAdmin
-            {
-                UserId = adminId,
-                Cafe = cafe
-            });
+        await cafeRepository.CreateCafeAdminAsync(new CafeAdmin
+        {
+            UserId = adminId,
+            Cafe = cafe
+        });
     }
 }

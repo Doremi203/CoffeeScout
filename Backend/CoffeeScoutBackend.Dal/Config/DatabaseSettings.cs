@@ -1,4 +1,4 @@
-namespace CoffeeScoutBackend.Dal;
+namespace CoffeeScoutBackend.Dal.Config;
 
 public record DatabaseSettings
 {

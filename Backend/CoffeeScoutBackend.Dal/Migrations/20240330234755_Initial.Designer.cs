@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CoffeeScoutBackend.Dal.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240330191738_Initial")]
+    [Migration("20240330234755_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -208,6 +208,12 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("cafe_id");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(21)
+                        .HasColumnType("character varying(21)")
+                        .HasColumnName("discriminator");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text")
@@ -227,6 +233,41 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         .HasDatabaseName("ix_menu_items_cafe_id");
 
                     b.ToTable("menu_items", (string)null);
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("MenuItemEntity");
+
+                    b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.OrderEntity", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("customer_id");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("order_date");
+
+                    b.Property<int>("StatusEntity")
+                        .HasColumnType("integer")
+                        .HasColumnName("status_entity");
+
+                    b.HasKey("Id")
+                        .HasName("pk_orders");
+
+                    b.HasIndex("CustomerId")
+                        .HasDatabaseName("ix_orders_customer_id");
+
+                    b.ToTable("orders", (string)null);
                 });
 
             modelBuilder.Entity("CustomerEntityMenuItemEntity", b =>
@@ -412,6 +453,37 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     b.ToTable("asp_net_user_tokens", (string)null);
                 });
 
+            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.OrderItemEntity", b =>
+                {
+                    b.HasBaseType("CoffeeScoutBackend.Dal.Entities.MenuItemEntity");
+
+                    b.Property<long>("MenuItemId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("menu_item_id");
+
+                    b.Property<long>("OrderId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("order_id");
+
+                    b.Property<decimal>("PricePerItem")
+                        .HasColumnType("numeric")
+                        .HasColumnName("price_per_item");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer")
+                        .HasColumnName("quantity");
+
+                    b.HasIndex("MenuItemId")
+                        .HasDatabaseName("ix_menu_items_menu_item_id");
+
+                    b.HasIndex("OrderId")
+                        .HasDatabaseName("ix_menu_items_order_id");
+
+                    b.ToTable("menu_items", (string)null);
+
+                    b.HasDiscriminator().HasValue("OrderItemEntity");
+                });
+
             modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.CafeAdminEntity", b =>
                 {
                     b.HasOne("CoffeeScoutBackend.Dal.Entities.CafeEntity", "Cafe")
@@ -464,6 +536,18 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     b.Navigation("BeverageType");
 
                     b.Navigation("Cafe");
+                });
+
+            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.OrderEntity", b =>
+                {
+                    b.HasOne("CoffeeScoutBackend.Dal.Entities.CustomerEntity", "Customer")
+                        .WithMany("Orders")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_orders_customers_customer_id");
+
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("CustomerEntityMenuItemEntity", b =>
@@ -540,6 +624,27 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         .HasConstraintName("fk_asp_net_user_tokens_asp_net_users_user_id");
                 });
 
+            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.OrderItemEntity", b =>
+                {
+                    b.HasOne("CoffeeScoutBackend.Dal.Entities.MenuItemEntity", "MenuItem")
+                        .WithMany()
+                        .HasForeignKey("MenuItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_menu_items_menu_items_menu_item_id");
+
+                    b.HasOne("CoffeeScoutBackend.Dal.Entities.OrderEntity", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_menu_items_orders_order_id");
+
+                    b.Navigation("MenuItem");
+
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.AppUser", b =>
                 {
                     b.Navigation("CafeAdmin");
@@ -557,6 +662,16 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     b.Navigation("Admins");
 
                     b.Navigation("MenuItems");
+                });
+
+            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.CustomerEntity", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.OrderEntity", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,7 +1,6 @@
 namespace CoffeeScoutBackend.Api.Requests;
 
-public record AddCafeAdminRequest
-(
+public record AddCafeAdminRequest(
     string Email,
     string Password,
     long CafeId

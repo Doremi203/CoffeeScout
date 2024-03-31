@@ -1,5 +1,5 @@
 using CoffeeScoutBackend.Dal.Entities;
-using CoffeeScoutBackend.Domain.Interfaces;
+using CoffeeScoutBackend.Domain.Interfaces.Repositories;
 using CoffeeScoutBackend.Domain.Models;
 using Mapster;
 using Microsoft.EntityFrameworkCore;

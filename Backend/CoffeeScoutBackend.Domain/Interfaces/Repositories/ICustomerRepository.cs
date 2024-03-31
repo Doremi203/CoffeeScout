@@ -1,6 +1,6 @@
 using CoffeeScoutBackend.Domain.Models;
 
-namespace CoffeeScoutBackend.Domain.Interfaces;
+namespace CoffeeScoutBackend.Domain.Interfaces.Repositories;
 
 public interface ICustomerRepository
 {

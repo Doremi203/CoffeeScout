@@ -1,8 +1,9 @@
 using CoffeeScoutBackend.Domain.Exceptions;
-using CoffeeScoutBackend.Domain.Interfaces;
+using CoffeeScoutBackend.Domain.Interfaces.Repositories;
+using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
 
-namespace CoffeeScoutBackend.Bll;
+namespace CoffeeScoutBackend.Bll.Services;
 
 public class MenuItemService(
     IMenuItemRepository menuItemRepository
@@ -19,11 +20,11 @@ public class MenuItemService(
     public async Task<IEnumerable<MenuItem>> GetAllInAreaByBeverageTypeAsync(
         Location location,
         double radiusInMeters,
-        string beverageTypeName
+        long beverageTypeId
     )
     {
-        var beverageType = await GetBeverageTypeByNameAsync(beverageTypeName);
-        
+        var beverageType = await GetBeverageTypeByIdAsync(beverageTypeId);
+
         return await menuItemRepository.GetAllInAreaByBeverageTypeAsync(
             location, radiusInMeters, beverageType);
     }
@@ -35,6 +36,15 @@ public class MenuItemService(
                ?? throw new BeverageTypeNotFoundException(
                    $"Beverage type with name {name} not found",
                    name);
+    }
+
+    public async Task<BeverageType> GetBeverageTypeByIdAsync(long id)
+    {
+        return await menuItemRepository
+                   .GetBeverageTypeByIdAsync(id)
+               ?? throw new BeverageTypeNotFoundException(
+                   $"Beverage type with id {id} not found",
+                   id);
     }
 
     public async Task AddAsync(MenuItem menuItem)

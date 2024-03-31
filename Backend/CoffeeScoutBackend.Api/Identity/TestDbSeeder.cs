@@ -2,11 +2,11 @@ using System.Transactions;
 using CoffeeScoutBackend.Api.Config;
 using CoffeeScoutBackend.Dal;
 using CoffeeScoutBackend.Dal.Entities;
+using CoffeeScoutBackend.Dal.Infrastructure;
 using CoffeeScoutBackend.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using NetTopologySuite.Geometries;
 
 namespace CoffeeScoutBackend.Api.Identity;
 
@@ -71,13 +71,13 @@ public class TestDbSeeder(
             var beverageTypes = new List<BeverageTypeEntity>
             {
                 new() { Name = "Cappuccino" },
-                new() { Name = "Espresso" },
+                new() { Name = "Espresso" }
             };
             await dbContext.BeverageTypes.AddRangeAsync(beverageTypes);
             await dbContext.SaveChangesAsync();
         }
     }
-    
+
     private async Task SeedCafeAsync()
     {
         using var scope = serviceProvider.CreateScope();
@@ -88,23 +88,22 @@ public class TestDbSeeder(
             var cafe = new CafeEntity
             {
                 Name = "Cafe 1",
-                Location = locationProvider.CreatePoint(55.754172, 37.635143),
+                Location = locationProvider.CreatePoint(55.754172, 37.635143)
             };
             await dbContext.Cafes.AddAsync(cafe);
             await dbContext.SaveChangesAsync();
         }
     }
-    
+
     private async Task SeedMenuItemsAsync()
     {
         using var scope = serviceProvider.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         var cafe = dbContext.Cafes.First();
-        
+
         if (!dbContext.MenuItems.Any())
         {
             foreach (var beverageType in dbContext.BeverageTypes)
-            {
                 await dbContext.MenuItems.AddAsync(new MenuItemEntity
                 {
                     Name = $"{beverageType.Name} 0.2l",
@@ -114,7 +113,6 @@ public class TestDbSeeder(
                     Cafe = cafe,
                     CafeId = cafe.Id
                 });
-            }
             await dbContext.SaveChangesAsync();
         }
     }
