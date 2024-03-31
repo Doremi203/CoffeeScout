@@ -8,4 +8,5 @@ public interface ICafeService
     Task<Cafe> GetByAdminIdAsync(string adminId);
     Task AddMenuItemAsync(string adminId, MenuItem menuItem);
     Task AssignNewCafeAdminAsync(string adminId, long cafeId);
+    Task<IReadOnlyCollection<Cafe>> GetCafesInAreaAsync(Location location, double radius);
 }

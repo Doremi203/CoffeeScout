@@ -8,13 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace CoffeeScoutBackend.Api.Controllers;
 
 [ApiController]
-[Authorize(Roles = nameof(Roles.Customer))]
-[Route("api/v1/[controller]")]
+[Route("api/v1/menu-items")]
 public class MenuItemsController(
     IMenuItemService menuItemService
 ) : ControllerBase
 {
     [HttpGet]
+    [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType<List<MenuItemResponse>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetMenuItemsInAsync(
         [FromQuery] double latitude,
