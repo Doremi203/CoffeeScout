@@ -9,11 +9,4 @@ public record MenuItemResponse
     public required decimal Price { get; init; }
     public required BeverageType BeverageType { get; init; }
     public required CafeResponse Cafe { get; init; }
-
-    public class CafeResponse
-    {
-        public required long Id { get; set; }
-        public required string Name { get; set; }
-        public required Location Location { get; set; }
-    }
 }

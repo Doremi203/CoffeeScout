@@ -51,4 +51,9 @@ public class CafeService(
             Cafe = cafe
         });
     }
+
+    public async Task<IReadOnlyCollection<Cafe>> GetCafesInAreaAsync(Location location, double radius)
+    {
+        return await cafeRepository.GetCafesInAreaAsync(location, radius);
+    }
 }

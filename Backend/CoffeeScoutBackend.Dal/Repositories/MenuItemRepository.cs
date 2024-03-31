@@ -1,4 +1,5 @@
 using CoffeeScoutBackend.Dal.Entities;
+using CoffeeScoutBackend.Dal.Infrastructure;
 using CoffeeScoutBackend.Domain.Interfaces.Repositories;
 using CoffeeScoutBackend.Domain.Models;
 using Mapster;
@@ -9,7 +10,8 @@ using Location = CoffeeScoutBackend.Domain.Models.Location;
 namespace CoffeeScoutBackend.Dal.Repositories;
 
 public class MenuItemRepository(
-    AppDbContext dbContext
+    AppDbContext dbContext,
+    ILocationProvider locationProvider
 ) : IMenuItemRepository
 {
     public async Task<MenuItem?> GetByIdAsync(long id)
@@ -40,12 +42,7 @@ public class MenuItemRepository(
         double radiusInMeters,
         BeverageType beverageType)
     {
-        const double degreesToMeters = 111139.0;
-        var degrees = radiusInMeters / degreesToMeters;
-        var locationPoint = GeometryFactory.Default.CreatePoint(
-            new Coordinate(location.Longitude, location.Latitude));
-        var area = locationPoint.Buffer(degrees);
-        area.SRID = 4326;
+        var area = locationProvider.CreateArea(location, radiusInMeters);
 
         var menuItems = await dbContext.MenuItems
             .Include(m => m.BeverageType)
