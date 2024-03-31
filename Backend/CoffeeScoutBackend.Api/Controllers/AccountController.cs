@@ -3,20 +3,22 @@ using CoffeeScoutBackend.Domain.Exceptions;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoffeeScoutBackend.Api.Controllers;
 
 [ApiController]
-[Route("api/v1/account")]
+[Route("api/v1/accounts")]
 public class AccountController(
-    ICustomerService customerService
+    ICustomerService customerService,
+    ISuperAdminService superAdminService
 ) : ControllerBase
 {
-    [HttpPost("customRegister")]
+    [HttpPost("customer/register")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Register(CustomerRegisterRequest request)
+    public async Task<IActionResult> RegisterCustomer(CustomerRegisterRequest request)
     {
         try
         {
@@ -35,5 +37,16 @@ public class AccountController(
 
             return BadRequest(validationProblemDetails);
         }
+    }
+    
+    [HttpPost("cafe-admins/register")]
+    [Authorize(Roles = nameof(Roles.SuperAdmin))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> AddCafeAdminAsync(AddCafeAdminRequest request)
+    {
+        await superAdminService.AddCafeAdminAsync(
+            request.Adapt<CafeAdminRegistrationData>());
+
+        return Ok();
     }
 }

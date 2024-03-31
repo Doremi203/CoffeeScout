@@ -64,7 +64,7 @@ if (app.Environment.IsDevelopment())
 
 //app.UseHttpsRedirection();
 
-app.MapGroup("api/v1/account").MapIdentityApi<AppUser>();
+app.MapGroup("api/v1/accounts").MapIdentityApi<AppUser>();
 
 app.UseAuthorization();
 
