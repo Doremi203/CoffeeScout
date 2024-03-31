@@ -5,7 +5,7 @@ using CoffeeScoutBackend.Domain.Exceptions;
 using CoffeeScoutBackend.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 
-namespace CoffeeScoutBackend.Bll;
+namespace CoffeeScoutBackend.Bll.Services;
 
 public class RoleRegistrationService(
     UserManager<AppUser> userManager
@@ -28,8 +28,9 @@ public class RoleRegistrationService(
 
             AddRegistrationErrors(roleResult, errors);
         }
+
         AddRegistrationErrors(result, errors);
-        
+
         throw new RegistrationException("Registration failed", errors);
     }
 

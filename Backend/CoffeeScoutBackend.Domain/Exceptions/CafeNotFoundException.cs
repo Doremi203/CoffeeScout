@@ -9,7 +9,7 @@ public class CafeNotFoundException : NotFoundException
         Id = id;
     }
 
-    public CafeNotFoundException(string? message, long? id)
+    public CafeNotFoundException(string? message, long? id = null)
         : this(message, id, null)
     {
     }

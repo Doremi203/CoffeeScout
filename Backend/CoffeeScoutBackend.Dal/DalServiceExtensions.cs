@@ -1,10 +1,13 @@
+using CoffeeScoutBackend.Dal.Config;
 using CoffeeScoutBackend.Dal.Entities;
+using CoffeeScoutBackend.Dal.Infrastructure;
 using CoffeeScoutBackend.Dal.Repositories;
-using CoffeeScoutBackend.Domain.Interfaces;
+using CoffeeScoutBackend.Domain.Interfaces.Repositories;
 using CoffeeScoutBackend.Domain.Models;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using NetTopologySuite.Geometries;
 using Location = CoffeeScoutBackend.Domain.Models.Location;
 
 namespace CoffeeScoutBackend.Dal;
@@ -29,38 +32,28 @@ public static class DalServiceExtensions
             .AddScoped<ICustomerRepository, CustomerRepository>()
             .AddScoped<IMenuItemRepository, MenuItemRepository>()
             .AddScoped<ICafeRepository, CafeRepository>();
-        
+
         var locationProvider = services.BuildServiceProvider().GetRequiredService<ILocationProvider>();
         ConfigureMapping(locationProvider);
-        
+
         return services;
     }
 
     private static void ConfigureMapping(ILocationProvider locationProvider)
     {
         TypeAdapterConfig<Cafe, CafeEntity>.NewConfig()
-            .PreserveReference(true)
-            .MapWith(dest => new CafeEntity
-            {
-                Id = dest.Id,
-                Name = dest.Name,
-                Location = locationProvider.CreatePoint(
-                    dest.Location.Latitude, dest.Location.Longitude),
-                Admins = dest.Admins.Adapt<ICollection<CafeAdminEntity>>(),
-                MenuItems = dest.MenuItems.Adapt<ICollection<MenuItemEntity>>()
-            });
+            .PreserveReference(true);
         TypeAdapterConfig<CafeEntity, Cafe>.NewConfig()
-            .PreserveReference(true)
-            .Map(dest => dest.Location,
-                src => new Location
-                {
-                    Latitude = src.Location.Y,
-                    Longitude = src.Location.X
-                }
-            );
+            .PreserveReference(true);
         TypeAdapterConfig<MenuItem, MenuItemEntity>.NewConfig()
             .PreserveReference(true)
             .Map(dest => dest.BeverageTypeId,
                 src => src.BeverageType.Id);
+        TypeAdapterConfig<Point, Location>.NewConfig()
+            .PreserveReference(true)
+            .MapWith(dest => new Location { Latitude = dest.Y, Longitude = dest.X });
+        TypeAdapterConfig<Location, Point>.NewConfig()
+            .PreserveReference(true)
+            .MapWith(dest => locationProvider.CreatePoint(dest.Latitude, dest.Longitude));
     }
 }

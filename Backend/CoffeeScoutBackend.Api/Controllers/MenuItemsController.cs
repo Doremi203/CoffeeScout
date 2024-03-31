@@ -1,6 +1,5 @@
-using CoffeeScoutBackend.Api.Requests;
 using CoffeeScoutBackend.Api.Responses;
-using CoffeeScoutBackend.Domain.Interfaces;
+using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
@@ -20,7 +19,7 @@ public class MenuItemsController(
         [FromQuery] double latitude,
         [FromQuery] double longitude,
         [FromQuery] double radiusInMeters,
-        [FromQuery] string beverageType
+        [FromQuery] long beverageTypeId
     )
     {
         var menuItems = await menuItemService.GetAllInAreaByBeverageTypeAsync(
@@ -30,8 +29,8 @@ public class MenuItemsController(
                 Longitude = longitude
             },
             radiusInMeters,
-            beverageType);
-        
+            beverageTypeId);
+
         return Ok(menuItems.Adapt<IEnumerable<MenuItemResponse>>());
     }
 }

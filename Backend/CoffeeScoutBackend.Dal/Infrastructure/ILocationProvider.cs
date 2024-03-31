@@ -1,6 +1,6 @@
 using NetTopologySuite.Geometries;
 
-namespace CoffeeScoutBackend.Dal;
+namespace CoffeeScoutBackend.Dal.Infrastructure;
 
 public interface ILocationProvider
 {

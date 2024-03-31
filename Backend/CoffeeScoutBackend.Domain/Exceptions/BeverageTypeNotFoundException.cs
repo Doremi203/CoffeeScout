@@ -2,6 +2,9 @@ namespace CoffeeScoutBackend.Domain.Exceptions;
 
 public class BeverageTypeNotFoundException : NotFoundException
 {
+    public string? Name { get; init; }
+    public long? Id { get; init; }
+
     public BeverageTypeNotFoundException()
     {
     }
@@ -11,11 +14,20 @@ public class BeverageTypeNotFoundException : NotFoundException
     {
     }
 
-    public BeverageTypeNotFoundException(string? message, string? name, Exception? innerException)
-        : base(message, innerException)
+    public BeverageTypeNotFoundException(string? message, long? id)
+        : this(message, null, id, null)
     {
-        Name = name;
     }
 
-    public string? Name { get; init; }
+    public BeverageTypeNotFoundException(string? message, string? name, long? id)
+        : this(message, name, id, null)
+    {
+    }
+
+    public BeverageTypeNotFoundException(string? message, string? name, long? id, Exception? innerException)
+        : base(message, innerException)
+    {
+        Id = id;
+        Name = name;
+    }
 }

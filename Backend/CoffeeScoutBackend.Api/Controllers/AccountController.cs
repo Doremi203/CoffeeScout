@@ -1,6 +1,6 @@
 using CoffeeScoutBackend.Api.Requests;
 using CoffeeScoutBackend.Domain.Exceptions;
-using CoffeeScoutBackend.Domain.Interfaces;
+using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;

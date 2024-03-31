@@ -2,10 +2,11 @@ using System.Transactions;
 using CoffeeScoutBackend.Bll.Interfaces;
 using CoffeeScoutBackend.Dal.Entities;
 using CoffeeScoutBackend.Domain.Exceptions;
-using CoffeeScoutBackend.Domain.Interfaces;
+using CoffeeScoutBackend.Domain.Interfaces.Repositories;
+using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
 
-namespace CoffeeScoutBackend.Bll;
+namespace CoffeeScoutBackend.Bll.Services;
 
 public class CustomerService(
     ICustomerRepository customerRepository,
@@ -16,11 +17,11 @@ public class CustomerService(
     public async Task RegisterCustomerAsync(CustomerRegistrationData customerRegistrationData)
     {
         using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-        
+
         var newUser = new AppUser
         {
-            UserName = customerRegistrationData.Email, 
-            Email = customerRegistrationData.Email,
+            UserName = customerRegistrationData.Email,
+            Email = customerRegistrationData.Email
         };
 
         var user = await roleRegistrationService
@@ -44,7 +45,7 @@ public class CustomerService(
                            $"Customer with id:{currentUserId} not found",
                            currentUserId);
         var menuItem = await menuItemService.GetByIdAsync(menuItemId);
-        
+
         if (customer.FavoriteMenuItems.Contains(menuItem))
             throw new MenuItemAlreadyFavoredException(
                 $"Menu item with id:{menuItemId} is already favored by customer with id:{currentUserId}",
