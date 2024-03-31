@@ -1,3 +1,4 @@
+using CoffeeScoutBackend.Bll.Infrastructure;
 using CoffeeScoutBackend.Bll.Interfaces;
 using CoffeeScoutBackend.Bll.Services;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
@@ -16,6 +17,9 @@ public static class BllServicesExtensions
             .AddScoped<IMenuItemService, MenuItemService>()
             .AddScoped<ISuperAdminService, SuperAdminService>()
             .AddScoped<IRoleRegistrationService, RoleRegistrationService>();
+        
+        services
+            .AddScoped<IDateTimeProvider, DateTimeProvider>();
 
         return services;
     }

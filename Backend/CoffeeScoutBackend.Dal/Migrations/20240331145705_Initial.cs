@@ -231,6 +231,34 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "menu_items",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    beverage_type_id = table.Column<int>(type: "integer", nullable: false),
+                    cafe_id = table.Column<long>(type: "bigint", nullable: false),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    price = table.Column<decimal>(type: "numeric", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_menu_items", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_menu_items_beverage_types_beverage_type_id",
+                        column: x => x.beverage_type_id,
+                        principalTable: "beverage_types",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_menu_items_cafes_cafe_id",
+                        column: x => x.cafe_id,
+                        principalTable: "cafes",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "orders",
                 columns: table => new
                 {
@@ -248,51 +276,6 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         column: x => x.customer_id,
                         principalTable: "customers",
                         principalColumn: "user_id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "menu_items",
-                columns: table => new
-                {
-                    id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    beverage_type_id = table.Column<int>(type: "integer", nullable: false),
-                    cafe_id = table.Column<long>(type: "bigint", nullable: false),
-                    name = table.Column<string>(type: "text", nullable: false),
-                    price = table.Column<decimal>(type: "numeric", nullable: false),
-                    discriminator = table.Column<string>(type: "character varying(21)", maxLength: 21, nullable: false),
-                    order_id = table.Column<long>(type: "bigint", nullable: true),
-                    menu_item_id = table.Column<long>(type: "bigint", nullable: true),
-                    quantity = table.Column<int>(type: "integer", nullable: true),
-                    price_per_item = table.Column<decimal>(type: "numeric", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_menu_items", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_menu_items_beverage_types_beverage_type_id",
-                        column: x => x.beverage_type_id,
-                        principalTable: "beverage_types",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_menu_items_cafes_cafe_id",
-                        column: x => x.cafe_id,
-                        principalTable: "cafes",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_menu_items_menu_items_menu_item_id",
-                        column: x => x.menu_item_id,
-                        principalTable: "menu_items",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_menu_items_orders_order_id",
-                        column: x => x.order_id,
-                        principalTable: "orders",
-                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -316,6 +299,33 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         name: "fk_customer_favorite_items_menu_items_favorite_menu_items_id",
                         column: x => x.favorite_menu_items_id,
                         principalTable: "menu_items",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "order_items",
+                columns: table => new
+                {
+                    order_id = table.Column<long>(type: "bigint", nullable: false),
+                    menu_item_id = table.Column<long>(type: "bigint", nullable: false),
+                    quantity = table.Column<int>(type: "integer", nullable: false),
+                    price_per_item = table.Column<decimal>(type: "numeric", nullable: false),
+                    is_completed = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_order_items", x => new { x.order_id, x.menu_item_id });
+                    table.ForeignKey(
+                        name: "fk_order_items_menu_items_menu_item_id",
+                        column: x => x.menu_item_id,
+                        principalTable: "menu_items",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_order_items_orders_order_id",
+                        column: x => x.order_id,
+                        principalTable: "orders",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -384,14 +394,9 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 column: "cafe_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_menu_items_menu_item_id",
-                table: "menu_items",
+                name: "ix_order_items_menu_item_id",
+                table: "order_items",
                 column: "menu_item_id");
-
-            migrationBuilder.CreateIndex(
-                name: "ix_menu_items_order_id",
-                table: "menu_items",
-                column: "order_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_orders_customer_id",
@@ -424,19 +429,22 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 name: "customer_favorite_items");
 
             migrationBuilder.DropTable(
+                name: "order_items");
+
+            migrationBuilder.DropTable(
                 name: "asp_net_roles");
 
             migrationBuilder.DropTable(
                 name: "menu_items");
 
             migrationBuilder.DropTable(
+                name: "orders");
+
+            migrationBuilder.DropTable(
                 name: "beverage_types");
 
             migrationBuilder.DropTable(
                 name: "cafes");
-
-            migrationBuilder.DropTable(
-                name: "orders");
 
             migrationBuilder.DropTable(
                 name: "customers");

@@ -111,7 +111,7 @@ public class TestDbSeeder(
                     BeverageType = beverageType,
                     BeverageTypeId = beverageType.Id,
                     Cafe = cafe,
-                    CafeId = cafe.Id
+                    CafeId = cafe.Id,
                 });
             await dbContext.SaveChangesAsync();
         }

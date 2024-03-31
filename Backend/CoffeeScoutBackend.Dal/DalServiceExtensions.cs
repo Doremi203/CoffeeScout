@@ -28,10 +28,13 @@ public static class DalServiceExtensions
         });
 
         services
-            .AddSingleton<ILocationProvider, GpsLocationProvider>()
+            .AddScoped<IOrderRepository, OrderRepository>()
             .AddScoped<ICustomerRepository, CustomerRepository>()
             .AddScoped<IMenuItemRepository, MenuItemRepository>()
             .AddScoped<ICafeRepository, CafeRepository>();
+
+        services
+            .AddSingleton<ILocationProvider, GpsLocationProvider>();
 
         var locationProvider = services.BuildServiceProvider().GetRequiredService<ILocationProvider>();
         ConfigureMapping(locationProvider);
