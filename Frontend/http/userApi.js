@@ -1,9 +1,9 @@
-import axios from "axios";
+/*import axios from "axios";
 import {Alert} from "react-native";
 
 import * as SecureStore from 'expo-secure-store';
 
-const saveTokens = async (accessToken, refreshToken) => {
+export const saveTokens = async (accessToken, refreshToken) => {
     try {
         await SecureStore.setItemAsync('accessToken', accessToken);
         await SecureStore.setItemAsync('refreshToken', refreshToken);
@@ -13,7 +13,7 @@ const saveTokens = async (accessToken, refreshToken) => {
     }
 };
 
-const loadTokens = async () => {
+export const loadTokens = async () => {
     try {
         const accessToken = await SecureStore.getItemAsync('accessToken');
         const refreshToken = await SecureStore.getItemAsync('refreshToken');
@@ -76,7 +76,13 @@ export const auth = (email, password, navigation) => {
     })
         .then(response => {
             console.log(`RESPONSE ${response.status}`);
-            navigation.navigate('main');
+            let accessTokenName = "accessToken";
+            let refreshTokenName = "refreshToken";
+
+            let accessToken = response.data[accessTokenName];
+            let refreshToken = response.data[refreshTokenName];
+
+            saveTokens(accessToken, refreshToken).then(() => navigation.navigate('main'));
         })
         .catch(error => {
             switch (error.response.status) {
@@ -87,4 +93,4 @@ export const auth = (email, password, navigation) => {
                     Alert.alert('Ошибка', 'Что-то пошло не так');
             }
         });
-};
+};*/

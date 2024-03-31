@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -9,7 +9,8 @@ import {
 } from 'react-native';
 import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
 
-import {register} from "../http/userApi";
+
+import {Context} from "../index";
 
 
 export default function Registration({navigation}) {
@@ -17,8 +18,11 @@ export default function Registration({navigation}) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const {user} = useContext(Context);
+
     const click = () => {
-        register(name, email, password, navigation);
+        console.log(name, email, password)
+        user.registration(name, email, password, navigation).then();
     }
 
     return (

@@ -1,19 +1,23 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {SafeAreaView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View} from 'react-native';
 import {RFValue} from "react-native-responsive-fontsize";
-import {auth} from "../http/userApi";
+import {Context} from "../index";
 
 
-export default function Auth({navigation}) {
+export default function Login({navigation}) {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     console.log(`Email: ${email}, Password: ${password}`);
 
+
+    const {user} = useContext(Context);
+
     const click = () => {
-        auth(email, password, navigation)
+        user.login(email, password, navigation).then();
     }
+
 
     return (
         <SafeAreaView>
