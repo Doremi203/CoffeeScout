@@ -4,5 +4,5 @@ namespace CoffeeScoutBackend.Domain.Interfaces.Services;
 
 public interface IOrderService
 {
-    Task<long> CreateOrderAsync(Order order);
+    Task<long> CreateOrderAsync(CreateOrderData orderData);
 }

@@ -9,6 +9,6 @@ public record MenuItemEntity
     public decimal Price { get; set; }
 
     public required BeverageTypeEntity BeverageType { get; set; }
-    public CafeEntity Cafe { get; set; }
-    public ICollection<CustomerEntity> CustomersFavoredBy { get; set; } = new HashSet<CustomerEntity>();
+    public required CafeEntity Cafe { get; set; }
+    public ICollection<CustomerEntity> CustomersFavoredBy { get; init; } = new HashSet<CustomerEntity>();
 }

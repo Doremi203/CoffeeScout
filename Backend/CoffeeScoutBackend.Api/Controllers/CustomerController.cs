@@ -2,6 +2,7 @@ using System.Security.Claims;
 using CoffeeScoutBackend.Api.Requests;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -37,7 +38,13 @@ public class CustomerController(
     [HttpPost("orders")]
     public async Task<IActionResult> PlaceOrderAsync(PlaceOrderRequest request)
     {
-        //await orderService.CreateOrderAsync();
-        return Ok();
+        var orderData = new CreateOrderData
+        {
+            CustomerId = CurrentUserId,
+            MenuItems = request.MenuItems
+                .Adapt<IReadOnlyCollection<CreateOrderData.MenuItemData>>()
+        };
+        var id = await orderService.CreateOrderAsync(orderData);
+        return Ok(id);
     }
 }
