@@ -6,5 +6,5 @@ public record MenuItem
     public required string Name { get; init; }
     public decimal Price { get; init; }
     public required BeverageType BeverageType { get; init; }
-    public Cafe? Cafe { get; init; }
+    public Cafe Cafe { get; init; }
 }

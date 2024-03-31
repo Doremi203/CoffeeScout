@@ -26,7 +26,7 @@ public class CustomerService(
 
         var user = await roleRegistrationService
             .RegisterUserAsync(newUser, customerRegistrationData.Password, Roles.Customer);
-        var customer = new Customer { UserId = user.Id, FirstName = customerRegistrationData.FirstName };
+        var customer = new Customer { Id = user.Id, FirstName = customerRegistrationData.FirstName };
 
         await customerRepository.AddAsync(customer);
         scope.Complete();
