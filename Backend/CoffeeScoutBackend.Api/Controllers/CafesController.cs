@@ -11,7 +11,8 @@ namespace CoffeeScoutBackend.Api.Controllers;
 [ApiController]
 [Route("api/v1/cafes")]
 public class CafesController(
-    ICafeService cafeService
+    ICafeService cafeService,
+    IOrderService orderService
 ) : ControllerBase
 {
     [HttpGet]
@@ -28,5 +29,20 @@ public class CafesController(
                 radius);
 
         return Ok(cafes.Adapt<IReadOnlyCollection<CafeResponse>>());
+    }
+    
+    [HttpGet("orders")]
+    [Authorize(Roles = nameof(Roles.CafeAdmin))]
+    [ProducesResponseType<List<OrderResponse>>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetOrdersAsync(
+        [FromQuery] OrderStatus status,
+        [FromQuery] DateTime from
+    )
+    {
+        var orders = 
+            await orderService.GetCafeOrdersAsync(
+                User.GetId(), status, from);
+
+        return Ok(orders.Adapt<IReadOnlyCollection<OrderResponse>>());
     }
 }

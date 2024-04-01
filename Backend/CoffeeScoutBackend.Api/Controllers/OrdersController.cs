@@ -1,6 +1,5 @@
 using CoffeeScoutBackend.Api.Extensions;
 using CoffeeScoutBackend.Api.Requests;
-using CoffeeScoutBackend.Api.Responses;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
 using Mapster;
@@ -15,21 +14,6 @@ public class OrdersController(
     IOrderService orderService
 ) : ControllerBase
 {
-    [HttpGet]
-    [Authorize(Roles = nameof(Roles.CafeAdmin))]
-    [ProducesResponseType<List<OrderResponse>>(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetOrdersAsync(
-        [FromQuery] OrderStatus status,
-        [FromQuery] DateTime from
-    )
-    {
-        var orders = 
-            await orderService.GetCafeOrdersAsync(
-                User.GetId(), status, from);
-
-        return Ok(orders.Adapt<IReadOnlyCollection<OrderResponse>>());
-    }
-    
     [HttpPost]
     [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType<long>(StatusCodes.Status201Created)]
