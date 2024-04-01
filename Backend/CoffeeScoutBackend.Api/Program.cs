@@ -1,5 +1,6 @@
 using CoffeeScoutBackend.Api.Config;
 using CoffeeScoutBackend.Api.Identity;
+using CoffeeScoutBackend.Api.Infrastructure;
 using CoffeeScoutBackend.Api.Middlewares;
 using CoffeeScoutBackend.Bll;
 using CoffeeScoutBackend.Dal;
@@ -29,6 +30,8 @@ builder.Services.AddSwaggerGen(options =>
             Type = SecuritySchemeType.ApiKey
         });
         options.OperationFilter<SecurityRequirementsOperationFilter>();
+        
+        options.DocumentFilter<RemovePathsDocumentFilter>();
     }
 );
 builder.Services.AddControllers();
@@ -64,7 +67,10 @@ if (app.Environment.IsDevelopment())
 
 //app.UseHttpsRedirection();
 
-app.MapGroup("api/v1/accounts").MapIdentityApi<AppUser>();
+app
+    .MapGroup("api/v1/accounts")
+    .WithTags("Accounts")
+    .MapIdentityApi<AppUser>();
 
 app.UseAuthorization();
 

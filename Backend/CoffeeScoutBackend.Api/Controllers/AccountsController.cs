@@ -10,7 +10,7 @@ namespace CoffeeScoutBackend.Api.Controllers;
 
 [ApiController]
 [Route("api/v1/accounts")]
-public class AccountController(
+public class AccountsController(
     ICustomerService customerService,
     ISuperAdminService superAdminService
 ) : ControllerBase
@@ -39,7 +39,7 @@ public class AccountController(
         }
     }
     
-    [HttpPost("cafe-admins/register")]
+    [HttpPost("cafe-admin/register")]
     [Authorize(Roles = nameof(Roles.SuperAdmin))]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> AddCafeAdminAsync(AddCafeAdminRequest request)

@@ -7,11 +7,11 @@ namespace CoffeeScoutBackend.Api.Controllers;
 
 [ApiController]
 [Route("api/v1/beverage-types")]
-public class BeverageTypeController(
+public class BeverageTypesController(
     IMenuItemService menuItemService
 ) : ControllerBase
 {
-    [HttpPost("beverage-types")]
+    [HttpPost]
     [Authorize(Roles = nameof(Roles.SuperAdmin))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> AddBeverageTypeAsync(string name)

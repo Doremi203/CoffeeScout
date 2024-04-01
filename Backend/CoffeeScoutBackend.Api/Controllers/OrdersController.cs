@@ -11,7 +11,7 @@ namespace CoffeeScoutBackend.Api.Controllers;
 
 [ApiController]
 [Route("api/v1/orders")]
-public class OrderController(
+public class OrdersController(
     IOrderService orderService
 ) : ControllerBase
 {

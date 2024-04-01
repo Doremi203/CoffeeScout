@@ -9,7 +9,7 @@ namespace CoffeeScoutBackend.Api.Controllers;
 [ApiController]
 [Route("api/v1/customers")]
 [Authorize(Roles = nameof(Roles.Customer))]
-public class CustomerController(
+public class CustomersController(
     ICustomerService customerService
 ) : ControllerBase
 {

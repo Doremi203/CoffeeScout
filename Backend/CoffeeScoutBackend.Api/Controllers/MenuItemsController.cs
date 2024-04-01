@@ -11,7 +11,7 @@ namespace CoffeeScoutBackend.Api.Controllers;
 
 [ApiController]
 [Route("api/v1/menu-items")]
-public class MenuItemController(
+public class MenuItemsController(
     IMenuItemService menuItemService,
     ICafeService cafeService
 ) : ControllerBase

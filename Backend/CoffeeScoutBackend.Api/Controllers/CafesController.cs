@@ -10,7 +10,7 @@ namespace CoffeeScoutBackend.Api.Controllers;
 
 [ApiController]
 [Route("api/v1/cafes")]
-public class CafeController(
+public class CafesController(
     ICafeService cafeService
 ) : ControllerBase
 {
