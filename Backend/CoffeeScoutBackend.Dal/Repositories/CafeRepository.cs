@@ -25,7 +25,7 @@ public class CafeRepository(
     {
         var admin = await dbContext.CafeAdmins
             .Include(ca => ca.Cafe)
-            .FirstOrDefaultAsync(ca => ca.UserId == adminId);
+            .FirstOrDefaultAsync(ca => ca.Id == adminId);
 
         return admin?.Cafe.Adapt<Cafe>();
     }

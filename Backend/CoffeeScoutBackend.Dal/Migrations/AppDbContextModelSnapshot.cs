@@ -130,15 +130,15 @@ namespace CoffeeScoutBackend.Dal.Migrations
 
             modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.CafeAdminEntity", b =>
                 {
-                    b.Property<string>("UserId")
+                    b.Property<string>("Id")
                         .HasColumnType("text")
-                        .HasColumnName("user_id");
+                        .HasColumnName("id");
 
                     b.Property<long>("CafeId")
                         .HasColumnType("bigint")
                         .HasColumnName("cafe_id");
 
-                    b.HasKey("UserId")
+                    b.HasKey("Id")
                         .HasName("pk_cafe_admins");
 
                     b.HasIndex("CafeId")
@@ -240,9 +240,9 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         .HasColumnType("text")
                         .HasColumnName("customer_id");
 
-                    b.Property<DateTime>("OrderDate")
+                    b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("order_date");
+                        .HasColumnName("date");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer")
@@ -486,10 +486,10 @@ namespace CoffeeScoutBackend.Dal.Migrations
 
                     b.HasOne("CoffeeScoutBackend.Dal.Entities.AppUser", "User")
                         .WithOne("CafeAdmin")
-                        .HasForeignKey("CoffeeScoutBackend.Dal.Entities.CafeAdminEntity", "UserId")
+                        .HasForeignKey("CoffeeScoutBackend.Dal.Entities.CafeAdminEntity", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_cafe_admins_users_user_id");
+                        .HasConstraintName("fk_cafe_admins_users_id");
 
                     b.Navigation("Cafe");
 

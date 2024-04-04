@@ -1,7 +1,7 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace CoffeeScoutBackend.Api.Infrastructure;
+namespace CoffeeScoutBackend.Api.Config;
 
 public class RemovePathsDocumentFilter : IDocumentFilter
 {

@@ -51,7 +51,7 @@ public class TestDbSeeder(
                 await dbContext.CafeAdmins.AddAsync(new CafeAdminEntity
                 {
                     User = admin,
-                    UserId = admin.Id,
+                    Id = admin.Id,
                     Cafe = cafe,
                     CafeId = cafe.Id
                 });

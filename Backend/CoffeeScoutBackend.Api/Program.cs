@@ -1,6 +1,5 @@
 using CoffeeScoutBackend.Api.Config;
 using CoffeeScoutBackend.Api.Identity;
-using CoffeeScoutBackend.Api.Infrastructure;
 using CoffeeScoutBackend.Api.Middlewares;
 using CoffeeScoutBackend.Bll;
 using CoffeeScoutBackend.Dal;

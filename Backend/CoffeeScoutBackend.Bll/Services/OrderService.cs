@@ -20,7 +20,7 @@ public class OrderService(
         var order = new Order
         {
             Customer = customer,
-            OrderDate = dateTimeProvider.UtcNow,
+            Date = dateTimeProvider.UtcNow,
             OrderItems = await FormOrderItems(orderData.MenuItems),
             Status = OrderStatus.Pending
         };

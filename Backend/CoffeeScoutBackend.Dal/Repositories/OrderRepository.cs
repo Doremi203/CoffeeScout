@@ -49,7 +49,7 @@ public class OrderRepository(
     public async Task<IReadOnlyCollection<Order>> GetOrdersAsync(OrderStatus status, DateTime from)
     {
         var orderEntities = await GetOrderEntities()
-            .Where(o => o.Status == status && o.OrderDate >= from)
+            .Where(o => o.Status == status && o.Date >= from)
             .ToListAsync();
 
         return orderEntities.Adapt<IReadOnlyCollection<Order>>();

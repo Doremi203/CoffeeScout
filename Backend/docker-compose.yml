@@ -3,7 +3,7 @@
     depends_on:
       - database
     restart:
-      no
+      always
     image: doreml/coffee-scout-backend.api:dev
     env_file:
       - .env

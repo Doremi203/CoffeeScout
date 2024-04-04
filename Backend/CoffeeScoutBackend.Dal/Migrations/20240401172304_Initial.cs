@@ -210,12 +210,12 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 name: "cafe_admins",
                 columns: table => new
                 {
-                    user_id = table.Column<string>(type: "text", nullable: false),
+                    id = table.Column<string>(type: "text", nullable: false),
                     cafe_id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_cafe_admins", x => x.user_id);
+                    table.PrimaryKey("pk_cafe_admins", x => x.id);
                     table.ForeignKey(
                         name: "fk_cafe_admins_cafes_cafe_id",
                         column: x => x.cafe_id,
@@ -223,8 +223,8 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_cafe_admins_users_user_id",
-                        column: x => x.user_id,
+                        name: "fk_cafe_admins_users_id",
+                        column: x => x.id,
                         principalTable: "asp_net_users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -266,7 +266,7 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     customer_id = table.Column<string>(type: "text", nullable: false),
                     status_id = table.Column<long>(type: "bigint", nullable: false),
-                    order_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     status = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>

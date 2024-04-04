@@ -47,7 +47,7 @@ public class CafeService(
         var cafe = await GetByIdAsync(cafeId);
         await cafeRepository.CreateCafeAdminAsync(new CafeAdmin
         {
-            UserId = adminId,
+            Id = adminId,
             Cafe = cafe
         });
     }
