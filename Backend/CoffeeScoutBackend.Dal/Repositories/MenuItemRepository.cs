@@ -4,8 +4,6 @@ using CoffeeScoutBackend.Domain.Interfaces.Repositories;
 using CoffeeScoutBackend.Domain.Models;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
-using NetTopologySuite.Geometries;
-using Location = CoffeeScoutBackend.Domain.Models.Location;
 
 namespace CoffeeScoutBackend.Dal.Repositories;
 
@@ -21,20 +19,6 @@ public class MenuItemRepository(
             .Include(m => m.Cafe)
             .FirstOrDefaultAsync(m => m.Id == id);
         return menuItem?.Adapt<MenuItem>();
-    }
-
-    public async Task<BeverageType?> GetBeverageTypeByNameAsync(string name)
-    {
-        var beverageType = await dbContext.BeverageTypes
-            .FirstOrDefaultAsync(bt => bt.Name == name);
-        return beverageType?.Adapt<BeverageType>();
-    }
-
-    public async Task<BeverageType?> GetBeverageTypeByIdAsync(long id)
-    {
-        var beverageType = await dbContext.BeverageTypes
-            .FirstOrDefaultAsync(bt => bt.Id == id);
-        return beverageType?.Adapt<BeverageType>();
     }
 
     public async Task<IReadOnlyCollection<MenuItem>> GetAllInAreaByBeverageTypeAsync(
@@ -62,13 +46,6 @@ public class MenuItemRepository(
             .FirstAsync(c => c.Id == entity.CafeId);
 
         await dbContext.MenuItems.AddAsync(entity);
-        await dbContext.SaveChangesAsync();
-    }
-
-    public async Task AddBeverageTypeAsync(BeverageType beverageType)
-    {
-        var entity = beverageType.Adapt<BeverageTypeEntity>();
-        await dbContext.BeverageTypes.AddAsync(entity);
         await dbContext.SaveChangesAsync();
     }
 }
