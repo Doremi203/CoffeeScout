@@ -1,9 +1,21 @@
 ﻿services:
-  coffeescoutbackend.api:
+  nginx:
+    networks: 
+      - app-network
+    image: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "80:80"
+
+  coffee-scout-backend:
     depends_on:
       - database
     restart:
-      always
+      no
+    networks: 
+      - app-network
+      - backend-network
     image: doreml/coffee-scout-backend.api:dev
     env_file:
       - .env
@@ -11,7 +23,10 @@
       - "8000:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+
   database:
+    networks: 
+      - backend-network
     image: postgis/postgis:16-3.4
     environment:
       POSTGRES_USER: ${DATABASESETTINGS__USERID}
@@ -19,3 +34,9 @@
       POSTGRES_DB: ${DATABASESETTINGS__DATABASE}
     ports:
       - "5432:5432"
+
+networks:
+    app-network:
+        driver: bridge
+    backend-network:
+        driver: bridge
