@@ -19,14 +19,14 @@ public class MenuItemsController(
     [HttpGet]
     [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType<List<MenuItemResponse>>(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetMenuItemsInAsync(
+    public async Task<IActionResult> GetMenuItemsByBeverageTypeInArea(
         [FromQuery] double latitude,
         [FromQuery] double longitude,
         [FromQuery] double radiusInMeters,
         [FromQuery] long beverageTypeId
     )
     {
-        var menuItems = await menuItemService.GetAllInAreaByBeverageTypeAsync(
+        var menuItems = await menuItemService.GetAllInAreaByBeverageType(
             new Location
             {
                 Latitude = latitude,
@@ -41,7 +41,7 @@ public class MenuItemsController(
     [HttpPost]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> AddMenuItemAsync(AddMenuItemRequest request)
+    public async Task<IActionResult> AddMenuItem(AddMenuItemRequest request)
     {
         var newMenuItem = new MenuItem
         {
@@ -52,7 +52,7 @@ public class MenuItemsController(
                 Name = request.BeverageTypeName
             }
         };
-        await cafeService.AddMenuItemAsync(User.GetId(), newMenuItem);
+        await cafeService.AddMenuItem(User.GetId(), newMenuItem);
 
         return Created();
     }

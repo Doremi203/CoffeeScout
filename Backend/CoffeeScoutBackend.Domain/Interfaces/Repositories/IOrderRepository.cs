@@ -4,8 +4,8 @@ namespace CoffeeScoutBackend.Domain.Interfaces.Repositories;
 
 public interface IOrderRepository
 {
-    Task<long> AddAsync(Order order);
-    Task<Order?> GetByIdAsync(long orderId);
-    Task<IReadOnlyCollection<Order>> GetByUserIdAsync(string userId);
-    Task<IReadOnlyCollection<Order>> GetOrdersAsync(OrderStatus status, DateTime from);
+    Task<long> Add(Order order);
+    Task<Order?> GetById(long orderId);
+    Task<IReadOnlyCollection<Order>> GetByUserId(string userId);
+    Task<IReadOnlyCollection<Order>> GetOrders(OrderStatus status, DateTime from);
 }

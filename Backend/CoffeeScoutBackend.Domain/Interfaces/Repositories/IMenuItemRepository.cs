@@ -4,8 +4,8 @@ namespace CoffeeScoutBackend.Domain.Interfaces.Repositories;
 
 public interface IMenuItemRepository
 {
-    Task<MenuItem?> GetByIdAsync(long id);
-    Task<IReadOnlyCollection<MenuItem>> GetAllInAreaByBeverageTypeAsync(
+    Task<MenuItem?> GetById(long id);
+    Task<IReadOnlyCollection<MenuItem>> GetAllInAreaByBeverageType(
         Location location, double radiusInMeters, BeverageType beverageType);
-    Task AddAsync(MenuItem menuItem);
+    Task Add(MenuItem menuItem);
 }

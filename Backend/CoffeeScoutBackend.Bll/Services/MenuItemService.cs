@@ -10,28 +10,28 @@ public class MenuItemService(
     IBeverageTypeService beverageTypeService
 ) : IMenuItemService
 {
-    public async Task<MenuItem> GetByIdAsync(long id)
+    public async Task<MenuItem> GetById(long id)
     {
-        return await menuItemRepository.GetByIdAsync(id)
+        return await menuItemRepository.GetById(id)
                ?? throw new MenuItemNotFoundException(
                    $"Menu item with id:{id} not found",
                    id);
     }
 
-    public async Task<IEnumerable<MenuItem>> GetAllInAreaByBeverageTypeAsync(
+    public async Task<IEnumerable<MenuItem>> GetAllInAreaByBeverageType(
         Location location,
         double radiusInMeters,
         long beverageTypeId
     )
     {
-        var beverageType = await beverageTypeService.GetBeverageTypeByIdAsync(beverageTypeId);
+        var beverageType = await beverageTypeService.GetBeverageTypeById(beverageTypeId);
 
-        return await menuItemRepository.GetAllInAreaByBeverageTypeAsync(
+        return await menuItemRepository.GetAllInAreaByBeverageType(
             location, radiusInMeters, beverageType);
     }
 
-    public async Task AddAsync(MenuItem menuItem)
+    public async Task Add(MenuItem menuItem)
     {
-        await menuItemRepository.AddAsync(menuItem);
+        await menuItemRepository.Add(menuItem);
     }
 }

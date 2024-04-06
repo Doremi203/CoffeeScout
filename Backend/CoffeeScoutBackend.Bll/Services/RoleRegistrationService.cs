@@ -11,7 +11,7 @@ public class RoleRegistrationService(
     UserManager<AppUser> userManager
 ) : IRoleRegistrationService
 {
-    public async Task<AppUser> RegisterUserAsync(AppUser user, string password, Roles role)
+    public async Task<AppUser> RegisterUser(AppUser user, string password, Roles role)
     {
         var errors = new Dictionary<string, string[]>();
         using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);

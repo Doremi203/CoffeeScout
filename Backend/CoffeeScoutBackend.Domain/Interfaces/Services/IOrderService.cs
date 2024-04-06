@@ -4,7 +4,7 @@ namespace CoffeeScoutBackend.Domain.Interfaces.Services;
 
 public interface IOrderService
 {
-    Task<long> CreateOrderAsync(CreateOrderData orderData);
-    Task<IReadOnlyCollection<Order>> GetCafeOrdersAsync(
+    Task<long> CreateOrder(CreateOrderData orderData);
+    Task<IReadOnlyCollection<Order>> GetCafeOrders(
         string currentCafeAdminId, OrderStatus status, DateTime from);
 }

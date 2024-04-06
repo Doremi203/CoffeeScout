@@ -11,26 +11,26 @@ public class CafeService(
     ICafeRepository cafeRepository
 ) : ICafeService
 {
-    public async Task<Cafe> GetByIdAsync(long id)
+    public async Task<Cafe> GetById(long id)
     {
-        return await cafeRepository.GetByIdAsync(id)
+        return await cafeRepository.GetById(id)
                ?? throw new CafeNotFoundException(
                    $"Cafe with id {id} not found",
                    id);
     }
 
-    public async Task<Cafe> GetByAdminIdAsync(string adminId)
+    public async Task<Cafe> GetByAdminId(string adminId)
     {
-        return await cafeRepository.GetByAdminIdAsync(adminId)
+        return await cafeRepository.GetByAdminId(adminId)
                ?? throw new CafeNotFoundException(
                    $"Cafe for admin with id: {adminId} not found");
     }
 
-    public async Task AddMenuItemAsync(string adminId, MenuItem menuItem)
+    public async Task AddMenuItem(string adminId, MenuItem menuItem)
     {
         var beverageName = menuItem.BeverageType.Name;
         var beverageType = await beverageTypeService.GetBeverageTypeByNameAsync(beverageName);
-        var cafe = await GetByAdminIdAsync(adminId);
+        var cafe = await GetByAdminId(adminId);
 
         var newMenuItem = new MenuItem
         {
@@ -40,21 +40,21 @@ public class CafeService(
             Cafe = cafe
         };
 
-        await menuItemService.AddAsync(newMenuItem);
+        await menuItemService.Add(newMenuItem);
     }
 
-    public async Task AssignNewCafeAdminAsync(string adminId, long cafeId)
+    public async Task AssignNewCafeAdmin(string adminId, long cafeId)
     {
-        var cafe = await GetByIdAsync(cafeId);
-        await cafeRepository.CreateCafeAdminAsync(new CafeAdmin
+        var cafe = await GetById(cafeId);
+        await cafeRepository.CreateCafeAdmin(new CafeAdmin
         {
             Id = adminId,
             Cafe = cafe
         });
     }
 
-    public async Task<IReadOnlyCollection<Cafe>> GetCafesInAreaAsync(Location location, double radius)
+    public async Task<IReadOnlyCollection<Cafe>> GetCafesInArea(Location location, double radius)
     {
-        return await cafeRepository.GetCafesInAreaAsync(location, radius);
+        return await cafeRepository.GetCafesInArea(location, radius);
     }
 }

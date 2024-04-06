@@ -4,9 +4,7 @@ namespace CoffeeScoutBackend.Domain.Interfaces.Repositories;
 
 public interface ICustomerRepository
 {
-    Task<Customer?> GetByIdAsync(string userId);
-    Task AddAsync(Customer customer);
-    public Task AddFavoredMenuItemAsync(Customer customer, MenuItem menuItem);
-    Task UpdateAsync(string userId, Customer customer);
-    Task DeleteAsync(string userId);
+    Task<Customer?> GetById(string userId);
+    Task Add(Customer customer);
+    public Task AddFavoredMenuItem(Customer customer, MenuItem menuItem);
 }

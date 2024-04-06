@@ -10,7 +10,7 @@ public class BeverageTypeRepository(
     AppDbContext dbContext
 ) : IBeverageTypeRepository
 {
-    public async Task<BeverageType?> GetBeverageTypeByNameAsync(string name)
+    public async Task<BeverageType?> GetBeverageTypeByName(string name)
     {
         var beverageType = await dbContext.BeverageTypes
             .FirstOrDefaultAsync(bt => bt.Name == name);
@@ -18,7 +18,7 @@ public class BeverageTypeRepository(
         return beverageType?.Adapt<BeverageType>();
     }
 
-    public async Task<BeverageType?> GetBeverageTypeByIdAsync(long id)
+    public async Task<BeverageType?> GetBeverageTypeById(long id)
     {
         var beverageType = await dbContext.BeverageTypes
             .FirstOrDefaultAsync(bt => bt.Id == id);
@@ -26,7 +26,7 @@ public class BeverageTypeRepository(
         return beverageType?.Adapt<BeverageType>();
     }
 
-    public async Task AddBeverageTypeAsync(BeverageType beverageType)
+    public async Task AddBeverageType(BeverageType beverageType)
     {
         var entity = beverageType.Adapt<BeverageTypeEntity>();
         
@@ -35,7 +35,7 @@ public class BeverageTypeRepository(
         await dbContext.SaveChangesAsync();
     }
 
-    public async Task UpdateBeverageTypeAsync(BeverageType beverageType)
+    public async Task UpdateBeverageType(BeverageType beverageType)
     {
         var entity = await dbContext.BeverageTypes
             .FirstAsync(bt => bt.Id == beverageType.Id);
@@ -46,7 +46,7 @@ public class BeverageTypeRepository(
         await dbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteBeverageTypeAsync(long id)
+    public async Task DeleteBeverageType(long id)
     {
         var entity = await dbContext.BeverageTypes
             .FirstAsync(bt => bt.Id == id);

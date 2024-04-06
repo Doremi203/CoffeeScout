@@ -17,7 +17,7 @@ public class OrdersController(
     [HttpPost]
     [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType<long>(StatusCodes.Status201Created)]
-    public async Task<IActionResult> PlaceOrderAsync(PlaceOrderRequest request)
+    public async Task<IActionResult> PlaceOrder(PlaceOrderRequest request)
     {
         var orderData = new CreateOrderData
         {
@@ -25,7 +25,7 @@ public class OrdersController(
             MenuItems = request.MenuItems
                 .Adapt<IReadOnlyCollection<CreateOrderData.MenuItemData>>()
         };
-        var id = await orderService.CreateOrderAsync(orderData);
+        var id = await orderService.CreateOrder(orderData);
         return Created($"api/v1/orders/{id}", id);
     }
 }

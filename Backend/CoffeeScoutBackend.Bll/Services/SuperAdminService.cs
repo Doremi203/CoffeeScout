@@ -11,7 +11,7 @@ public class SuperAdminService(
     ICafeService cafeService
 ) : ISuperAdminService
 {
-    public async Task AddCafeAdminAsync(
+    public async Task AddCafeAdmin(
         CafeAdminRegistrationData registrationData
     )
     {
@@ -24,10 +24,10 @@ public class SuperAdminService(
             PhoneNumberConfirmed = true
         };
 
-        await roleRegistrationService.RegisterUserAsync(
+        await roleRegistrationService.RegisterUser(
             admin, registrationData.Password, Roles.CafeAdmin);
 
-        await cafeService.AssignNewCafeAdminAsync(admin.Id, registrationData.CafeId);
+        await cafeService.AssignNewCafeAdmin(admin.Id, registrationData.CafeId);
 
         transaction.Complete();
     }

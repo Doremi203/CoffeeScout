@@ -13,9 +13,9 @@ public class OrderService(
     IDateTimeProvider dateTimeProvider
 ) : IOrderService
 {
-    public async Task<long> CreateOrderAsync(CreateOrderData orderData)
+    public async Task<long> CreateOrder(CreateOrderData orderData)
     {
-        var customer = await customerService.GetByUserIdAsync(orderData.CustomerId);
+        var customer = await customerService.GetByUserId(orderData.CustomerId);
 
         var order = new Order
         {
@@ -25,17 +25,17 @@ public class OrderService(
             Status = OrderStatus.Pending
         };
 
-        return await orderRepository.AddAsync(order);
+        return await orderRepository.Add(order);
     }
 
-    public async Task<IReadOnlyCollection<Order>> GetCafeOrdersAsync(
+    public async Task<IReadOnlyCollection<Order>> GetCafeOrders(
         string currentCafeAdminId,
         OrderStatus status,
         DateTime from
     )
     {
-        var cafe = await cafeService.GetByAdminIdAsync(currentCafeAdminId);
-        var orders = await orderRepository.GetOrdersAsync(status, from);
+        var cafe = await cafeService.GetByAdminId(currentCafeAdminId);
+        var orders = await orderRepository.GetOrders(status, from);
 
         foreach (var order in orders)
         {
@@ -54,7 +54,7 @@ public class OrderService(
 
         foreach (var orderDataMenuItem in orderDataMenuItems)
         {
-            var menuItem = await menuItemService.GetByIdAsync(orderDataMenuItem.Id);
+            var menuItem = await menuItemService.GetById(orderDataMenuItem.Id);
             var orderItem = new OrderItem
             {
                 MenuItem = menuItem,

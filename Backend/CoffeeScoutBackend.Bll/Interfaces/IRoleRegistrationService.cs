@@ -5,5 +5,5 @@ namespace CoffeeScoutBackend.Bll.Interfaces;
 
 public interface IRoleRegistrationService
 {
-    Task<AppUser> RegisterUserAsync(AppUser user, string password, Roles role);
+    Task<AppUser> RegisterUser(AppUser user, string password, Roles role);
 }
