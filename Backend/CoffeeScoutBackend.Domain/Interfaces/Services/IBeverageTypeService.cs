@@ -8,4 +8,5 @@ public interface IBeverageTypeService
     Task<BeverageType> GetBeverageTypeByIdAsync(long id);
     Task AddBeverageTypeAsync(BeverageType beverageType);
     Task UpdateBeverageTypeNameAsync(long id, string name);
+    Task DeleteBeverageTypeAsync(long id);
 }

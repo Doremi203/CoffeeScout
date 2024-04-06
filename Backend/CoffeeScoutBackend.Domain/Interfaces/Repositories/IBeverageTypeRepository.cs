@@ -9,4 +9,5 @@ public interface IBeverageTypeRepository
     Task AddBeverageTypeAsync(BeverageType beverageType);
     
     Task UpdateBeverageTypeAsync(BeverageType beverageType);
+    Task DeleteBeverageTypeAsync(long id);
 }

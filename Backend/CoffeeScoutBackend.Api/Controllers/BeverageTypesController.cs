@@ -37,4 +37,15 @@ public class BeverageTypesController(
 
         return NoContent();
     }
+    
+    [HttpDelete("{id:long}")]
+    [Authorize(Roles = nameof(Roles.SuperAdmin))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> DeleteBeverageTypeAsync([FromRoute] long id)
+    {
+        await beverageTypeService.DeleteBeverageTypeAsync(id);
+
+        return NoContent();
+    }
+    
 }
