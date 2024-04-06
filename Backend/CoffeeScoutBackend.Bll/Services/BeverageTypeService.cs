@@ -39,4 +39,11 @@ public class BeverageTypeService(
         await beverageTypeRepository.UpdateBeverageTypeAsync(
             beverage with { Name = name });
     }
+
+    public async Task DeleteBeverageTypeAsync(long id)
+    {
+        var beverage = await GetBeverageTypeByIdAsync(id);
+        
+        await beverageTypeRepository.DeleteBeverageTypeAsync(beverage.Id);
+    }
 }
