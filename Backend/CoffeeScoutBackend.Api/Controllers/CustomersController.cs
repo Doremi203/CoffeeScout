@@ -15,18 +15,18 @@ public class CustomersController(
 {
     [HttpPost("favored-menu-items")]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<IActionResult> AddFavoredMenuItemAsync(long menuItemId)
+    public async Task<IActionResult> AddFavoredMenuItem(long menuItemId)
     {
-        await customerService.AddFavoredMenuItemAsync(User.GetId(), menuItemId);
+        await customerService.AddFavoredMenuItem(User.GetId(), menuItemId);
         return Created($"api/v1/customers/favored-menu-items/{menuItemId}", null);
     }
 
     [HttpGet("favored-beverage-types")]
     [ProducesResponseType<IReadOnlyCollection<BeverageType>>(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetFavoredBeverageTypesAsync()
+    public async Task<IActionResult> GetFavoredBeverageTypes()
     {
         var favoredBeverageTypes =
-            await customerService.GetFavoredBeverageTypesAsync(User.GetId());
+            await customerService.GetFavoredBeverageTypes(User.GetId());
         return Ok(favoredBeverageTypes);
     }
 }

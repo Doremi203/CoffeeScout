@@ -12,38 +12,38 @@ public class BeverageTypeService(
     public async Task<BeverageType> GetBeverageTypeByNameAsync(string name)
     {
         return await beverageTypeRepository
-                   .GetBeverageTypeByNameAsync(name)
+                   .GetBeverageTypeByName(name)
                ?? throw new BeverageTypeNotFoundException(
                    $"Beverage type with name {name} not found",
                    name);
     }
 
-    public async Task<BeverageType> GetBeverageTypeByIdAsync(long id)
+    public async Task<BeverageType> GetBeverageTypeById(long id)
     {
         return await beverageTypeRepository
-                   .GetBeverageTypeByIdAsync(id)
+                   .GetBeverageTypeById(id)
                ?? throw new BeverageTypeNotFoundException(
                    $"Beverage type with id {id} not found",
                    id);
     }
 
-    public Task AddBeverageTypeAsync(BeverageType beverageType)
+    public Task AddBeverageType(BeverageType beverageType)
     {
-        return beverageTypeRepository.AddBeverageTypeAsync(beverageType);
+        return beverageTypeRepository.AddBeverageType(beverageType);
     }
 
-    public async Task UpdateBeverageTypeNameAsync(long id, string name)
+    public async Task UpdateBeverageTypeName(long id, string name)
     {
-        var beverage = await GetBeverageTypeByIdAsync(id);
+        var beverage = await GetBeverageTypeById(id);
         
-        await beverageTypeRepository.UpdateBeverageTypeAsync(
+        await beverageTypeRepository.UpdateBeverageType(
             beverage with { Name = name });
     }
 
-    public async Task DeleteBeverageTypeAsync(long id)
+    public async Task DeleteBeverageType(long id)
     {
-        var beverage = await GetBeverageTypeByIdAsync(id);
+        var beverage = await GetBeverageTypeById(id);
         
-        await beverageTypeRepository.DeleteBeverageTypeAsync(beverage.Id);
+        await beverageTypeRepository.DeleteBeverageType(beverage.Id);
     }
 }

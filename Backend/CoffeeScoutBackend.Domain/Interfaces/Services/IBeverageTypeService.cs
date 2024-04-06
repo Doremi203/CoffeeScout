@@ -5,8 +5,8 @@ namespace CoffeeScoutBackend.Domain.Interfaces.Services;
 public interface IBeverageTypeService
 {
     Task<BeverageType> GetBeverageTypeByNameAsync(string name);
-    Task<BeverageType> GetBeverageTypeByIdAsync(long id);
-    Task AddBeverageTypeAsync(BeverageType beverageType);
-    Task UpdateBeverageTypeNameAsync(long id, string name);
-    Task DeleteBeverageTypeAsync(long id);
+    Task<BeverageType> GetBeverageTypeById(long id);
+    Task AddBeverageType(BeverageType beverageType);
+    Task UpdateBeverageTypeName(long id, string name);
+    Task DeleteBeverageType(long id);
 }

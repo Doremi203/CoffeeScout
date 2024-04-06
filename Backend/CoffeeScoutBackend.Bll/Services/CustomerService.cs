@@ -14,7 +14,7 @@ public class CustomerService(
     IRoleRegistrationService roleRegistrationService
 ) : ICustomerService
 {
-    public async Task RegisterCustomerAsync(CustomerRegistrationData customerRegistrationData)
+    public async Task RegisterCustomer(CustomerRegistrationData customerRegistrationData)
     {
         using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
@@ -25,38 +25,38 @@ public class CustomerService(
         };
 
         var user = await roleRegistrationService
-            .RegisterUserAsync(newUser, customerRegistrationData.Password, Roles.Customer);
+            .RegisterUser(newUser, customerRegistrationData.Password, Roles.Customer);
         var customer = new Customer { Id = user.Id, FirstName = customerRegistrationData.FirstName };
 
-        await customerRepository.AddAsync(customer);
+        await customerRepository.Add(customer);
         scope.Complete();
     }
 
-    public async Task<Customer> GetByUserIdAsync(string userId)
+    public async Task<Customer> GetByUserId(string userId)
     {
-        return await customerRepository.GetByIdAsync(userId)
+        return await customerRepository.GetById(userId)
                ?? throw new CustomerNotFoundException($"Customer with id:{userId} not found", userId);
     }
 
-    public async Task AddFavoredMenuItemAsync(string currentUserId, long menuItemId)
+    public async Task AddFavoredMenuItem(string currentUserId, long menuItemId)
     {
-        var customer = await customerRepository.GetByIdAsync(currentUserId)
+        var customer = await customerRepository.GetById(currentUserId)
                        ?? throw new CustomerNotFoundException(
                            $"Customer with id:{currentUserId} not found",
                            currentUserId);
-        var menuItem = await menuItemService.GetByIdAsync(menuItemId);
+        var menuItem = await menuItemService.GetById(menuItemId);
 
         if (customer.FavoriteMenuItems.Contains(menuItem))
             throw new MenuItemAlreadyFavoredException(
                 $"Menu item with id:{menuItemId} is already favored by customer with id:{currentUserId}",
                 menuItemId,
                 currentUserId);
-        await customerRepository.AddFavoredMenuItemAsync(customer, menuItem);
+        await customerRepository.AddFavoredMenuItem(customer, menuItem);
     }
 
-    public async Task<IReadOnlyCollection<BeverageType>> GetFavoredBeverageTypesAsync(string userId)
+    public async Task<IReadOnlyCollection<BeverageType>> GetFavoredBeverageTypes(string userId)
     {
-        var customer = await GetByUserIdAsync(userId);
+        var customer = await GetByUserId(userId);
 
         var favoredBeverageTypes =
             customer.FavoriteMenuItems

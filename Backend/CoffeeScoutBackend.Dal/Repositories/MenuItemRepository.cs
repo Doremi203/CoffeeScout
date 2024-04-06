@@ -12,7 +12,7 @@ public class MenuItemRepository(
     ILocationProvider locationProvider
 ) : IMenuItemRepository
 {
-    public async Task<MenuItem?> GetByIdAsync(long id)
+    public async Task<MenuItem?> GetById(long id)
     {
         var menuItem = await dbContext.MenuItems
             .Include(m => m.BeverageType)
@@ -21,7 +21,7 @@ public class MenuItemRepository(
         return menuItem?.Adapt<MenuItem>();
     }
 
-    public async Task<IReadOnlyCollection<MenuItem>> GetAllInAreaByBeverageTypeAsync(
+    public async Task<IReadOnlyCollection<MenuItem>> GetAllInAreaByBeverageType(
         Location location,
         double radiusInMeters,
         BeverageType beverageType)
@@ -37,7 +37,7 @@ public class MenuItemRepository(
         return menuItems.Adapt<IReadOnlyCollection<MenuItem>>();
     }
 
-    public async Task AddAsync(MenuItem menuItem)
+    public async Task Add(MenuItem menuItem)
     {
         var entity = menuItem.Adapt<MenuItemEntity>();
         entity.BeverageType = await dbContext.BeverageTypes

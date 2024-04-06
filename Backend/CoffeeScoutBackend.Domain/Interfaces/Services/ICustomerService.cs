@@ -4,8 +4,8 @@ namespace CoffeeScoutBackend.Domain.Interfaces.Services;
 
 public interface ICustomerService
 {
-    Task RegisterCustomerAsync(CustomerRegistrationData customerRegistrationData);
-    Task<Customer> GetByUserIdAsync(string userId);
-    Task AddFavoredMenuItemAsync(string currentUserId, long menuItemId);
-    Task<IReadOnlyCollection<BeverageType>> GetFavoredBeverageTypesAsync(string userId);
+    Task RegisterCustomer(CustomerRegistrationData customerRegistrationData);
+    Task<Customer> GetByUserId(string userId);
+    Task AddFavoredMenuItem(string currentUserId, long menuItemId);
+    Task<IReadOnlyCollection<BeverageType>> GetFavoredBeverageTypes(string userId);
 }

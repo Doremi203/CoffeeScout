@@ -12,7 +12,7 @@ public class OrderRepository(
     AppDbContext dbContext
 ) : IOrderRepository
 {
-    public async Task<long> AddAsync(Order order)
+    public async Task<long> Add(Order order)
     {
         using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
         var orderEntity = order.Adapt<OrderEntity>();
@@ -33,7 +33,7 @@ public class OrderRepository(
         return addedOrder.Entity.Id;
     }
 
-    public async Task<Order?> GetByIdAsync(long orderId)
+    public async Task<Order?> GetById(long orderId)
     {
         var orderEntity = await GetOrderEntities()
             .FirstOrDefaultAsync(o => o.Id == orderId);
@@ -41,12 +41,12 @@ public class OrderRepository(
         return orderEntity?.Adapt<Order>();
     }
 
-    public async Task<IReadOnlyCollection<Order>> GetByUserIdAsync(string userId)
+    public async Task<IReadOnlyCollection<Order>> GetByUserId(string userId)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<IReadOnlyCollection<Order>> GetOrdersAsync(OrderStatus status, DateTime from)
+    public async Task<IReadOnlyCollection<Order>> GetOrders(OrderStatus status, DateTime from)
     {
         var orderEntities = await GetOrderEntities()
             .Where(o => o.Status == status && o.Date >= from)

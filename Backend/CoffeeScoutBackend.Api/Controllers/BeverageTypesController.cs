@@ -15,13 +15,13 @@ public class BeverageTypesController(
     [HttpPost]
     [Authorize(Roles = nameof(Roles.SuperAdmin))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> AddBeverageTypeAsync(string name)
+    public async Task<IActionResult> AddBeverageType(string name)
     {
         var newBeverageType = new BeverageType
         {
             Name = name
         };
-        await beverageTypeService.AddBeverageTypeAsync(newBeverageType);
+        await beverageTypeService.AddBeverageType(newBeverageType);
 
         return Created();
     }
@@ -29,11 +29,11 @@ public class BeverageTypesController(
     [HttpPatch("{id:long}")]
     [Authorize(Roles = nameof(Roles.SuperAdmin))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> UpdateBeverageTypeAsync(
+    public async Task<IActionResult> UpdateBeverageType(
         [FromRoute] long id,
         UpdateBeverageTypeRequest request)
     {
-        await beverageTypeService.UpdateBeverageTypeNameAsync(id, request.Name);
+        await beverageTypeService.UpdateBeverageTypeName(id, request.Name);
 
         return NoContent();
     }
@@ -41,9 +41,9 @@ public class BeverageTypesController(
     [HttpDelete("{id:long}")]
     [Authorize(Roles = nameof(Roles.SuperAdmin))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> DeleteBeverageTypeAsync([FromRoute] long id)
+    public async Task<IActionResult> DeleteBeverageType([FromRoute] long id)
     {
-        await beverageTypeService.DeleteBeverageTypeAsync(id);
+        await beverageTypeService.DeleteBeverageType(id);
 
         return NoContent();
     }

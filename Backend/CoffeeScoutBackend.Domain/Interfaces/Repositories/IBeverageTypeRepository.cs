@@ -4,10 +4,10 @@ namespace CoffeeScoutBackend.Domain.Interfaces.Repositories;
 
 public interface IBeverageTypeRepository
 {
-    Task<BeverageType?> GetBeverageTypeByNameAsync(string name);
-    Task<BeverageType?> GetBeverageTypeByIdAsync(long id);
-    Task AddBeverageTypeAsync(BeverageType beverageType);
+    Task<BeverageType?> GetBeverageTypeByName(string name);
+    Task<BeverageType?> GetBeverageTypeById(long id);
+    Task AddBeverageType(BeverageType beverageType);
     
-    Task UpdateBeverageTypeAsync(BeverageType beverageType);
-    Task DeleteBeverageTypeAsync(long id);
+    Task UpdateBeverageType(BeverageType beverageType);
+    Task DeleteBeverageType(long id);
 }

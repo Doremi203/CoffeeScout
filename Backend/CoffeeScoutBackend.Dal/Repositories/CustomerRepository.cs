@@ -10,7 +10,7 @@ public class CustomerRepository(
     AppDbContext dbContext
 ) : ICustomerRepository
 {
-    public async Task<Customer?> GetByIdAsync(string userId)
+    public async Task<Customer?> GetById(string userId)
     {
         var customer = await dbContext.Customers
             .Include(c => c.User)
@@ -20,32 +20,22 @@ public class CustomerRepository(
         return customer?.Adapt<Customer>();
     }
 
-    public async Task AddAsync(Customer customer)
+    public async Task Add(Customer customer)
     {
         await dbContext.Customers.AddAsync(customer.Adapt<CustomerEntity>());
         await dbContext.SaveChangesAsync();
     }
 
-    public async Task AddFavoredMenuItemAsync(Customer customer, MenuItem menuItem)
+    public async Task AddFavoredMenuItem(Customer customer, MenuItem menuItem)
     {
         var customerEntity = await dbContext.Customers
             .Include(c => c.FavoriteMenuItems)
-            .FirstOrDefaultAsync(c => c.Id == customer.Id);
-        var menuItemEntity = await dbContext.MenuItems.FindAsync(menuItem.Id);
-        if (customerEntity is null || menuItemEntity is null)
-            return;
+            .FirstAsync(c => c.Id == customer.Id);
+        var menuItemEntity = await dbContext.MenuItems
+            .FirstAsync(mi => mi.Id == menuItem.Id);
 
         customerEntity.FavoriteMenuItems.Add(menuItemEntity);
+        
         await dbContext.SaveChangesAsync();
-    }
-
-    public Task UpdateAsync(string userId, Customer customer)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task DeleteAsync(string userId)
-    {
-        throw new NotImplementedException();
     }
 }

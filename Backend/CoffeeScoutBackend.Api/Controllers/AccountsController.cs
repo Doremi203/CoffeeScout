@@ -22,7 +22,7 @@ public class AccountsController(
     {
         try
         {
-            await customerService.RegisterCustomerAsync(
+            await customerService.RegisterCustomer(
                 request.Adapt<CustomerRegistrationData>());
             return Ok();
         }
@@ -42,9 +42,9 @@ public class AccountsController(
     [HttpPost("cafe-admin/register")]
     [Authorize(Roles = nameof(Roles.SuperAdmin))]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> AddCafeAdminAsync(AddCafeAdminRequest request)
+    public async Task<IActionResult> AddCafeAdmin(AddCafeAdminRequest request)
     {
-        await superAdminService.AddCafeAdminAsync(
+        await superAdminService.AddCafeAdmin(
             request.Adapt<CafeAdminRegistrationData>());
 
         return Ok();

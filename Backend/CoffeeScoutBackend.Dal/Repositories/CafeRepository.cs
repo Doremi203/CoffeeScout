@@ -12,7 +12,7 @@ public class CafeRepository(
     ILocationProvider locationProvider
 ) : ICafeRepository
 {
-    public async Task<Cafe?> GetByIdAsync(long id)
+    public async Task<Cafe?> GetById(long id)
     {
         var cafeEntity = await dbContext.Cafes
             .Include(ca => ca.Admins)
@@ -21,7 +21,7 @@ public class CafeRepository(
         return cafeEntity?.Adapt<Cafe>();
     }
 
-    public async Task<Cafe?> GetByAdminIdAsync(string adminId)
+    public async Task<Cafe?> GetByAdminId(string adminId)
     {
         var admin = await dbContext.CafeAdmins
             .Include(ca => ca.Cafe)
@@ -30,7 +30,7 @@ public class CafeRepository(
         return admin?.Cafe.Adapt<Cafe>();
     }
 
-    public async Task CreateCafeAdminAsync(CafeAdmin admin)
+    public async Task CreateCafeAdmin(CafeAdmin admin)
     {
         var adminEntity = admin.Adapt<CafeAdminEntity>();
         adminEntity.Cafe = await dbContext.Cafes
@@ -40,7 +40,7 @@ public class CafeRepository(
         await dbContext.SaveChangesAsync();
     }
 
-    public async Task<IReadOnlyCollection<Cafe>> GetCafesInAreaAsync(Location location, double radius)
+    public async Task<IReadOnlyCollection<Cafe>> GetCafesInArea(Location location, double radius)
     {
         var area = locationProvider.CreateArea(location, radius);
         

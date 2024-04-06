@@ -18,13 +18,13 @@ public class CafesController(
     [HttpGet]
     [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType<List<CafeResponse>>(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetCafesAsync(
+    public async Task<IActionResult> GetCafes(
         [FromQuery] double latitude,
         [FromQuery] double longitude,
         [FromQuery] double radius)
     {
         var cafes =
-            await cafeService.GetCafesInAreaAsync(
+            await cafeService.GetCafesInArea(
                 new Location { Longitude = longitude, Latitude = latitude },
                 radius);
 
@@ -34,13 +34,13 @@ public class CafesController(
     [HttpGet("orders")]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
     [ProducesResponseType<List<OrderResponse>>(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetOrdersAsync(
+    public async Task<IActionResult> GetOrders(
         [FromQuery] OrderStatus status,
         [FromQuery] DateTime from
     )
     {
         var orders = 
-            await orderService.GetCafeOrdersAsync(
+            await orderService.GetCafeOrders(
                 User.GetId(), status, from);
 
         return Ok(orders.Adapt<IReadOnlyCollection<OrderResponse>>());
