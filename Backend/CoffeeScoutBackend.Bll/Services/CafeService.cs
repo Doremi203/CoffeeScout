@@ -7,6 +7,7 @@ namespace CoffeeScoutBackend.Bll.Services;
 
 public class CafeService(
     IMenuItemService menuItemService,
+    IBeverageTypeService beverageTypeService,
     ICafeRepository cafeRepository
 ) : ICafeService
 {
@@ -28,7 +29,7 @@ public class CafeService(
     public async Task AddMenuItemAsync(string adminId, MenuItem menuItem)
     {
         var beverageName = menuItem.BeverageType.Name;
-        var beverageType = await menuItemService.GetBeverageTypeByNameAsync(beverageName);
+        var beverageType = await beverageTypeService.GetBeverageTypeByNameAsync(beverageName);
         var cafe = await GetByAdminIdAsync(adminId);
 
         var newMenuItem = new MenuItem

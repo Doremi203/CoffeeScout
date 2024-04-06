@@ -1,3 +1,4 @@
+using CoffeeScoutBackend.Api.Requests;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +9,7 @@ namespace CoffeeScoutBackend.Api.Controllers;
 [ApiController]
 [Route("api/v1/beverage-types")]
 public class BeverageTypesController(
-    IMenuItemService menuItemService
+    IBeverageTypeService beverageTypeService
 ) : ControllerBase
 {
     [HttpPost]
@@ -20,8 +21,20 @@ public class BeverageTypesController(
         {
             Name = name
         };
-        await menuItemService.AddBeverageTypeAsync(newBeverageType);
+        await beverageTypeService.AddBeverageTypeAsync(newBeverageType);
 
         return Created();
+    }
+    
+    [HttpPatch("{id:long}")]
+    [Authorize(Roles = nameof(Roles.SuperAdmin))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> UpdateBeverageTypeAsync(
+        [FromRoute] long id,
+        UpdateBeverageTypeRequest request)
+    {
+        await beverageTypeService.UpdateBeverageTypeNameAsync(id, request.Name);
+
+        return NoContent();
     }
 }
