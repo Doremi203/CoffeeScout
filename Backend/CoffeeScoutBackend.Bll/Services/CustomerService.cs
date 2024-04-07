@@ -5,6 +5,7 @@ using CoffeeScoutBackend.Domain.Exceptions;
 using CoffeeScoutBackend.Domain.Interfaces.Repositories;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
+using Mapster;
 
 namespace CoffeeScoutBackend.Bll.Services;
 
@@ -64,5 +65,21 @@ public class CustomerService(
                 .Distinct();
 
         return favoredBeverageTypes.ToList()!;
+    }
+    
+    public async Task<CustomerInfo> GetInfo(string userId)
+    {
+        var customer = await GetByUserId(userId);
+
+        return customer.Adapt<CustomerInfo>();
+    }
+
+    public async Task UpdateInfo(string userId, CustomerInfo info)
+    {
+        var customer = await GetByUserId(userId);
+
+        var updatedCustomer = customer with { FirstName = info.FirstName };
+
+        await customerRepository.Update(updatedCustomer);
     }
 }

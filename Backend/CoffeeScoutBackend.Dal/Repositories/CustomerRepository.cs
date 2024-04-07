@@ -38,4 +38,15 @@ public class CustomerRepository(
         
         await dbContext.SaveChangesAsync();
     }
+
+    public async Task Update(Customer customer)
+    {
+        var customerEntity = await dbContext.Customers
+            .FirstAsync(c => c.Id == customer.Id);
+        
+        customerEntity.FirstName = customer.FirstName;
+        
+        dbContext.Customers.Update(customerEntity);
+        await dbContext.SaveChangesAsync();
+    }
 }
