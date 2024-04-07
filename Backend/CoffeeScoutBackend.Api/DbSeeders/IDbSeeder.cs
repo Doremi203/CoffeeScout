@@ -1,4 +1,4 @@
-namespace CoffeeScoutBackend.Api.Identity;
+namespace CoffeeScoutBackend.Api.DbSeeders;
 
 public interface IDbSeeder
 {

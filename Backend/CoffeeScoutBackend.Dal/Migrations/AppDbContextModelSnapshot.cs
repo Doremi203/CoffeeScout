@@ -214,6 +214,10 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         .HasColumnType("numeric")
                         .HasColumnName("price");
 
+                    b.Property<int>("SizeInMl")
+                        .HasColumnType("integer")
+                        .HasColumnName("size_in_ml");
+
                     b.HasKey("Id")
                         .HasName("pk_menu_items");
 

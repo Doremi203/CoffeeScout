@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CoffeeScoutBackend.Dal.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240401172304_Initial")]
+    [Migration("20240407161011_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -216,6 +216,10 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric")
                         .HasColumnName("price");
+
+                    b.Property<int>("SizeInMl")
+                        .HasColumnType("integer")
+                        .HasColumnName("size_in_ml");
 
                     b.HasKey("Id")
                         .HasName("pk_menu_items");

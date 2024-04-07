@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-namespace CoffeeScoutBackend.Api.Identity;
+namespace CoffeeScoutBackend.Api.DbSeeders;
 
 public class TestDbSeeder(
     IServiceProvider serviceProvider

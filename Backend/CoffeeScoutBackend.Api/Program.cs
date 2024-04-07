@@ -1,4 +1,5 @@
 using CoffeeScoutBackend.Api.Config;
+using CoffeeScoutBackend.Api.DbSeeders;
 using CoffeeScoutBackend.Api.Identity;
 using CoffeeScoutBackend.Api.Middlewares;
 using CoffeeScoutBackend.Bll;
