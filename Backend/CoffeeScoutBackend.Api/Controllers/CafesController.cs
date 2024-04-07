@@ -21,12 +21,12 @@ public class CafesController(
     public async Task<IActionResult> GetCafes(
         [FromQuery] double latitude,
         [FromQuery] double longitude,
-        [FromQuery] double radius)
+        [FromQuery] double radiusInMeters)
     {
         var cafes =
             await cafeService.GetCafesInArea(
                 new Location { Longitude = longitude, Latitude = latitude },
-                radius);
+                radiusInMeters);
 
         return Ok(cafes.Adapt<IReadOnlyCollection<CafeResponse>>());
     }

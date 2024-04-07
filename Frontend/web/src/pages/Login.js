@@ -18,7 +18,7 @@ const LoginPage = () => {
     const {user} = useContext(Context);
 
     const click = async () => {
-        await fetch('http://backend:8080/api/v1/accounts/login', {
+        await fetch('http://localhost/api/v1/accounts/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
