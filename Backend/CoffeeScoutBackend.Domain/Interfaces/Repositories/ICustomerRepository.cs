@@ -7,4 +7,5 @@ public interface ICustomerRepository
     Task<Customer?> GetById(string userId);
     Task Add(Customer customer);
     public Task AddFavoredMenuItem(Customer customer, MenuItem menuItem);
+    Task Update(Customer customer);
 }

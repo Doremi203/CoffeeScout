@@ -8,4 +8,6 @@ public interface ICustomerService
     Task<Customer> GetByUserId(string userId);
     Task AddFavoredMenuItem(string currentUserId, long menuItemId);
     Task<IReadOnlyCollection<BeverageType>> GetFavoredBeverageTypes(string userId);
+    Task<CustomerInfo> GetInfo(string userId);
+    Task UpdateInfo(string userId, CustomerInfo info);
 }
