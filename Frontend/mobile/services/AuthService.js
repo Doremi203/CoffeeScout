@@ -17,4 +17,13 @@ export default class AuthService {
                 password: password
             })
     }
+
+    static async getName() {
+        return $api.get('v1/customers/info')
+    }
+
+    static async getEmail() {
+        return $api.get('v1/accounts/manage/info')
+    }
+
 }

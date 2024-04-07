@@ -1,6 +1,5 @@
 import React, {useContext, useState} from 'react';
 import {
-    SafeAreaView,
     StyleSheet,
     Text,
     TextInput,
@@ -20,16 +19,15 @@ export default function Registration({navigation}) {
 
     const {user} = useContext(Context);
 
-    const click = () => {
-        console.log(name, email, password)
-        user.registration(name, email, password, navigation).then();
+    const click = async () => {
+        await user.registration(name, email, password, navigation);
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View>
             <Text style={styles.header}>регистрация</Text>
 
-            <View style={{height: '45%', marginTop: '23%'}}>
+            <View style={{height: '42%', marginTop: '35%'}}>
                 <View style={[styles.box, {top: '10%'}]}>
                     <TextInput style={styles.input}
                                placeholder="имя"
@@ -66,7 +64,7 @@ export default function Registration({navigation}) {
                 <Text style={styles.text}> уже есть аккаунт? <Text
                     style={{fontFamily: 'MontserratAlternatesSemiBold'}}> войти </Text> </Text>
             </TouchableOpacity>
-        </SafeAreaView>
+        </View>
     );
 }
 
@@ -74,7 +72,7 @@ export default function Registration({navigation}) {
 const styles = StyleSheet.create({
     header: {
         fontSize: RFValue(34),
-        top: '17%',
+        top: '23%',
         left: 25,
         fontFamily: 'MontserratAlternates',
     },
@@ -82,13 +80,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#05704A',
         width: '80%',
         height: RFValue(43),
-        top: '0%',
         left: '10%',
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 10,
         elevation: 3,
-
     },
     text: {
         top: '1%',
@@ -102,7 +98,6 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         fontFamily: 'MontserratAlternates',
     },
-
     box: {
         position: 'absolute',
         left: 0,
@@ -114,5 +109,4 @@ const styles = StyleSheet.create({
         color: 'white',
         fontFamily: 'MontserratAlternates',
     }
-
 });
