@@ -9,4 +9,7 @@ public interface ICafeService
     Task AddMenuItem(string adminId, MenuItem menuItem);
     Task AssignNewCafeAdmin(string adminId, long cafeId);
     Task<IReadOnlyCollection<Cafe>> GetCafesInArea(Location location, double radius);
+    Task AddCafe(Cafe cafe);
+    Task UpdateCafe(string adminId, Cafe cafe);
+    Task DeleteCafe(long id);
 }

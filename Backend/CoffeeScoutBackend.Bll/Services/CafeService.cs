@@ -57,4 +57,28 @@ public class CafeService(
     {
         return await cafeRepository.GetCafesInArea(location, radius);
     }
+
+    public async Task AddCafe(Cafe cafe)
+    {
+        await cafeRepository.Add(cafe);
+    }
+
+    public async Task UpdateCafe(string adminId, Cafe cafe)
+    {
+        var existingCafe = await GetByAdminId(adminId);
+        var modifiedCafe = existingCafe with
+        {
+            Name = cafe.Name,
+            Location = cafe.Location
+        };
+
+        await cafeRepository.Update(modifiedCafe);
+    }
+    
+    public async Task DeleteCafe(long id)
+    {
+        var cafe = await GetById(id);
+        
+        await cafeRepository.Delete(cafe.Id);
+    }
 }

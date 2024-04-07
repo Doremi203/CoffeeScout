@@ -43,12 +43,42 @@ public class CafeRepository(
     public async Task<IReadOnlyCollection<Cafe>> GetCafesInArea(Location location, double radius)
     {
         var area = locationProvider.CreateArea(location, radius);
-        
+
         var cafes = await dbContext.Cafes
             .Include(c => c.MenuItems)
             .Where(c => c.Location.Within(area))
             .ToListAsync();
 
         return cafes.Adapt<IReadOnlyCollection<Cafe>>();
+    }
+
+    public Task Add(Cafe cafe)
+    {
+        var cafeEntity = cafe.Adapt<CafeEntity>();
+        dbContext.Cafes.Add(cafeEntity);
+
+        return dbContext.SaveChangesAsync();
+    }
+
+    public async Task Update(Cafe cafe)
+    {
+        var cafeData = cafe.Adapt<CafeEntity>();
+        var cafeEntity = dbContext.Cafes
+            .First(ca => ca.Id == cafe.Id);
+        
+        cafeEntity.Name = cafeData.Name;
+        cafeEntity.Location = cafeData.Location;
+        
+        dbContext.Cafes.Update(cafeEntity);
+        await dbContext.SaveChangesAsync();
+    }
+    
+    public async Task Delete(long id)
+    {
+        var cafe = await dbContext.Cafes
+            .FirstAsync(ca => ca.Id == id);
+
+        dbContext.Cafes.Remove(cafe);
+        await dbContext.SaveChangesAsync();
     }
 }

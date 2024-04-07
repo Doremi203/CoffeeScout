@@ -124,7 +124,8 @@ public class TestDbSeeder(
                     CafeId = coffeeCrew.Id,
                     BeverageType = cappuccino,
                     BeverageTypeId = cappuccino.Id,
-                    Price = 240
+                    Price = 240,
+                    SizeInMl = 180
                 },
                 new()
                 {
@@ -133,7 +134,8 @@ public class TestDbSeeder(
                     CafeId = starsCoffee.Id,
                     BeverageType = cappuccino,
                     BeverageTypeId = cappuccino.Id,
-                    Price = 325
+                    Price = 325,
+                    SizeInMl = 300
                 }
             };
             
