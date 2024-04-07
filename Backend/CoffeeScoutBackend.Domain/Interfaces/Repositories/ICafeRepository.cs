@@ -8,4 +8,5 @@ public interface ICafeRepository
     Task<Cafe?> GetByAdminId(string adminId);
     Task CreateCafeAdmin(CafeAdmin admin);
     Task<IReadOnlyCollection<Cafe>> GetCafesInArea(Location location, double radius);
+    Task Add(Cafe cafe);
 }

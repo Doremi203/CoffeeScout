@@ -57,4 +57,9 @@ public class CafeService(
     {
         return await cafeRepository.GetCafesInArea(location, radius);
     }
+
+    public async Task AddCafe(Cafe cafe)
+    {
+        await cafeRepository.Add(cafe);
+    }
 }

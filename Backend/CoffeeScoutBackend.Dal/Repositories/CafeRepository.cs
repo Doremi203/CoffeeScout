@@ -51,4 +51,12 @@ public class CafeRepository(
 
         return cafes.Adapt<IReadOnlyCollection<Cafe>>();
     }
+
+    public Task Add(Cafe cafe)
+    {
+        var cafeEntity = cafe.Adapt<CafeEntity>();
+        dbContext.Cafes.Add(cafeEntity);
+        
+        return dbContext.SaveChangesAsync();
+    }
 }

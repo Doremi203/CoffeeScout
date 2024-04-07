@@ -1,4 +1,5 @@
 using CoffeeScoutBackend.Api.Extensions;
+using CoffeeScoutBackend.Api.Requests;
 using CoffeeScoutBackend.Api.Responses;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
@@ -29,6 +30,26 @@ public class CafesController(
                 radiusInMeters);
 
         return Ok(cafes.Adapt<IReadOnlyCollection<CafeResponse>>());
+    }
+    
+    [HttpPost]
+    [Authorize(Roles = nameof(Roles.SuperAdmin))]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    public async Task<IActionResult> AddCafe(AddCafeRequest request)
+    {
+        var cafe = new Cafe
+        {
+            Name = request.Name,
+            Location = new Location
+            {
+                Latitude = request.Latitude,
+                Longitude = request.Longitude
+            }
+        };
+        
+        await cafeService.AddCafe(cafe);
+
+        return Created();
     }
     
     [HttpGet("orders")]
