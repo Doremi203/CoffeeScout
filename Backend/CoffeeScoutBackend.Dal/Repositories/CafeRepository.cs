@@ -72,4 +72,13 @@ public class CafeRepository(
         dbContext.Cafes.Update(cafeEntity);
         await dbContext.SaveChangesAsync();
     }
+    
+    public async Task Delete(long id)
+    {
+        var cafe = await dbContext.Cafes
+            .FirstAsync(ca => ca.Id == id);
+
+        dbContext.Cafes.Remove(cafe);
+        await dbContext.SaveChangesAsync();
+    }
 }

@@ -72,6 +72,16 @@ public class CafesController(
         return NoContent();
     }
     
+    [HttpDelete("{id:long}")]
+    [Authorize(Roles = nameof(Roles.SuperAdmin))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> DeleteCafe([FromRoute] long id)
+    {
+        await cafeService.DeleteCafe(id);
+
+        return NoContent();
+    }
+    
     [HttpGet("orders")]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
     [ProducesResponseType<List<OrderResponse>>(StatusCodes.Status200OK)]

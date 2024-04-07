@@ -11,4 +11,5 @@ public interface ICafeService
     Task<IReadOnlyCollection<Cafe>> GetCafesInArea(Location location, double radius);
     Task AddCafe(Cafe cafe);
     Task UpdateCafe(string adminId, Cafe cafe);
+    Task DeleteCafe(long id);
 }

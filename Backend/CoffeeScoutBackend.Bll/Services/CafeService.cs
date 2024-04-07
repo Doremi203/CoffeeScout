@@ -74,4 +74,11 @@ public class CafeService(
 
         await cafeRepository.Update(modifiedCafe);
     }
+    
+    public async Task DeleteCafe(long id)
+    {
+        var cafe = await GetById(id);
+        
+        await cafeRepository.Delete(cafe.Id);
+    }
 }
