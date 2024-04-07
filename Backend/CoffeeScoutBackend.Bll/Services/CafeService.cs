@@ -62,4 +62,16 @@ public class CafeService(
     {
         await cafeRepository.Add(cafe);
     }
+
+    public async Task UpdateCafe(string adminId, Cafe cafe)
+    {
+        var existingCafe = await GetByAdminId(adminId);
+        var modifiedCafe = existingCafe with
+        {
+            Name = cafe.Name,
+            Location = cafe.Location
+        };
+
+        await cafeRepository.Update(modifiedCafe);
+    }
 }

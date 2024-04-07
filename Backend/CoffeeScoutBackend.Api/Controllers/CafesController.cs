@@ -52,6 +52,26 @@ public class CafesController(
         return Created();
     }
     
+    [HttpPatch]
+    [Authorize(Roles = nameof(Roles.CafeAdmin))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> UpdateCafe(UpdateCafeRequest request)
+    {
+        var cafe = new Cafe
+        {
+            Name = request.Name,
+            Location = new Location
+            {
+                Latitude = request.Latitude,
+                Longitude = request.Longitude
+            }
+        };
+        
+        await cafeService.UpdateCafe(User.GetId(), cafe);
+
+        return NoContent();
+    }
+    
     [HttpGet("orders")]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
     [ProducesResponseType<List<OrderResponse>>(StatusCodes.Status200OK)]
