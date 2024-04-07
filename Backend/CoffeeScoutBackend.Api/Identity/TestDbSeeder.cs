@@ -89,15 +89,15 @@ public class TestDbSeeder(
             {
                 new()
                 {
-                    Name = "Cafe 1",
+                    Name = "Coffee Crew",
                     Location = locationProvider.CreatePoint(
-                        55.754172, 37.635143)
+                        55.698964, 37.499202)
                 },
                 new()
                 {
-                    Name = "Cafe 2",
+                    Name = "Stars Coffee",
                     Location = locationProvider.CreatePoint(
-                        55.760742, 37.626232)
+                        55.697503, 37.500088)
                 }
             };
             await dbContext.Cafes.AddRangeAsync(cafes);
@@ -109,24 +109,35 @@ public class TestDbSeeder(
     {
         using var scope = serviceProvider.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        var cafes = await dbContext.Cafes.ToListAsync();
 
         if (!dbContext.MenuItems.Any())
         {
-            foreach (var beverageType in dbContext.BeverageTypes)
+            var coffeeCrew = await dbContext.Cafes.FirstAsync(c => c.Name == "Coffee Crew");
+            var starsCoffee = await dbContext.Cafes.FirstAsync(c => c.Name == "Stars Coffee");
+            var cappuccino = await dbContext.BeverageTypes.FirstAsync(b => b.Name == "Cappuccino");
+            var menuItems = new List<MenuItemEntity>
             {
-                var cafe = cafes[Random.Shared.Next(0, cafes.Count)];
-                await dbContext.MenuItems.AddAsync(new MenuItemEntity
+                new()
                 {
-                    Name = $"{beverageType.Name} 0.2l",
-                    Price = 2.5m,
-                    BeverageType = beverageType,
-                    BeverageTypeId = beverageType.Id,
-                    Cafe = cafe,
-                    CafeId = cafe.Id,
-                });
-            }
-
+                    Name = "Капучино малый",
+                    Cafe = coffeeCrew,
+                    CafeId = coffeeCrew.Id,
+                    BeverageType = cappuccino,
+                    BeverageTypeId = cappuccino.Id,
+                    Price = 240
+                },
+                new()
+                {
+                    Name = "Капучино большой",
+                    Cafe = starsCoffee,
+                    CafeId = starsCoffee.Id,
+                    BeverageType = cappuccino,
+                    BeverageTypeId = cappuccino.Id,
+                    Price = 325
+                }
+            };
+            
+            await dbContext.MenuItems.AddRangeAsync(menuItems);
             await dbContext.SaveChangesAsync();
         }
     }
