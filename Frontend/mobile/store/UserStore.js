@@ -2,8 +2,7 @@ import {makeAutoObservable} from "mobx";
 import AuthService from "../services/AuthService";
 import * as SecureStorage from "expo-secure-store";
 import {Alert} from "react-native";
-import {useEffect, useState} from "react";
-import * as Location from "expo-location";
+
 
 export default class UserStore {
 
@@ -13,28 +12,36 @@ export default class UserStore {
 
 
     async getName() {
+        try {
+            const response = await AuthService.getName();
+            return response.data.firstName;
+        } catch (error) {
+            Alert.alert('Ошибка', 'Что-то пошло не так')
+        }
+    }
 
+
+    async getEmail() {
+        try {
+            const response = await AuthService.getEmail();
+            console.log(response.data)
+            return response.data.email;
+        } catch (error) {
+            Alert.alert('Ошибка', 'Что-то пошло не так')
+        }
     }
 
     async registration(name, email, password, navigation) {
         try {
-            await AuthService.registration(name, email, password).then(async response => {
+            await AuthService.registration(name, email, password).then(async () => {
                 await AuthService.login(email, password).then(response2 => {
                     let accessTokenName = "accessToken";
                     let accessToken = response2.data[accessTokenName];
 
                     SecureStorage.setItem('accessToken', accessToken);
-
-                    SecureStorage.setItem('username', name);
-                    SecureStorage.setItem('email', email);
-
-                    console.log(SecureStorage.getItem('accessToken'));
-
                     navigation.navigate('main');
                 })
             })
-
-
         } catch (error) {
             let errors = "";
 
@@ -51,15 +58,10 @@ export default class UserStore {
 
     async login(email, password, navigation) {
         try {
-
             const response = await AuthService.login(email, password);
-
-            console.log(response.status)
 
             let accessTokenName = "accessToken";
             let accessToken = response.data[accessTokenName];
-
-            console.log(accessToken)
 
             SecureStorage.setItem('accessToken', accessToken);
             navigation.navigate('main')
@@ -74,21 +76,4 @@ export default class UserStore {
             }
         }
     }
-
-
-    async getLocation() {
-        let {status} = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-            Alert.alert('Permission to access location was denied');
-            return;
-        }
-
-        let location = await Location.getCurrentPositionAsync({});
-        console.log(location.coords.longitude);
-        console.log(location.coords.latitude);
-
-        return location;
-    }
-
-
 }
