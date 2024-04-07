@@ -239,7 +239,8 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     beverage_type_id = table.Column<int>(type: "integer", nullable: false),
                     cafe_id = table.Column<long>(type: "bigint", nullable: false),
                     name = table.Column<string>(type: "text", nullable: false),
-                    price = table.Column<decimal>(type: "numeric", nullable: false)
+                    price = table.Column<decimal>(type: "numeric", nullable: false),
+                    size_in_ml = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {

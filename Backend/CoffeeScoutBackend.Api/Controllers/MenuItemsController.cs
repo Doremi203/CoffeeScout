@@ -47,6 +47,7 @@ public class MenuItemsController(
         {
             Name = request.Name,
             Price = request.Price,
+            SizeInMl = request.SizeInMl,
             BeverageType = new BeverageType
             {
                 Name = request.BeverageTypeName
