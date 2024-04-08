@@ -3,7 +3,6 @@ import UserService from "../services/UserService";
 import * as SecureStorage from "expo-secure-store";
 import {Alert} from "react-native";
 
-
 export default class UserStore {
 
     constructor() {

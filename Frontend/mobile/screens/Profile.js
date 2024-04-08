@@ -1,15 +1,31 @@
-import React from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableWithoutFeedback, View, Image, ScrollView} from 'react-native';
 import Footer from "./Footer";
 import {RFValue} from "react-native-responsive-fontsize";
 import OrderComponent from "../components/OrderComponent";
-import * as SecureStorage from "expo-secure-store";
+import {Context} from "../index";
 
 
 export default function Profile({navigation}) {
 
-    const name = SecureStorage.getItem('username');
-    const email = SecureStorage.getItem('email');
+    const {user} = useContext(Context);
+
+    const [name, setName] = useState("")
+    const [email, setEmail] = useState("")
+
+    useEffect(() => {
+        return navigation.addListener('focus', async () => {
+            const name = await user.getName();
+            setName(name);
+            const email = await user.getEmail();
+            setEmail(email);
+        });
+
+    }, [navigation]);
+
+
+    console.log(email)
+
 
     return (
         <View style={styles.container}>
@@ -19,9 +35,7 @@ export default function Profile({navigation}) {
                     <View style={styles.profile}>
                         <Image source={require('../assets/icons/user.png')} style={styles.image}/>
                         <Text style={styles.name}>{name}</Text>
-                        <Text style={styles.email}>
-                            {email}
-                        </Text>
+                        <Text style={styles.email}>{email}</Text>
                         <Image source={require('../assets/icons/right-arrow.png')} style={styles.arrow}/>
                     </View>
                 </TouchableWithoutFeedback>
@@ -47,23 +61,17 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
         minHeight: '100%',
-        // alignItems: 'center',
-
     },
     main: {
         flex: 1,
         alignItems: 'center',
     },
     profile: {
-        //backgroundColor: '#AEC09A',
-        //backgroundColor: '#D5E2DD',
         backgroundColor: '#E2E9E6',
         width: '90%',
         height: RFValue(100),
         top: '10%',
-       // flexDirection: 'row',
         borderRadius: 15,
-
     },
 
     image: {
@@ -91,8 +99,7 @@ const styles = StyleSheet.create({
         width: RFValue(15),
         height: RFValue(15),
         marginTop: RFValue(-35),
-        right : RFValue(-290)
-        //right: RFValue(45),
+        right: RFValue(-290)
     },
     historyHeader: {
         fontSize: RFValue(20),
@@ -100,8 +107,5 @@ const styles = StyleSheet.create({
         marginTop: '30%',
         right: '16%',
     },
-
-    orders: {},
-    scroll: {}
 
 });
