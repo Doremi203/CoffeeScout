@@ -296,6 +296,45 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     b.ToTable("order_items", (string)null);
                 });
 
+            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.ReviewEntity", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("content");
+
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("customer_id");
+
+                    b.Property<long>("MenuItemId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("menu_item_id");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("integer")
+                        .HasColumnName("rating");
+
+                    b.HasKey("Id")
+                        .HasName("pk_reviews");
+
+                    b.HasIndex("CustomerId")
+                        .HasDatabaseName("ix_reviews_customer_id");
+
+                    b.HasIndex("MenuItemId")
+                        .HasDatabaseName("ix_reviews_menu_item_id");
+
+                    b.ToTable("reviews", (string)null);
+                });
+
             modelBuilder.Entity("CustomerEntityMenuItemEntity", b =>
                 {
                     b.Property<string>("CustomersFavoredById")
@@ -566,6 +605,27 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     b.Navigation("Order");
                 });
 
+            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.ReviewEntity", b =>
+                {
+                    b.HasOne("CoffeeScoutBackend.Dal.Entities.CustomerEntity", "Customer")
+                        .WithMany("Reviews")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_reviews_customers_customer_id");
+
+                    b.HasOne("CoffeeScoutBackend.Dal.Entities.MenuItemEntity", "MenuItem")
+                        .WithMany("Reviews")
+                        .HasForeignKey("MenuItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_reviews_menu_items_menu_item_id");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("MenuItem");
+                });
+
             modelBuilder.Entity("CustomerEntityMenuItemEntity", b =>
                 {
                     b.HasOne("CoffeeScoutBackend.Dal.Entities.CustomerEntity", null)
@@ -662,6 +722,13 @@ namespace CoffeeScoutBackend.Dal.Migrations
             modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.CustomerEntity", b =>
                 {
                     b.Navigation("Orders");
+
+                    b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.MenuItemEntity", b =>
+                {
+                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.OrderEntity", b =>

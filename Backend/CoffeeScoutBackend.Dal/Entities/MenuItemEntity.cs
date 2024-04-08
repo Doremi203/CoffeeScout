@@ -11,5 +11,6 @@ public record MenuItemEntity
 
     public required BeverageTypeEntity BeverageType { get; set; }
     public required CafeEntity Cafe { get; set; }
-    public ICollection<CustomerEntity> CustomersFavoredBy { get; init; } = new HashSet<CustomerEntity>();
+    public required ICollection<CustomerEntity> CustomersFavoredBy { get; init; }
+    public required ICollection<ReviewEntity> Reviews { get; init; }
 }

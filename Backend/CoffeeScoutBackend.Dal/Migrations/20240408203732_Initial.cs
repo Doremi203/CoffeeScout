@@ -306,6 +306,34 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "reviews",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    customer_id = table.Column<string>(type: "text", nullable: false),
+                    menu_item_id = table.Column<long>(type: "bigint", nullable: false),
+                    content = table.Column<string>(type: "text", nullable: false),
+                    rating = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_reviews", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_reviews_customers_customer_id",
+                        column: x => x.customer_id,
+                        principalTable: "customers",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_reviews_menu_items_menu_item_id",
+                        column: x => x.menu_item_id,
+                        principalTable: "menu_items",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "order_items",
                 columns: table => new
                 {
@@ -404,6 +432,16 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 name: "ix_orders_customer_id",
                 table: "orders",
                 column: "customer_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_reviews_customer_id",
+                table: "reviews",
+                column: "customer_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_reviews_menu_item_id",
+                table: "reviews",
+                column: "menu_item_id");
         }
 
         /// <inheritdoc />
@@ -434,22 +472,25 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 name: "order_items");
 
             migrationBuilder.DropTable(
+                name: "reviews");
+
+            migrationBuilder.DropTable(
                 name: "asp_net_roles");
+
+            migrationBuilder.DropTable(
+                name: "orders");
 
             migrationBuilder.DropTable(
                 name: "menu_items");
 
             migrationBuilder.DropTable(
-                name: "orders");
+                name: "customers");
 
             migrationBuilder.DropTable(
                 name: "beverage_types");
 
             migrationBuilder.DropTable(
                 name: "cafes");
-
-            migrationBuilder.DropTable(
-                name: "customers");
 
             migrationBuilder.DropTable(
                 name: "asp_net_users");

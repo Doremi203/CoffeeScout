@@ -125,7 +125,9 @@ public class TestDbSeeder(
                     BeverageType = cappuccino,
                     BeverageTypeId = cappuccino.Id,
                     Price = 240,
-                    SizeInMl = 180
+                    SizeInMl = 180,
+                    Reviews = new List<ReviewEntity>(),
+                    CustomersFavoredBy = new List<CustomerEntity>()
                 },
                 new()
                 {
@@ -135,7 +137,9 @@ public class TestDbSeeder(
                     BeverageType = cappuccino,
                     BeverageTypeId = cappuccino.Id,
                     Price = 325,
-                    SizeInMl = 300
+                    SizeInMl = 300,
+                    Reviews = new List<ReviewEntity>(),
+                    CustomersFavoredBy = new List<CustomerEntity>()
                 }
             };
 
