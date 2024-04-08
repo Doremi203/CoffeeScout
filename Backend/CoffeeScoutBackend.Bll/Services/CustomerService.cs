@@ -39,20 +39,30 @@ public class CustomerService(
                ?? throw new CustomerNotFoundException($"Customer with id:{userId} not found", userId);
     }
 
-    public async Task AddFavoredMenuItem(string currentUserId, long menuItemId)
+    public async Task AddFavoredMenuItem(string userId, long menuItemId)
     {
-        var customer = await customerRepository.GetById(currentUserId)
-                       ?? throw new CustomerNotFoundException(
-                           $"Customer with id:{currentUserId} not found",
-                           currentUserId);
+        var customer = await GetByUserId(userId);
         var menuItem = await menuItemService.GetById(menuItemId);
 
-        if (customer.FavoriteMenuItems.Contains(menuItem))
+        if (customer.FavoriteMenuItems.Any(mi => mi.Id == menuItemId))
             throw new MenuItemAlreadyFavoredException(
-                $"Menu item with id:{menuItemId} is already favored by customer with id:{currentUserId}",
-                menuItemId,
-                currentUserId);
+                $"Menu item with id:{menuItemId} is already favored by customer with id:{userId}",
+                menuItemId);
+        
         await customerRepository.AddFavoredMenuItem(customer, menuItem);
+    }
+    
+    public async Task RemoveFavoredMenuItem(string userId, long menuItemId)
+    {
+        var customer = await GetByUserId(userId);
+        var menuItem = await menuItemService.GetById(menuItemId);
+
+        if (customer.FavoriteMenuItems.All(mi => mi.Id != menuItemId))
+            throw new MenuItemNotFavoredException(
+                $"Menu item with id:{menuItemId} is not favored by customer with id:{userId}",
+                menuItemId);
+        
+        await customerRepository.RemoveFavoredMenuItem(customer, menuItem);
     }
 
     public async Task<IReadOnlyCollection<BeverageType>> GetFavoredBeverageTypes(string userId)
@@ -64,7 +74,7 @@ public class CustomerService(
                 .Select(mi => mi.BeverageType)
                 .Distinct();
 
-        return favoredBeverageTypes.ToList()!;
+        return favoredBeverageTypes.ToList();
     }
     
     public async Task<CustomerInfo> GetInfo(string userId)

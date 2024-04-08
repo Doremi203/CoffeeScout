@@ -39,7 +39,17 @@ public class CustomersController(
     public async Task<IActionResult> AddFavoredMenuItem([FromQuery] long menuItemId)
     {
         await customerService.AddFavoredMenuItem(User.GetId(), menuItemId);
+        
         return Created($"{RoutesV1.Customers}/favored-menu-items/{menuItemId}", null);
+    }
+
+    [HttpDelete("favored-menu-items/{menuItemId:long}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> RemoveFavoredMenuItem(long menuItemId)
+    {
+        await customerService.RemoveFavoredMenuItem(User.GetId(), menuItemId);
+        
+        return NoContent();
     }
 
     [HttpGet("favored-beverage-types")]
@@ -48,6 +58,7 @@ public class CustomersController(
     {
         var favoredBeverageTypes =
             await customerService.GetFavoredBeverageTypes(User.GetId());
+        
         return Ok(favoredBeverageTypes);
     }
 }
