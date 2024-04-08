@@ -47,4 +47,21 @@ public class MenuItemService(
 
         return await menuItemRepository.Add(newMenuItem);
     }
+
+    public async Task Update(long id, MenuItem menuItem)
+    {
+        var existingMenuItem = await GetById(id);
+        var beverageType = 
+            await beverageTypeService.GetBeverageTypeByNameAsync(menuItem.BeverageType.Name);
+
+        var newMenuItem = existingMenuItem with
+        {
+            Name = menuItem.Name,
+            Price = menuItem.Price,
+            SizeInMl = menuItem.SizeInMl,
+            BeverageType = beverageType
+        };
+
+        await menuItemRepository.Update(newMenuItem);
+    }
 }

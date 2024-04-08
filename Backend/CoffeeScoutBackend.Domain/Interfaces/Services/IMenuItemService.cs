@@ -8,4 +8,5 @@ public interface IMenuItemService
     Task<IEnumerable<MenuItem>> GetAllInAreaByBeverageType(
         Location location, double radiusInMeters, long beverageTypeId);
     Task<MenuItem> Add(string cafeAdminId, MenuItem menuItem);
+    Task Update(long id, MenuItem menuItem);
 }
