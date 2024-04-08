@@ -86,7 +86,7 @@ public class CafesController(
     [HttpGet("orders")]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
     [ProducesResponseType<List<OrderResponse>>(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetCafeOrders([FromQuery] GetCafeOrdersRequest request)
+    public async Task<IActionResult> GetCafeOrders([FromQuery] GetOrdersRequest request)
     {
         var orders =
             await orderService.GetCafeOrders(
