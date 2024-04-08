@@ -7,7 +7,8 @@ namespace CoffeeScoutBackend.Bll.Services;
 
 public class MenuItemService(
     IMenuItemRepository menuItemRepository,
-    IBeverageTypeService beverageTypeService
+    IBeverageTypeService beverageTypeService,
+    ICafeService cafeService
 ) : IMenuItemService
 {
     public async Task<MenuItem> GetById(long id)
@@ -29,9 +30,21 @@ public class MenuItemService(
         return await menuItemRepository.GetAllInAreaByBeverageType(
             location, radiusInMeters, beverageType);
     }
-
-    public async Task Add(MenuItem menuItem)
+    
+    public async Task<MenuItem> Add(string adminId, MenuItem menuItem)
     {
-        await menuItemRepository.Add(menuItem);
+        var beverageName = menuItem.BeverageType.Name;
+        var beverageType = await beverageTypeService.GetBeverageTypeByNameAsync(beverageName);
+        var cafe = await cafeService.GetByAdminId(adminId);
+
+        var newMenuItem = new MenuItem
+        {
+            Name = menuItem.Name,
+            Price = menuItem.Price,
+            BeverageType = beverageType,
+            Cafe = cafe
+        };
+
+        return await menuItemRepository.Add(newMenuItem);
     }
 }

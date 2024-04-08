@@ -27,9 +27,9 @@ public class BeverageTypeService(
                    id);
     }
 
-    public Task AddBeverageType(BeverageType beverageType)
+    public async Task<BeverageType> AddBeverageType(BeverageType beverageType)
     {
-        return beverageTypeRepository.AddBeverageType(beverageType);
+        return await beverageTypeRepository.AddBeverageType(beverageType);
     }
 
     public async Task UpdateBeverageTypeName(long id, string name)

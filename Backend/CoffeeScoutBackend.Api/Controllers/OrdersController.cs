@@ -1,5 +1,6 @@
 using CoffeeScoutBackend.Api.Extensions;
 using CoffeeScoutBackend.Api.Requests;
+using CoffeeScoutBackend.Api.Responses;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
 using Mapster;
@@ -16,7 +17,7 @@ public class OrdersController(
 {
     [HttpPost]
     [Authorize(Roles = nameof(Roles.Customer))]
-    [ProducesResponseType<long>(StatusCodes.Status201Created)]
+    [ProducesResponseType<OrderResponse>(StatusCodes.Status201Created)]
     public async Task<IActionResult> PlaceOrder(PlaceOrderRequest request)
     {
         var orderData = new CreateOrderData
@@ -25,7 +26,8 @@ public class OrdersController(
             MenuItems = request.MenuItems
                 .Adapt<IReadOnlyCollection<CreateOrderData.MenuItemData>>()
         };
-        var id = await orderService.CreateOrder(orderData);
-        return Created($"api/v1/orders/{id}", id);
+        var order = await orderService.CreateOrder(orderData);
+        
+        return Created($"api/v1/orders/{order.Id}", order.Adapt<OrderResponse>());
     }
 }

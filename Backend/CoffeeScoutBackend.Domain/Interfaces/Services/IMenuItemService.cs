@@ -7,5 +7,5 @@ public interface IMenuItemService
     Task<MenuItem> GetById(long id);
     Task<IEnumerable<MenuItem>> GetAllInAreaByBeverageType(
         Location location, double radiusInMeters, long beverageTypeId);
-    Task Add(MenuItem menuItem);
+    Task<MenuItem> Add(string cafeAdminId, MenuItem menuItem);
 }

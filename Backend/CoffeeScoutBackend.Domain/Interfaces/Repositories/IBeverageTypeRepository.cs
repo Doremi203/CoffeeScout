@@ -6,7 +6,7 @@ public interface IBeverageTypeRepository
 {
     Task<BeverageType?> GetBeverageTypeByName(string name);
     Task<BeverageType?> GetBeverageTypeById(long id);
-    Task AddBeverageType(BeverageType beverageType);
+    Task<BeverageType> AddBeverageType(BeverageType beverageType);
     
     Task UpdateBeverageType(BeverageType beverageType);
     Task DeleteBeverageType(long id);
