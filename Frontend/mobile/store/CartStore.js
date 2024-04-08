@@ -1,4 +1,3 @@
-import React, { createContext, useState } from 'react';
 import {makeAutoObservable} from "mobx";
 
 
@@ -15,6 +14,7 @@ export default class CartStore  {
             id: menuItemId,
             name: name,
             price: price,
+            quantity: 1
         };
         this.cart.push(product);
     }
@@ -42,6 +42,18 @@ export default class CartStore  {
             const productIndex = this.cart.indexOf(product);
             this.cart[productIndex].quantity += 1;
         }
+    }
+
+    clearCart() {
+        this.cart = [];
+    }
+
+    getMenuItems() {
+
+        return this.cart.map(item => ({
+            id: item.id,
+            quantity: item.quantity
+        }));
     }
 
 
