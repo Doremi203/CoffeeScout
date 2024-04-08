@@ -1,4 +1,4 @@
-using CoffeeScoutBackend.Api.Requests;
+using CoffeeScoutBackend.Api.Requests.V1.Beverages;
 using CoffeeScoutBackend.Api.Responses;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CoffeeScoutBackend.Api.Controllers;
 
 [ApiController]
-[Route("api/v1/beverage-types")]
+[Route(RoutesV1.BeverageTypes)]
 public class BeverageTypesController(
     IBeverageTypeService beverageTypeService
 ) : ControllerBase
@@ -17,17 +17,17 @@ public class BeverageTypesController(
     [HttpPost]
     [Authorize(Roles = nameof(Roles.SuperAdmin))]
     [ProducesResponseType<BeverageTypeResponse>(StatusCodes.Status201Created)]
-    public async Task<IActionResult> AddBeverageType(string name)
+    public async Task<IActionResult> AddBeverageType(AddBeverageTypeRequest request)
     {
         var newBeverageType = new BeverageType
         {
-            Name = name
+            Name = request.Name
         };
         var beverageType = await beverageTypeService.AddBeverageType(newBeverageType);
 
-        return Created($"api/v1/beverage-types/{beverageType.Id}", beverageType.Adapt<BeverageTypeResponse>());
+        return Created($"{RoutesV1.BeverageTypes}/{beverageType.Id}", beverageType.Adapt<BeverageTypeResponse>());
     }
-    
+
     [HttpPatch("{id:long}")]
     [Authorize(Roles = nameof(Roles.SuperAdmin))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -39,7 +39,7 @@ public class BeverageTypesController(
 
         return NoContent();
     }
-    
+
     [HttpDelete("{id:long}")]
     [Authorize(Roles = nameof(Roles.SuperAdmin))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -49,5 +49,4 @@ public class BeverageTypesController(
 
         return NoContent();
     }
-    
 }

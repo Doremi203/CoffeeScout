@@ -1,5 +1,5 @@
 using CoffeeScoutBackend.Api.Extensions;
-using CoffeeScoutBackend.Api.Requests;
+using CoffeeScoutBackend.Api.Requests.V1.MenuItems;
 using CoffeeScoutBackend.Api.Responses;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CoffeeScoutBackend.Api.Controllers;
 
 [ApiController]
-[Route("api/v1/menu-items")]
+[Route(RoutesV1.MenuItems)]
 public class MenuItemsController(
     IMenuItemService menuItemService
 ) : ControllerBase
@@ -19,24 +19,21 @@ public class MenuItemsController(
     [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType<List<MenuItemResponse>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetMenuItemsByBeverageTypeInArea(
-        [FromQuery] double latitude,
-        [FromQuery] double longitude,
-        [FromQuery] double radiusInMeters,
-        [FromQuery] long beverageTypeId
+        [FromQuery] GetMenuItemsByBeverageTypeInAreaRequest request
     )
     {
         var menuItems = await menuItemService.GetAllInAreaByBeverageType(
             new Location
             {
-                Latitude = latitude,
-                Longitude = longitude
+                Latitude = request.Latitude,
+                Longitude = request.Longitude
             },
-            radiusInMeters,
-            beverageTypeId);
+            request.RadiusInMeters,
+            request.BeverageTypeId);
 
         return Ok(menuItems.Adapt<IEnumerable<MenuItemResponse>>());
     }
-    
+
     [HttpPost]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -54,6 +51,6 @@ public class MenuItemsController(
         };
         var menuItem = await menuItemService.Add(User.GetId(), newMenuItem);
 
-        return Created($"api/v1/menu-items/{menuItem.Id}", menuItem.Adapt<MenuItemResponse>());
+        return Created($"{RoutesV1.MenuItems}/{menuItem.Id}", menuItem.Adapt<MenuItemResponse>());
     }
 }

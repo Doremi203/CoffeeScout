@@ -1,5 +1,5 @@
 using CoffeeScoutBackend.Api.Extensions;
-using CoffeeScoutBackend.Api.Requests;
+using CoffeeScoutBackend.Api.Requests.V1.Cafes;
 using CoffeeScoutBackend.Api.Responses;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CoffeeScoutBackend.Api.Controllers;
 
 [ApiController]
-[Route("api/v1/cafes")]
+[Route(RoutesV1.Cafes)]
 public class CafesController(
     ICafeService cafeService,
     IOrderService orderService
@@ -19,19 +19,20 @@ public class CafesController(
     [HttpGet]
     [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType<List<CafeResponse>>(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetCafes(
-        [FromQuery] double latitude,
-        [FromQuery] double longitude,
-        [FromQuery] double radiusInMeters)
+    public async Task<IActionResult> GetCafes([FromQuery] GetCafesRequest request)
     {
         var cafes =
             await cafeService.GetCafesInArea(
-                new Location { Longitude = longitude, Latitude = latitude },
-                radiusInMeters);
+                new Location
+                {
+                    Longitude = request.Longitude,
+                    Latitude = request.Latitude
+                },
+                request.RadiusInMeters);
 
         return Ok(cafes.Adapt<IReadOnlyCollection<CafeResponse>>());
     }
-    
+
     [HttpPost]
     [Authorize(Roles = nameof(Roles.SuperAdmin))]
     [ProducesResponseType<CafeResponse>(StatusCodes.Status201Created)]
@@ -46,12 +47,12 @@ public class CafesController(
                 Longitude = request.Longitude
             }
         };
-        
+
         var newCafe = await cafeService.AddCafe(cafe);
 
-        return Created($"api/v1/cafes/{newCafe.Id}", newCafe.Adapt<CafeResponse>());
+        return Created($"{RoutesV1.Cafes}/{newCafe.Id}", newCafe.Adapt<CafeResponse>());
     }
-    
+
     [HttpPatch]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -66,12 +67,12 @@ public class CafesController(
                 Longitude = request.Longitude
             }
         };
-        
+
         await cafeService.UpdateCafe(User.GetId(), cafe);
 
         return NoContent();
     }
-    
+
     [HttpDelete("{id:long}")]
     [Authorize(Roles = nameof(Roles.SuperAdmin))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -81,18 +82,15 @@ public class CafesController(
 
         return NoContent();
     }
-    
+
     [HttpGet("orders")]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
     [ProducesResponseType<List<OrderResponse>>(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetOrders(
-        [FromQuery] OrderStatus status,
-        [FromQuery] DateTime from
-    )
+    public async Task<IActionResult> GetCafeOrders([FromQuery] GetCafeOrdersRequest request)
     {
-        var orders = 
+        var orders =
             await orderService.GetCafeOrders(
-                User.GetId(), status, from);
+                User.GetId(), request.Status, request.From);
 
         return Ok(orders.Adapt<IReadOnlyCollection<OrderResponse>>());
     }

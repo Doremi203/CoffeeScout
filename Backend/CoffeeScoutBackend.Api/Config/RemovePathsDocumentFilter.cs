@@ -11,12 +11,9 @@ public class RemovePathsDocumentFilter : IDocumentFilter
         var pathsToRemove = new List<string>
         {
             "/api/v1/accounts/manage/2fa",
-            "/api/v1/accounts/register",
+            "/api/v1/accounts/register"
         };
 
-        foreach (var path in pathsToRemove)
-        {
-            swaggerDoc.Paths.Remove(path);
-        }
+        foreach (var path in pathsToRemove) swaggerDoc.Paths.Remove(path);
     }
 }
