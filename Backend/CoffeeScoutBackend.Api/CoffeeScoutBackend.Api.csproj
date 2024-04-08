@@ -32,6 +32,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Identity\infrastructure\" />
       <Folder Include="Requests\V1\" />
     </ItemGroup>
 

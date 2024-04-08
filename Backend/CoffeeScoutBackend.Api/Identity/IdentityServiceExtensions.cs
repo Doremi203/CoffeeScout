@@ -1,3 +1,5 @@
+using CoffeeScoutBackend.Api.Identity.Services;
+using CoffeeScoutBackend.Bll.Interfaces;
 using CoffeeScoutBackend.Dal;
 using CoffeeScoutBackend.Dal.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -31,6 +33,10 @@ public static class IdentityServiceExtensions
                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
             options.User.RequireUniqueEmail = true;
         });
+
+        services
+            .AddScoped<IRoleRegistrationService, RoleRegistrationService>()
+            .AddScoped<IEmailConfirmationService, EmailConfirmationService>();
 
         return services;
     }

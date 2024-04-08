@@ -1,3 +1,4 @@
+using CoffeeScoutBackend.Api;
 using CoffeeScoutBackend.Api.Config;
 using CoffeeScoutBackend.Api.DbSeeders;
 using CoffeeScoutBackend.Api.Identity;
@@ -68,7 +69,7 @@ if (app.Environment.IsDevelopment())
 //app.UseHttpsRedirection();
 
 app
-    .MapGroup("api/v1/accounts")
+    .MapGroup(RoutesV1.Accounts)
     .WithTags("Accounts")
     .MapIdentityApi<AppUser>();
 
