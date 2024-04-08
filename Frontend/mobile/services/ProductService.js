@@ -16,4 +16,12 @@ export default class ProductService {
         return $api.get(`/v1/menu-items?latitude=${latitude}&longitude=${longitude}&radiusInMeters=${radiusInMeters}&beverageTypeId=${beverageTypeId}`)
     }
 
+    static async getFavMenuItems() {
+        return $api.get(`/v1/customers/favored-menu-items`)
+    }
+
+    static async dislikeMenuItem(menuItemId) {
+        return $api.delete(`/v1/customers/favored-menu-items/${menuItemId}`)
+    }
+
 }

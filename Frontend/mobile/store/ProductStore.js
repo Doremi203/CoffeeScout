@@ -36,4 +36,27 @@ export default class ProductStore {
         }
     }
 
+    async getFavMenuItems() {
+        try {
+            const response = await ProductService.getFavMenuItems();
+            console.log(response.status)
+            console.log(response.data)
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching data: NEAR', error);
+        }
+    }
+
+    async dislikeMenuItem(menuItemId) {
+        try {
+            await ProductService.dislikeMenuItem(menuItemId)
+        } catch (error) {
+            console.error('Error fetching data: disLIKE', error);
+        }
+    }
+
+    async isProductLiked(menuItemId) {
+        const favItems = await this.getFavMenuItems();
+        return !!favItems.find(item => item.id === menuItemId);
+    }
 }

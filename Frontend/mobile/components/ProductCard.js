@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
     Image,
     StyleSheet,
@@ -25,8 +25,23 @@ export default function ProductCard({menuItemId, name, price, size, cafe}) {
 
     const [isLiked, setIsLiked] = useState(false);
 
+    useEffect(() => {
+        const fetchLiked = async () => {
+            const liked = await product.isProductLiked(menuItemId);
+            setIsLiked(liked);
+        };
+
+        fetchLiked();
+    }, []);
+
+
     const like = async () => {
-        await product.likeProduct(menuItemId);
+        console.log(menuItemId)
+        if (isLiked) {
+            await product.dislikeMenuItem(menuItemId);
+        } else {
+            await product.likeProduct(menuItemId);
+        }
         setIsLiked(!isLiked);
     }
 
