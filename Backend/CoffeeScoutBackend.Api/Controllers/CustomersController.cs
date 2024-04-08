@@ -42,6 +42,16 @@ public class CustomersController(
         
         return Created($"{RoutesV1.Customers}/favored-menu-items/{menuItemId}", null);
     }
+    
+    [HttpGet("favored-menu-items")]
+    [ProducesResponseType<IReadOnlyCollection<MenuItemResponse>>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetFavoredMenuItems()
+    {
+        var favoredMenuItems =
+            await customerService.GetFavoredMenuItems(User.GetId());
+        
+        return Ok(favoredMenuItems.Adapt<IReadOnlyCollection<MenuItemResponse>>());
+    }
 
     [HttpDelete("favored-menu-items/{menuItemId:long}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

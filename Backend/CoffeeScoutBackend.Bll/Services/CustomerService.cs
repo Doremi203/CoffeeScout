@@ -51,7 +51,14 @@ public class CustomerService(
         
         await customerRepository.AddFavoredMenuItem(customer, menuItem);
     }
-    
+
+    public async Task<IReadOnlyCollection<MenuItem>> GetFavoredMenuItems(string userId)
+    {
+        var customer = await GetByUserId(userId);
+
+        return customer.FavoriteMenuItems.ToList();
+    }
+
     public async Task RemoveFavoredMenuItem(string userId, long menuItemId)
     {
         var customer = await GetByUserId(userId);
