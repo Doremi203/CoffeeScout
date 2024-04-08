@@ -6,7 +6,8 @@ public interface ICustomerService
 {
     Task RegisterCustomer(CustomerRegistrationData customerRegistrationData);
     Task<Customer> GetByUserId(string userId);
-    Task AddFavoredMenuItem(string currentUserId, long menuItemId);
+    Task AddFavoredMenuItem(string userId, long menuItemId);
+    Task RemoveFavoredMenuItem(string userId, long menuItemId);
     Task<IReadOnlyCollection<BeverageType>> GetFavoredBeverageTypes(string userId);
     Task<CustomerInfo> GetInfo(string userId);
     Task UpdateInfo(string userId, CustomerInfo info);
