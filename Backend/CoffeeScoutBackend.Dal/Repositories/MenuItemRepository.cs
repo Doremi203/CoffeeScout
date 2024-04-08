@@ -14,11 +14,11 @@ public class MenuItemRepository(
 {
     public async Task<MenuItem?> GetById(long id)
     {
-        var menuItem = await dbContext.MenuItems
+        var menuItemEntity = await dbContext.MenuItems
             .Include(m => m.BeverageType)
             .Include(m => m.Cafe)
             .FirstOrDefaultAsync(m => m.Id == id);
-        return menuItem?.Adapt<MenuItem>();
+        return menuItemEntity?.Adapt<MenuItem>();
     }
 
     public async Task<IReadOnlyCollection<MenuItem>> GetAllInAreaByBeverageType(
@@ -39,15 +39,31 @@ public class MenuItemRepository(
 
     public async Task<MenuItem> Add(MenuItem menuItem)
     {
-        var entity = menuItem.Adapt<MenuItemEntity>();
-        entity.BeverageType = await dbContext.BeverageTypes
-            .FirstAsync(bt => bt.Id == entity.BeverageTypeId);
-        entity.Cafe = await dbContext.Cafes
-            .FirstAsync(c => c.Id == entity.CafeId);
+        var menuItemEntity = menuItem.Adapt<MenuItemEntity>();
+        menuItemEntity.BeverageType = await dbContext.BeverageTypes
+            .FirstAsync(bt => bt.Id == menuItemEntity.BeverageTypeId);
+        menuItemEntity.Cafe = await dbContext.Cafes
+            .FirstAsync(c => c.Id == menuItemEntity.CafeId);
 
-        await dbContext.MenuItems.AddAsync(entity);
+        await dbContext.MenuItems.AddAsync(menuItemEntity);
         await dbContext.SaveChangesAsync();
+
+        return menuItemEntity.Adapt<MenuItem>();
+    }
+
+    public async Task Update(MenuItem menuItem)
+    {
+        var menuItemEntity = await dbContext.MenuItems
+            .FirstAsync(m => m.Id == menuItem.Id);
         
-        return entity.Adapt<MenuItem>();
+        menuItemEntity.BeverageType = await dbContext.BeverageTypes
+            .FirstAsync(bt => bt.Id == menuItemEntity.BeverageTypeId);
+        menuItemEntity.Name = menuItem.Name;
+        menuItemEntity.Price = menuItem.Price;
+        menuItemEntity.SizeInMl = menuItem.SizeInMl;
+
+        dbContext.MenuItems.Update(menuItemEntity);
+
+        await dbContext.SaveChangesAsync();
     }
 }

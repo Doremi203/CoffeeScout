@@ -13,7 +13,8 @@ namespace CoffeeScoutBackend.Api.Controllers;
 [Route(RoutesV1.Cafes)]
 public class CafesController(
     ICafeService cafeService,
-    IOrderService orderService
+    IOrderService orderService,
+    IMenuItemService menuItemService
 ) : ControllerBase
 {
     [HttpGet]
@@ -85,7 +86,7 @@ public class CafesController(
 
     [HttpGet("orders")]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
-    [ProducesResponseType<List<OrderResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<IReadOnlyCollection<OrderResponse>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCafeOrders([FromQuery] GetOrdersRequest request)
     {
         var orders =
@@ -93,5 +94,15 @@ public class CafesController(
                 User.GetId(), request.Status, request.From);
 
         return Ok(orders.Adapt<IReadOnlyCollection<OrderResponse>>());
+    }
+    
+    [HttpGet("menuItems")]
+    [Authorize(Roles = nameof(Roles.CafeAdmin))]
+    [ProducesResponseType<IReadOnlyCollection<CafeMenuItemResponse>>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetCafeMenuItems()
+    {
+        var menuItems = await menuItemService.GetCafeMenuItems(User.GetId());
+
+        return Ok(menuItems.Adapt<IReadOnlyCollection<CafeMenuItemResponse>>());
     }
 }

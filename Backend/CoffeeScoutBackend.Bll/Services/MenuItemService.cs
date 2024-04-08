@@ -19,7 +19,7 @@ public class MenuItemService(
                    id);
     }
 
-    public async Task<IEnumerable<MenuItem>> GetAllInAreaByBeverageType(
+    public async Task<IReadOnlyCollection<MenuItem>> GetAllInAreaByBeverageType(
         Location location,
         double radiusInMeters,
         long beverageTypeId
@@ -46,5 +46,29 @@ public class MenuItemService(
         };
 
         return await menuItemRepository.Add(newMenuItem);
+    }
+
+    public async Task Update(long id, MenuItem menuItem)
+    {
+        var existingMenuItem = await GetById(id);
+        var beverageType = 
+            await beverageTypeService.GetBeverageTypeByNameAsync(menuItem.BeverageType.Name);
+
+        var newMenuItem = existingMenuItem with
+        {
+            Name = menuItem.Name,
+            Price = menuItem.Price,
+            SizeInMl = menuItem.SizeInMl,
+            BeverageType = beverageType
+        };
+
+        await menuItemRepository.Update(newMenuItem);
+    }
+
+    public async Task<IReadOnlyCollection<MenuItem>> GetCafeMenuItems(string cafeAdminId)
+    {
+        var cafe = await cafeService.GetByAdminId(cafeAdminId);
+
+        return cafe.MenuItems;
     }
 }
