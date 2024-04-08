@@ -30,13 +30,13 @@ public class CafeRepository(
         return admin?.Cafe.Adapt<Cafe>();
     }
 
-    public async Task CreateCafeAdmin(CafeAdmin admin)
+    public async Task AddCafeAdmin(CafeAdmin admin)
     {
         var adminEntity = admin.Adapt<CafeAdminEntity>();
         adminEntity.Cafe = await dbContext.Cafes
             .FirstAsync(ca => ca.Id == admin.Cafe.Id);
 
-        dbContext.CafeAdmins.Add(adminEntity);
+        await dbContext.CafeAdmins.AddAsync(adminEntity);
         await dbContext.SaveChangesAsync();
     }
 
@@ -52,12 +52,14 @@ public class CafeRepository(
         return cafes.Adapt<IReadOnlyCollection<Cafe>>();
     }
 
-    public Task Add(Cafe cafe)
+    public async Task<Cafe> Add(Cafe cafe)
     {
         var cafeEntity = cafe.Adapt<CafeEntity>();
-        dbContext.Cafes.Add(cafeEntity);
+        
+        await dbContext.Cafes.AddAsync(cafeEntity);
+        await dbContext.SaveChangesAsync();
 
-        return dbContext.SaveChangesAsync();
+        return cafeEntity.Adapt<Cafe>();
     }
 
     public async Task Update(Cafe cafe)
@@ -65,14 +67,14 @@ public class CafeRepository(
         var cafeData = cafe.Adapt<CafeEntity>();
         var cafeEntity = dbContext.Cafes
             .First(ca => ca.Id == cafe.Id);
-        
+
         cafeEntity.Name = cafeData.Name;
         cafeEntity.Location = cafeData.Location;
-        
+
         dbContext.Cafes.Update(cafeEntity);
         await dbContext.SaveChangesAsync();
     }
-    
+
     public async Task Delete(long id)
     {
         var cafe = await dbContext.Cafes

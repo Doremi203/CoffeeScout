@@ -6,8 +6,6 @@ using CoffeeScoutBackend.Domain.Models;
 namespace CoffeeScoutBackend.Bll.Services;
 
 public class CafeService(
-    IMenuItemService menuItemService,
-    IBeverageTypeService beverageTypeService,
     ICafeRepository cafeRepository
 ) : ICafeService
 {
@@ -19,36 +17,19 @@ public class CafeService(
                    id);
     }
 
-    public async Task<Cafe> GetByAdminId(string adminId)
+    public async Task<Cafe> GetByAdminId(string cafeAdminId)
     {
-        return await cafeRepository.GetByAdminId(adminId)
+        return await cafeRepository.GetByAdminId(cafeAdminId)
                ?? throw new CafeNotFoundException(
-                   $"Cafe for admin with id: {adminId} not found");
+                   $"Cafe for admin with id: {cafeAdminId} not found");
     }
 
-    public async Task AddMenuItem(string adminId, MenuItem menuItem)
-    {
-        var beverageName = menuItem.BeverageType.Name;
-        var beverageType = await beverageTypeService.GetBeverageTypeByNameAsync(beverageName);
-        var cafe = await GetByAdminId(adminId);
-
-        var newMenuItem = new MenuItem
-        {
-            Name = menuItem.Name,
-            Price = menuItem.Price,
-            BeverageType = beverageType,
-            Cafe = cafe
-        };
-
-        await menuItemService.Add(newMenuItem);
-    }
-
-    public async Task AssignNewCafeAdmin(string adminId, long cafeId)
+    public async Task AssignNewCafeAdmin(string cafeAdminId, long cafeId)
     {
         var cafe = await GetById(cafeId);
-        await cafeRepository.CreateCafeAdmin(new CafeAdmin
+        await cafeRepository.AddCafeAdmin(new CafeAdmin
         {
-            Id = adminId,
+            Id = cafeAdminId,
             Cafe = cafe
         });
     }
@@ -58,14 +39,14 @@ public class CafeService(
         return await cafeRepository.GetCafesInArea(location, radius);
     }
 
-    public async Task AddCafe(Cafe cafe)
+    public async Task<Cafe> AddCafe(Cafe cafe)
     {
-        await cafeRepository.Add(cafe);
+        return await cafeRepository.Add(cafe);
     }
 
-    public async Task UpdateCafe(string adminId, Cafe cafe)
+    public async Task UpdateCafe(string cafeAdminId, Cafe cafe)
     {
-        var existingCafe = await GetByAdminId(adminId);
+        var existingCafe = await GetByAdminId(cafeAdminId);
         var modifiedCafe = existingCafe with
         {
             Name = cafe.Name,

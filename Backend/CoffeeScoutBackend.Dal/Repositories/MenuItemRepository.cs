@@ -37,7 +37,7 @@ public class MenuItemRepository(
         return menuItems.Adapt<IReadOnlyCollection<MenuItem>>();
     }
 
-    public async Task Add(MenuItem menuItem)
+    public async Task<MenuItem> Add(MenuItem menuItem)
     {
         var entity = menuItem.Adapt<MenuItemEntity>();
         entity.BeverageType = await dbContext.BeverageTypes
@@ -47,5 +47,7 @@ public class MenuItemRepository(
 
         await dbContext.MenuItems.AddAsync(entity);
         await dbContext.SaveChangesAsync();
+        
+        return entity.Adapt<MenuItem>();
     }
 }

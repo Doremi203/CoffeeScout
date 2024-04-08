@@ -34,7 +34,7 @@ public class CafesController(
     
     [HttpPost]
     [Authorize(Roles = nameof(Roles.SuperAdmin))]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType<CafeResponse>(StatusCodes.Status201Created)]
     public async Task<IActionResult> AddCafe(AddCafeRequest request)
     {
         var cafe = new Cafe
@@ -47,9 +47,9 @@ public class CafesController(
             }
         };
         
-        await cafeService.AddCafe(cafe);
+        var newCafe = await cafeService.AddCafe(cafe);
 
-        return Created();
+        return Created($"api/v1/cafes/{newCafe.Id}", newCafe.Adapt<CafeResponse>());
     }
     
     [HttpPatch]

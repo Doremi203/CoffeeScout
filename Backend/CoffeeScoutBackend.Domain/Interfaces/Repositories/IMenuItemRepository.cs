@@ -7,5 +7,5 @@ public interface IMenuItemRepository
     Task<MenuItem?> GetById(long id);
     Task<IReadOnlyCollection<MenuItem>> GetAllInAreaByBeverageType(
         Location location, double radiusInMeters, BeverageType beverageType);
-    Task Add(MenuItem menuItem);
+    Task<MenuItem> Add(MenuItem menuItem);
 }

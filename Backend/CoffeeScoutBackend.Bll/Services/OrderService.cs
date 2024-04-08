@@ -13,7 +13,7 @@ public class OrderService(
     IDateTimeProvider dateTimeProvider
 ) : IOrderService
 {
-    public async Task<long> CreateOrder(CreateOrderData orderData)
+    public async Task<Order> CreateOrder(CreateOrderData orderData)
     {
         var customer = await customerService.GetByUserId(orderData.CustomerId);
 

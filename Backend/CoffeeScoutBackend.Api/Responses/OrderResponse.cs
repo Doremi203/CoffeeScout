@@ -1,5 +1,3 @@
-using CoffeeScoutBackend.Domain.Models;
-
 namespace CoffeeScoutBackend.Api.Responses;
 
 public record OrderResponse

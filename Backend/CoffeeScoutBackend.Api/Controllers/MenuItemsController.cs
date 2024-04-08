@@ -12,8 +12,7 @@ namespace CoffeeScoutBackend.Api.Controllers;
 [ApiController]
 [Route("api/v1/menu-items")]
 public class MenuItemsController(
-    IMenuItemService menuItemService,
-    ICafeService cafeService
+    IMenuItemService menuItemService
 ) : ControllerBase
 {
     [HttpGet]
@@ -40,7 +39,7 @@ public class MenuItemsController(
     
     [HttpPost]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> AddMenuItem(AddMenuItemRequest request)
     {
         var newMenuItem = new MenuItem
@@ -53,8 +52,8 @@ public class MenuItemsController(
                 Name = request.BeverageTypeName
             }
         };
-        await cafeService.AddMenuItem(User.GetId(), newMenuItem);
+        var menuItem = await menuItemService.Add(User.GetId(), newMenuItem);
 
-        return Created();
+        return Created($"api/v1/menu-items/{menuItem.Id}", menuItem.Adapt<MenuItemResponse>());
     }
 }

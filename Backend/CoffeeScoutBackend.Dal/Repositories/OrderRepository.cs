@@ -12,7 +12,7 @@ public class OrderRepository(
     AppDbContext dbContext
 ) : IOrderRepository
 {
-    public async Task<long> Add(Order order)
+    public async Task<Order> Add(Order order)
     {
         using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
         var orderEntity = order.Adapt<OrderEntity>();
@@ -30,7 +30,7 @@ public class OrderRepository(
         var addedOrder = await dbContext.Orders.AddAsync(orderEntity);
         await dbContext.SaveChangesAsync();
         transaction.Complete();
-        return addedOrder.Entity.Id;
+        return addedOrder.Entity.Adapt<Order>();
     }
 
     public async Task<Order?> GetById(long orderId)

@@ -1,6 +1,8 @@
 using CoffeeScoutBackend.Api.Requests;
+using CoffeeScoutBackend.Api.Responses;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,16 +16,16 @@ public class BeverageTypesController(
 {
     [HttpPost]
     [Authorize(Roles = nameof(Roles.SuperAdmin))]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<BeverageTypeResponse>(StatusCodes.Status201Created)]
     public async Task<IActionResult> AddBeverageType(string name)
     {
         var newBeverageType = new BeverageType
         {
             Name = name
         };
-        await beverageTypeService.AddBeverageType(newBeverageType);
+        var beverageType = await beverageTypeService.AddBeverageType(newBeverageType);
 
-        return Created();
+        return Created($"api/v1/beverage-types/{beverageType.Id}", beverageType.Adapt<BeverageTypeResponse>());
     }
     
     [HttpPatch("{id:long}")]
