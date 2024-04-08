@@ -51,16 +51,6 @@ export default function Main({navigation}) {
     }, [location, executed]);
 
 
-    /*const [name, setName] = useState("")
-    useEffect(() => {
-        const fetchName = async () => {
-            const name = await user.getName();
-            setName(name);
-        };
-
-        fetchName();
-    }, []);*/
-
     return (
 
         <View style={styles.container}>
