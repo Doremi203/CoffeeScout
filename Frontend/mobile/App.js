@@ -17,6 +17,7 @@ import OrderScreen from "./screens/OrderScreen";
 import SearchScreen from "./screens/SearchScreen";
 import {Context} from "./index";
 import CafeScreen from "./screens/CafeScreen";
+import Payment from "./screens/Payment";
 
 const Stack = createStackNavigator();
 
@@ -101,6 +102,11 @@ export default function App() {
                 <Stack.Screen
                     name="cafeScreen"
                     component={CafeScreen}
+                    options={{headerShown: false}}
+                />
+                <Stack.Screen
+                    name="payment"
+                    component={Payment}
                     options={{headerShown: false}}
                 />
             </Stack.Navigator>
