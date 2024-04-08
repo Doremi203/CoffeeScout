@@ -1,5 +1,5 @@
 using CoffeeScoutBackend.Api.Extensions;
-using CoffeeScoutBackend.Api.Requests;
+using CoffeeScoutBackend.Api.Requests.V1.Customers;
 using CoffeeScoutBackend.Api.Responses;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CoffeeScoutBackend.Api.Controllers;
 
 [ApiController]
-[Route("api/v1/customers")]
+[Route(RoutesV1.Customers)]
 [Authorize(Roles = nameof(Roles.Customer))]
 public class CustomersController(
     ICustomerService customerService
@@ -21,25 +21,25 @@ public class CustomersController(
     public async Task<IActionResult> GetInfo()
     {
         var customer = await customerService.GetInfo(User.GetId());
-        
+
         return Ok(customer.Adapt<CustomerInfoResponse>());
     }
-    
+
     [HttpPatch("info")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateInfo(UpdateCustomerInfoRequest request)
     {
         await customerService.UpdateInfo(User.GetId(), request.Adapt<CustomerInfo>());
-        
+
         return NoContent();
     }
-    
+
     [HttpPost("favored-menu-items")]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<IActionResult> AddFavoredMenuItem(long menuItemId)
+    public async Task<IActionResult> AddFavoredMenuItem([FromQuery] long menuItemId)
     {
         await customerService.AddFavoredMenuItem(User.GetId(), menuItemId);
-        return Created($"api/v1/customers/favored-menu-items/{menuItemId}", null);
+        return Created($"{RoutesV1.Customers}/favored-menu-items/{menuItemId}", null);
     }
 
     [HttpGet("favored-beverage-types")]

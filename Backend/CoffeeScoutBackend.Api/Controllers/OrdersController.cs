@@ -1,5 +1,5 @@
 using CoffeeScoutBackend.Api.Extensions;
-using CoffeeScoutBackend.Api.Requests;
+using CoffeeScoutBackend.Api.Requests.V1.Orders;
 using CoffeeScoutBackend.Api.Responses;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CoffeeScoutBackend.Api.Controllers;
 
 [ApiController]
-[Route("api/v1/orders")]
+[Route(RoutesV1.Orders)]
 public class OrdersController(
     IOrderService orderService
 ) : ControllerBase
@@ -27,7 +27,7 @@ public class OrdersController(
                 .Adapt<IReadOnlyCollection<CreateOrderData.MenuItemData>>()
         };
         var order = await orderService.CreateOrder(orderData);
-        
-        return Created($"api/v1/orders/{order.Id}", order.Adapt<OrderResponse>());
+
+        return Created($"{RoutesV1.Orders}/{order.Id}", order.Adapt<OrderResponse>());
     }
 }

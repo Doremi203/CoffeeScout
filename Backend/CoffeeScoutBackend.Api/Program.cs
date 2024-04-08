@@ -30,7 +30,7 @@ builder.Services.AddSwaggerGen(options =>
             Type = SecuritySchemeType.ApiKey
         });
         options.OperationFilter<SecurityRequirementsOperationFilter>();
-        
+
         options.DocumentFilter<RemovePathsDocumentFilter>();
     }
 );

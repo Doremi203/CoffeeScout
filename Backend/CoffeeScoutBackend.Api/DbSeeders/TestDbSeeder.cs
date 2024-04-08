@@ -138,7 +138,7 @@ public class TestDbSeeder(
                     SizeInMl = 300
                 }
             };
-            
+
             await dbContext.MenuItems.AddRangeAsync(menuItems);
             await dbContext.SaveChangesAsync();
         }
