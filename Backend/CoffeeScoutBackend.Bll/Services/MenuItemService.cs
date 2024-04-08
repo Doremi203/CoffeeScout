@@ -71,4 +71,11 @@ public class MenuItemService(
 
         return cafe.MenuItems;
     }
+
+    public async Task Delete(long id)
+    {
+        var menuItem = await GetById(id);
+
+        await menuItemRepository.Delete(menuItem.Id);
+    }
 }
