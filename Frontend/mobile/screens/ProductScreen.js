@@ -1,58 +1,27 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Alert, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
 import Footer from "./Footer";
-import CoffeeShopCard from "../components/CoffeeShopCard";
+import ProductCard from "../components/ProductCard";
 import {Context} from "../index";
-import Product from "../components/Product";
-import * as Location from "expo-location";
-
 export default function ProductScreen({navigation}) {
 
 
     const {product} = useContext(Context);
-    const {user} = useContext(Context);
+    const {loc} = useContext(Context);
 
-    const [location, setLocation] = useState(null);
-    useEffect(() => {
-        const getLocation = async () => {
-            const location = await user.getLocation()
-            setLocation(location);
-        };
-
-        getLocation().then();
-    }, [])
-
-
-    //console.log('jjjj')
-    //console.log(location.coords.latitude)
-    //console.log(location.coords.longitude)
+    const location = loc.getLocation();
 
     const [nearProducts, setNearProducts] = useState([]);
 
     useEffect(() => {
         const fetchProducts = async () => {
-            if (location) {
-                console.log('ssFFFFFFFFFFFFFs')
-                console.log(location.coords.latitude)
-                console.log(location.coords.longitude)
-                const products = await product.getNearbyProducts(location.coords.longitude, location.coords.latitude, 1000, 1);
-                setNearProducts(products);
-            }
+            const products = await product.getNearbyProducts(location._j.longitude, location._j.latitude, 10000, 1);
+            setNearProducts(products);
 
         };
-
-        fetchProducts().then();
+        fetchProducts();
     }, []);
-
-    console.log(nearProducts)
-
-
-
-    ///console.log(location.longitude)
-    //console.log(location.latitude)
-
-
 
     return (
         <View style={styles.container}>
@@ -66,9 +35,9 @@ export default function ProductScreen({navigation}) {
                 <View style={styles.shops}>
                     <ScrollView style={styles.scroll}>
 
-
-                        <CoffeeShopCard navigation={navigation} menuItemId={1} name={'Капучино'} price={100}/>
-                        <CoffeeShopCard navigation={navigation} menuItemId={2} name={'Латте'} price={100}/>
+                        {nearProducts && nearProducts.map((product) => (
+                            <ProductCard menuItemId={product.id} name={product.name} price={product.price} size={product.sizeInMl} cafe={product.cafe}/>
+                        ))}
 
                     </ScrollView>
                 </View>

@@ -3,8 +3,7 @@ import $api from "../http";
 
 export default class ProductService {
 
-
-    static async getBeverageTypes() {
+    static async getFavoredBeverageTypes() {
         return $api.get('/v1/customers/favored-beverage-types')
     }
 
@@ -16,6 +15,5 @@ export default class ProductService {
     static async getNearbyProducts(longitude, latitude, radiusInMeters, beverageTypeId) {
         return $api.get(`/v1/menu-items?latitude=${latitude}&longitude=${longitude}&radiusInMeters=${radiusInMeters}&beverageTypeId=${beverageTypeId}`)
     }
-
 
 }

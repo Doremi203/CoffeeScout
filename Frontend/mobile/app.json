@@ -7,7 +7,6 @@
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/icons/splashpic.png",
-
       "backgroundColor": "#05704A"
     },
     "assetBundlePatterns": [
@@ -18,7 +17,6 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
     },
