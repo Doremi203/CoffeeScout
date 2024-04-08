@@ -66,4 +66,14 @@ public class MenuItemRepository(
 
         await dbContext.SaveChangesAsync();
     }
+
+    public async Task Delete(long id)
+    {
+        var menuItemEntity = await dbContext.MenuItems
+            .FirstAsync(m => m.Id == id);
+
+        dbContext.MenuItems.Remove(menuItemEntity);
+
+        await dbContext.SaveChangesAsync();
+    }
 }

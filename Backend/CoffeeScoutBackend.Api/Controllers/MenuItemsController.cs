@@ -60,8 +60,7 @@ public class MenuItemsController(
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateMenuItem(long id, UpdateMenuItemRequest request)
     {
-        var cafe = await cafeService.GetByAdminId(User.GetId());
-        if (cafe.MenuItems.All(m => m.Id != id))
+        if (!await IsMenuItemInCafe(id))
             return Forbid();
         
         var menuItem = new MenuItem
@@ -78,5 +77,25 @@ public class MenuItemsController(
         await menuItemService.Update(id, menuItem);
 
         return NoContent();
+    }
+    
+    [HttpDelete("{id:long}")]
+    [Authorize(Roles = nameof(Roles.CafeAdmin))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> DeleteMenuItem(long id)
+    {
+        if (!await IsMenuItemInCafe(id))
+            return Forbid();
+        
+        await menuItemService.Delete(id);
+
+        return NoContent();
+    }
+    
+    private async Task<bool> IsMenuItemInCafe(long menuItemId)
+    {
+        var cafe = await cafeService.GetByAdminId(User.GetId());
+        
+        return cafe.MenuItems.Any(m => m.Id == menuItemId);
     }
 }

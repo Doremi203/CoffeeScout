@@ -9,4 +9,5 @@ public interface IMenuItemRepository
         Location location, double radiusInMeters, BeverageType beverageType);
     Task<MenuItem> Add(MenuItem menuItem);
     Task Update(MenuItem menuItem);
+    Task Delete(long id);
 }
