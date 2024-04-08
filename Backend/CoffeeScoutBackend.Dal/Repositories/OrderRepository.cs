@@ -41,15 +41,25 @@ public class OrderRepository(
         return orderEntity?.Adapt<Order>();
     }
 
-    public async Task<IReadOnlyCollection<Order>> GetByUserId(string userId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<IReadOnlyCollection<Order>> GetOrders(OrderStatus status, DateTime from)
+    public async Task<IReadOnlyCollection<Order>> GetByUserId(string userId, OrderStatus status, DateTime from)
     {
         var orderEntities = await GetOrderEntities()
-            .Where(o => o.Status == status && o.Date >= from)
+            .Where(o => 
+                o.Customer.Id == userId 
+                && o.Status == status 
+                && o.Date >= from)
+            .ToListAsync();
+
+        return orderEntities.Adapt<IReadOnlyCollection<Order>>();
+    }
+
+    public async Task<IReadOnlyCollection<Order>> GetByCafeId(long cafeId, OrderStatus status, DateTime from)
+    {
+        var orderEntities = await GetOrderEntities()
+            .Where(o => 
+                o.Status == status 
+                && o.Date >= from 
+                && o.OrderItems.Any(oi => oi.MenuItem.Cafe.Id == cafeId))
             .ToListAsync();
 
         return orderEntities.Adapt<IReadOnlyCollection<Order>>();

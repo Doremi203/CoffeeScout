@@ -1,4 +1,5 @@
 using CoffeeScoutBackend.Api.Extensions;
+using CoffeeScoutBackend.Api.Requests.V1.Cafes;
 using CoffeeScoutBackend.Api.Requests.V1.Customers;
 using CoffeeScoutBackend.Api.Responses;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
@@ -13,7 +14,8 @@ namespace CoffeeScoutBackend.Api.Controllers;
 [Route(RoutesV1.Customers)]
 [Authorize(Roles = nameof(Roles.Customer))]
 public class CustomersController(
-    ICustomerService customerService
+    ICustomerService customerService,
+    IOrderService orderService
 ) : ControllerBase
 {
     [HttpGet("info")]
@@ -70,5 +72,16 @@ public class CustomersController(
             await customerService.GetFavoredBeverageTypes(User.GetId());
         
         return Ok(favoredBeverageTypes);
+    }
+    
+    [HttpGet("orders")]
+    [ProducesResponseType<IReadOnlyCollection<OrderResponse>>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetOrders([FromQuery] GetOrdersRequest request)
+    {
+        var orders = 
+            await orderService.GetCustomerOrders(
+                User.GetId(), request.Status, request.From);
+
+        return Ok(orders.Adapt<IReadOnlyCollection<OrderResponse>>());
     }
 }

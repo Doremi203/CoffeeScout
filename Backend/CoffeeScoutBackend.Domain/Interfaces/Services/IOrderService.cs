@@ -7,4 +7,7 @@ public interface IOrderService
     Task<Order> CreateOrder(CreateOrderData orderData);
     Task<IReadOnlyCollection<Order>> GetCafeOrders(
         string currentCafeAdminId, OrderStatus status, DateTime from);
+
+    Task<IReadOnlyCollection<Order>> GetCustomerOrders(
+        string userId, OrderStatus status, DateTime from);
 }

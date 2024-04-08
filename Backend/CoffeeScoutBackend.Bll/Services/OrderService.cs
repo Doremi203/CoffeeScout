@@ -35,16 +35,30 @@ public class OrderService(
     )
     {
         var cafe = await cafeService.GetByAdminId(currentCafeAdminId);
-        var orders = await orderRepository.GetOrders(status, from);
+        var orders = await orderRepository.GetByCafeId(cafe.Id, status, from);
 
-        foreach (var order in orders)
-        {
-            order.OrderItems = order.OrderItems
-                .Where(oi => oi.MenuItem.Cafe.Id == cafe.Id)
-                .ToList();
-        }
-        
+        FilterOutUnrelatedOrderItems();
+
         return orders;
+
+        void FilterOutUnrelatedOrderItems()
+        {
+            foreach (var order in orders)
+            {
+                order.OrderItems = order.OrderItems
+                    .Where(oi => oi.MenuItem.Cafe.Id == cafe.Id)
+                    .ToList();
+            }
+        }
+    }
+
+    public async Task<IReadOnlyCollection<Order>> GetCustomerOrders(
+        string userId,
+        OrderStatus status,
+        DateTime from
+    )
+    {
+        return await orderRepository.GetByUserId(userId, status, from);
     }
 
     private async Task<List<OrderItem>> FormOrderItems(
