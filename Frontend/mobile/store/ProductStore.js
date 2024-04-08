@@ -1,7 +1,4 @@
 import {makeAutoObservable} from "mobx";
-import AuthService from "../services/AuthService";
-import * as SecureStorage from "expo-secure-store";
-import {Alert} from "react-native";
 import ProductService from "../services/ProductService";
 
 export default class ProductStore {
@@ -10,30 +7,22 @@ export default class ProductStore {
         makeAutoObservable(this);
     }
 
-    async getBeverageTypes() {
+    async getFavoredBeverageTypes() {
 
         try {
-            const response = await ProductService.getBeverageTypes();
+            const response = await ProductService.getFavoredBeverageTypes();
             return response.data;
-
         } catch (error) {
-            console.log('NETAHJBHJBDL')
             console.log('Error fetching data: TYPES', error);
-            console.log(error.message)
-            console.log(error.response.status)
         }
     }
 
     async likeProduct(menuItemId) {
         try {
-            await ProductService.likeProduct(menuItemId).then(response => {
-                console.log('sDDDDDDDDDDDDDDDD')
-                this.getBeverageTypes();
-            })
+            await ProductService.likeProduct(menuItemId)
+
         } catch (error) {
-            console.log(menuItemId)
-            console.log(error.message)
-            //console.log(error.response)
+            console.error('Error fetching data: LIKE', error);
         }
     }
 
@@ -46,6 +35,5 @@ export default class ProductStore {
             console.error('Error fetching data: NEAR', error);
         }
     }
-
 
 }

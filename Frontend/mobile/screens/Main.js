@@ -1,72 +1,65 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Product from "../components/Product";
 import Footer from "./Footer";
 import {RFPercentage} from 'react-native-responsive-fontsize';
 import {Context} from "../index";
-import CoffeeShop from "../components/CoffeeShop";
-import * as SecureStorage from "expo-secure-store";
-
-
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+import Cafe from "../components/Cafe";
 
 export default function Main({navigation}) {
-
 
     const {product} = useContext(Context);
     const {cafe} = useContext(Context);
     const {user} = useContext(Context);
 
     const [favTypes, setFavTypes] = useState([]);
+    const [name, setName] = useState("")
 
     useEffect(() => {
 
         return navigation.addListener('focus', async () => {
-            const types = await product.getBeverageTypes();
+            const types = await product.getFavoredBeverageTypes();
             setFavTypes(types);
+            const name = await user.getName();
+            setName(name);
         });
 
     }, [navigation]);
 
 
-
-    const [location, setLocation] = useState(null);
-    user.getLocation().then(location => {
-        setLocation(location);
-        console.log('LOCATION')
-        console.log(location.coords.longitude, location.coords.latitude);
-    });
-
-
+    const {loc} = useContext(Context);
+    const location = loc.getLocation();
 
 
     const [cafes, setCafes] = useState([]);
+    const [executed, setExecuted] = useState(false);
 
-    useEffect( async () => {
+    useEffect(() => {
+        const fetchCafes = async () => {
+            if (!executed && location._j.latitude !== 0) {
+                const cafes = await cafe.getNearbyCafes(location._j.longitude, location._j.latitude, 10000);
+                setCafes(cafes);
+                setExecuted(true);
+            }
+        };
 
-        async function fetchCafes() {
-            const cafes = await cafe.getNearbyCafes(location.coords.longitude, location.coords.latitude, 10000);
-            setCafes(cafes);
-        }
+        fetchCafes();
 
-        await fetchCafes();
-
-    }, [location]);
-
-
-
-    console.log('CAFES')
-    console.log(cafes)
-
-
+        return () => {
+        };
+    }, [location, executed]);
 
 
+    /*const [name, setName] = useState("")
+    useEffect(() => {
+        const fetchName = async () => {
+            const name = await user.getName();
+            setName(name);
+        };
 
-
-    const name = SecureStorage.getItem('username');
-    console.log(name)
+        fetchName();
+    }, []);*/
 
     return (
 
@@ -104,7 +97,7 @@ export default function Main({navigation}) {
                     <ScrollView horizontal={true} style={styles.scrollCont2}>
                         <View style={styles.pro2}>
                             {cafes && cafes.map((cafe) => (
-                                <CoffeeShop navigation={navigation} name={cafe.name}/>
+                                <Cafe navigation={navigation} cafe={cafe}/>
                             ))}
                         </View>
                     </ScrollView>
@@ -114,7 +107,7 @@ export default function Main({navigation}) {
                     <ScrollView horizontal={true} style={styles.scrollCont3}>
                         <View style={styles.pro3}>
                             {favTypes && favTypes.map((type) => (
-                                <Product key={type.id} id={type.id} name={type.name} navigation={navigation}/>
+                                <Product key={type.id} name={type.name} navigation={navigation}/>
                             ))}
 
                         </View>
@@ -139,35 +132,10 @@ const styles = StyleSheet.create({
     main: {
         flex: 1,
     },
-    name: {
-        fontSize: RFPercentage(5),
-        //fontSize: RFValue(36, windowHeight),
-        //position: 'absolute',
-        top: 84,
-        left: 38,
-    },
-    /*line: {
-        // position: 'absolute',
-        left: 0,
-        right: 0,
-        borderBottomWidth: 1,
-        borderBottomColor: 'black'
-    },*/
     text: {
-        //fontSize: RFValue(20, windowHeight),
         fontSize: RFPercentage(2.5),
-        //fontSize: 20,
-        // position: 'absolute',
         fontFamily: 'MontserratAlternates',
     },
-    /*out: {
-        fontSize: 20,
-        color: '#05704A',
-        position:'absolute',
-        top: 365,
-        left: 148,
-        fontWeight: 'bold'
-    },*/
     searchBox: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -176,17 +144,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         width: '87%',
         height: '53%',
-        //width: 349,
-        //height : 48,
-        //position: 'absolute',
-        // top: 132,
-        //top: '29%',
         left: 22,
         marginTop: '2%'
     },
     input: {
-       // flex: 1,
-        //height: 40,
         fontFamily: 'MontserratAlternates',
         opacity: 0.5
     },
@@ -195,23 +156,10 @@ const styles = StyleSheet.create({
     },
 
     header: {
-        // position: 'absolute',
         left: 25,
         fontFamily: 'MontserratAlternatesSemiBold',
         fontSize: RFPercentage(2),
     },
-    box: {
-        width: 128,
-        height: 128,
-        backgroundColor: '#169366',
-        borderRadius: 6,
-        //position: 'absolute'
-    },
-    /*product: {
-        //position: 'absolute',
-        top: 250,
-        left: 50
-    },*/
     scrollCont: {
         height: '20%',
         marginTop: '2%'
@@ -230,7 +178,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginLeft: 20,
     },
-    pro2 : {
+    pro2: {
         flex: 1,
         justifyContent: 'space-between',
         flexDirection: 'row',
@@ -247,10 +195,8 @@ const styles = StyleSheet.create({
     head: {
         height: '18%',
         top: '12%',
-        // backgroundColor: 'purple'
     },
     body: {
-        // backgroundColor:'yellow',
         marginTop: '18%'
     }
 

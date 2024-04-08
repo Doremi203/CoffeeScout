@@ -1,6 +1,5 @@
 import 'react-native-gesture-handler';
-import {StyleSheet} from 'react-native';
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useContext} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Registration from "./screens/Registration";
@@ -17,14 +16,9 @@ import Settings from "./screens/Settings";
 import OrderScreen from "./screens/OrderScreen";
 import SearchScreen from "./screens/SearchScreen";
 import {Context} from "./index";
-import ShopScreen from "./screens/ShopScreen";
-import * as SplashScreen from 'expo-splash-screen';
-import Entypo from "react-native-vector-icons/Entypo";
-import {Asset as Font} from "expo-asset";
-
+import CafeScreen from "./screens/CafeScreen";
 
 const Stack = createStackNavigator();
-
 
 
 export default function App() {
@@ -36,10 +30,9 @@ export default function App() {
     });
 
 
-    const {user} = useContext(Context);
-
-
-
+    const {loc} = useContext(Context);
+    loc.setLocation().then();
+    console.log(loc.location.coords.latitude)
 
 
     return (
@@ -106,8 +99,8 @@ export default function App() {
                     options={{headerShown: false}}
                 />
                 <Stack.Screen
-                    name="shopScreen"
-                    component={ShopScreen}
+                    name="cafeScreen"
+                    component={CafeScreen}
                     options={{headerShown: false}}
                 />
             </Stack.Navigator>
@@ -116,14 +109,6 @@ export default function App() {
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});
 
 
-//export default App;
+

@@ -1,18 +1,16 @@
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
-import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
+import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
 
-
-export default function Product({navigation, name}) {
+export default function Cafe({navigation, cafe}) {
     return (
         <View style={styles.square}>
-            <TouchableWithoutFeedback onPress={() => navigation.navigate('product')}>
+            <TouchableWithoutFeedback onPress={() => navigation.navigate('cafeScreen', {cafe: cafe})}>
                 <View>
-                    <Image source={require('../assets/icons/coffee.png')} style={styles.image}/>
-                    <Text style={styles.label}> {name} </Text>
+                    <Image source={require('../assets/icons/shop2.png')} style={styles.image}/>
+                    <Text style={styles.label}> {cafe.name} </Text>
                 </View>
             </TouchableWithoutFeedback>
-
         </View>
     );
 };
@@ -33,18 +31,19 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.6,
         shadowRadius: 3.84,
         elevation: 10
+
     },
     image: {
-        marginLeft: RFPercentage(3),
-        marginTop: RFPercentage(2),
-        width: RFValue(70),
-        height: RFValue(70),
+        marginLeft: RFPercentage(1),
+        marginTop: RFPercentage(1),
+        width: RFValue(80),
+        height: RFValue(80),
     },
     label: {
-        top: '7%',
-        fontSize: RFPercentage(2),
+        fontSize: RFPercentage(1.8),
         color: 'white',
-        marginLeft: 10,
         fontFamily: 'MontserratAlternates',
     },
 });
+
+
