@@ -109,6 +109,16 @@ public class MenuItemsController(
         return Created($"{RoutesV1.MenuItems}/{menuItemId}/reviews/{review.Id}", review.Adapt<ReviewResponse>());
     }
     
+    [HttpGet("{menuItemId:long}/reviews")]
+    [Authorize(Roles = $"{nameof(Roles.Customer)},{nameof(Roles.CafeAdmin)}")]
+    [ProducesResponseType<IReadOnlyCollection<ReviewResponse>>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetReviews(long menuItemId)
+    {
+        var reviews = await reviewService.GetByMenuItemId(menuItemId);
+
+        return Ok(reviews.Adapt<IReadOnlyCollection<ReviewResponse>>());
+    }
+    
     [HttpPatch("{menuItemId:long}/reviews/{reviewId:long}")]
     [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

@@ -34,6 +34,13 @@ public class ReviewService(
         return review;
     }
 
+    public async Task<IReadOnlyCollection<Review>> GetByMenuItemId(long menuItemId)
+    {
+        var menuItem = await menuItemService.GetById(menuItemId);
+        
+        return await reviewRepository.GetByMenuItemId(menuItem.Id);
+    }
+
     public async Task UpdateReview(long reviewId, Review review)
     {
         var existingReview = await GetById(reviewId);

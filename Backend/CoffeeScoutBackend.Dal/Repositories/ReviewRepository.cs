@@ -34,6 +34,17 @@ public class ReviewRepository(
         return reviewEntity?.Adapt<Review>();
     }
 
+    public async Task<IReadOnlyCollection<Review>> GetByMenuItemId(long menuItemId)
+    {
+        var reviews = await dbContext.Reviews
+            .Include(r => r.Customer)
+            .Include(r => r.MenuItem)
+            .Where(r => r.MenuItem.Id == menuItemId)
+            .ToListAsync();
+        
+        return reviews.Adapt<IReadOnlyCollection<Review>>();
+    }
+
     public async Task UpdateReview(Review updatedReview)
     {
         var reviewEntity = await dbContext.Reviews
