@@ -1,4 +1,6 @@
+using System.Transactions;
 using CoffeeScoutBackend.Bll.Infrastructure;
+using CoffeeScoutBackend.Domain.Exceptions;
 using CoffeeScoutBackend.Domain.Interfaces.Repositories;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
@@ -26,6 +28,15 @@ public class OrderService(
         };
 
         return await orderRepository.Add(order);
+    }
+
+    public async Task<Order> GetById(long id)
+    {
+        var order = await orderRepository.GetById(id)
+                    ?? throw new OrderNotFoundException(
+                        $"Order with id: {id} not found", id);
+
+        return order;
     }
 
     public async Task<IReadOnlyCollection<Order>> GetCafeOrders(
@@ -59,6 +70,36 @@ public class OrderService(
     )
     {
         return await orderRepository.GetByUserId(userId, status, from);
+    }
+
+    public async Task CompleteCafeOrderPart(string adminId, long id)
+    {
+        using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+        
+        var order = await GetById(id);
+        AssertOrderStatus(order, OrderStatus.InProgress);
+
+        var cafe = await cafeService.GetByAdminId(adminId);
+
+        foreach (var orderItem in order.OrderItems
+                     .Where(orderItem => orderItem.MenuItem.Cafe.Id == cafe.Id))
+        {
+            await orderRepository.UpdateOrderItemCompletionStatus(
+                orderItem.Order.Id, 
+                orderItem.MenuItem.Id,
+                true);
+        }
+        
+        transaction.Complete();
+    }
+
+    private static void AssertOrderStatus(Order order, OrderStatus expectedStatus)
+    {
+        if (order.Status != expectedStatus)
+            throw new InvalidOrderStatusException(
+                $"Order with id: {order.Id} is not in {expectedStatus} status",
+                expectedStatus,
+                order.Id);
     }
 
     private async Task<List<OrderItem>> FormOrderItems(
