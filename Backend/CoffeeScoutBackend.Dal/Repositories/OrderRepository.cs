@@ -77,6 +77,18 @@ public class OrderRepository(
         await dbContext.SaveChangesAsync();
     }
 
+    public async Task UpdateStatus(long id, OrderStatus cancelled)
+    {
+        var orderEntity = await dbContext.Orders
+            .FirstAsync(o => o.Id == id);
+
+        orderEntity.Status = cancelled;
+
+        dbContext.Update(orderEntity);
+
+        await dbContext.SaveChangesAsync();
+    }
+
     private IIncludableQueryable<OrderEntity, CustomerEntity> GetOrderEntities()
     {
         return dbContext.Orders

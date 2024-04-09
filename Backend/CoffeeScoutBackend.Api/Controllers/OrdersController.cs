@@ -41,4 +41,13 @@ public class OrdersController(
         return NoContent();
     }
     
+    [HttpPatch("{id:long}/cancel")]
+    [Authorize(Roles = $"{nameof(Roles.Customer)},{nameof(Roles.CafeAdmin)}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> CancelOrder(long id)
+    {
+        await orderService.CancelOrder(id);
+
+        return NoContent();
+    }
 }
