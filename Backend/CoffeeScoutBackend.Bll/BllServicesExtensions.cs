@@ -11,6 +11,7 @@ public static class BllServicesExtensions
     public static IServiceCollection AddBllServices(this IServiceCollection services)
     {
         services
+            .AddScoped<IPaymentService, PaymentService>()
             .AddScoped<IReviewService, ReviewService>()
             .AddScoped<IBeverageTypeService, BeverageTypeService>()
             .AddScoped<IOrderService, OrderService>()

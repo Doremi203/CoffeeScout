@@ -11,6 +11,7 @@ public class OrderService(
     ICustomerService customerService,
     IMenuItemService menuItemService,
     ICafeService cafeService,
+    IPaymentService paymentService,
     IOrderRepository orderRepository,
     IDateTimeProvider dateTimeProvider
 ) : IOrderService
@@ -99,6 +100,25 @@ public class OrderService(
         AssertOrderNotCompleted(id, order);
         
         await orderRepository.UpdateStatus(id, OrderStatus.Cancelled);
+    }
+
+    public async Task PayOrder(string getId, long id)
+    {
+        using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+        
+        var order = await GetById(id);
+        AssertOrderStatus(order, OrderStatus.Pending);
+        
+        await paymentService.ProcessPayment(getId, GetTotalAmount(order));
+
+        await orderRepository.UpdateStatus(id, OrderStatus.InProgress);
+        
+        transaction.Complete();
+    }
+
+    private static decimal GetTotalAmount(Order order)
+    {
+        return order.OrderItems.Sum(oi => oi.Quantity * oi.PricePerItem);
     }
 
     private static void AssertOrderNotCompleted(long id, Order order)

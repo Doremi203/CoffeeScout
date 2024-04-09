@@ -50,4 +50,14 @@ public class OrdersController(
 
         return NoContent();
     }
+    
+    [HttpPatch("{id:long}/pay")]
+    [Authorize(Roles = nameof(Roles.Customer))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> PayOrder(long id)
+    {
+        await orderService.PayOrder(User.GetId(), id);
+
+        return NoContent();
+    }
 }

@@ -14,4 +14,5 @@ public interface IOrderService
 
     Task CompleteCafeOrderPart(string adminId, long id);
     Task CancelOrder(long id);
+    Task PayOrder(string getId, long id);
 }
