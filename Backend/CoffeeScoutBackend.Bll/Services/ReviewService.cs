@@ -1,3 +1,4 @@
+using CoffeeScoutBackend.Domain.Exceptions;
 using CoffeeScoutBackend.Domain.Interfaces.Repositories;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
@@ -10,7 +11,7 @@ public class ReviewService(
     IReviewRepository reviewRepository
 ) : IReviewService
 {
-    public async Task<Review> AddReview(long menuItemId, string userId, Review review)
+    public async Task<Review> Add(long menuItemId, string userId, Review review)
     {
         var menuItem = await menuItemService.GetById(menuItemId);
         var customer = await customerService.GetByUserId(userId);
@@ -22,5 +23,28 @@ public class ReviewService(
         };
         
         return await reviewRepository.AddReview(reviewToAdd);
+    }
+
+    public async Task<Review> GetById(long reviewId)
+    {
+        var review = await reviewRepository.GetById(reviewId)
+            ?? throw new ReviewNotFoundException(
+                $"Review with id: {reviewId} not found", reviewId);
+
+        return review;
+    }
+
+    public async Task UpdateReview(long reviewId, Review review)
+    {
+        var existingReview = await GetById(reviewId);
+
+        var updatedReview = review with
+        {
+            Id = reviewId,
+            MenuItem = existingReview.MenuItem,
+            Customer = existingReview.Customer
+        };
+
+        await reviewRepository.UpdateReview(updatedReview);
     }
 }

@@ -23,4 +23,27 @@ public class ReviewRepository(
         
         return reviewEntity.Adapt<Review>();
     }
+
+    public async Task<Review?> GetById(long reviewId)
+    {
+        var reviewEntity = await dbContext.Reviews
+            .Include(r => r.Customer)
+            .Include(r => r.MenuItem)
+            .FirstOrDefaultAsync(r => r.Id == reviewId);
+        
+        return reviewEntity?.Adapt<Review>();
+    }
+
+    public async Task UpdateReview(Review updatedReview)
+    {
+        var reviewEntity = await dbContext.Reviews
+            .FirstAsync(r => r.Id == updatedReview.Id);
+        
+        reviewEntity.Rating = updatedReview.Rating;
+        reviewEntity.Content = updatedReview.Content;
+        
+        dbContext.Reviews.Update(reviewEntity);
+        
+        await dbContext.SaveChangesAsync();
+    }
 }
