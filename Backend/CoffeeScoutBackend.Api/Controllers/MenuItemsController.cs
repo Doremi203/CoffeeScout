@@ -13,7 +13,8 @@ namespace CoffeeScoutBackend.Api.Controllers;
 [Route(RoutesV1.MenuItems)]
 public class MenuItemsController(
     IMenuItemService menuItemService,
-    ICafeService cafeService
+    ICafeService cafeService,
+    IReviewService reviewService
 ) : ControllerBase
 {
     [HttpGet]
@@ -92,6 +93,86 @@ public class MenuItemsController(
         return NoContent();
     }
     
+    [HttpPost("{menuItemId:long}/reviews")]
+    [Authorize(Roles = nameof(Roles.Customer))]
+    [ProducesResponseType<ReviewResponse>(StatusCodes.Status201Created)]
+    public async Task<IActionResult> AddReview(long menuItemId, AddReviewRequest request)
+    {
+        var reviewToAdd = new Review
+        {
+            Rating = request.Rating,
+            Content = request.Content
+        };
+        
+        var review = await reviewService.Add(menuItemId, User.GetId(), reviewToAdd);
+
+        return Created($"{RoutesV1.MenuItems}/{menuItemId}/reviews/{review.Id}", review.Adapt<ReviewResponse>());
+    }
+    
+    [HttpGet("{menuItemId:long}/reviews")]
+    [Authorize(Roles = $"{nameof(Roles.Customer)},{nameof(Roles.CafeAdmin)}")]
+    [ProducesResponseType<IReadOnlyCollection<ReviewResponse>>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetReviews(long menuItemId)
+    {
+        var reviews = await reviewService.GetByMenuItemId(menuItemId);
+
+        return Ok(reviews.Adapt<IReadOnlyCollection<ReviewResponse>>());
+    }
+    
+    [HttpPatch("{menuItemId:long}/reviews/{reviewId:long}")]
+    [Authorize(Roles = nameof(Roles.Customer))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> UpdateReview(
+        [FromRoute] long menuItemId,
+        [FromRoute] long reviewId, 
+        UpdateReviewRequest request)
+    {
+        if (!await IsReviewOfCustomer(reviewId))
+            return Forbid();
+        if (!await IsReviewOfMenuItem(reviewId, menuItemId))
+            return NotFound();
+        
+        var review = new Review
+        {
+            Id = reviewId,
+            Rating = request.Rating,
+            Content = request.Content
+        };
+        
+        await reviewService.UpdateReview(reviewId, review);
+
+        return NoContent();
+    }
+    
+    [HttpDelete("{menuItemId:long}/reviews/{reviewId:long}")]
+    [Authorize(Roles = nameof(Roles.Customer))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> DeleteReview(long menuItemId, long reviewId)
+    {
+        if (!await IsReviewOfCustomer(reviewId))
+            return Forbid();
+        if (!await IsReviewOfMenuItem(reviewId, menuItemId))
+            return NotFound();
+        
+        await reviewService.Delete(reviewId);
+
+        return NoContent();
+    }
+
+    private async Task<bool> IsReviewOfMenuItem(long reviewId, long menuItemId)
+    {
+        var review = await reviewService.GetById(reviewId);
+        
+        return review.MenuItem.Id == menuItemId;
+    }
+
+    private async Task<bool> IsReviewOfCustomer(long reviewId)
+    {
+        var review = await reviewService.GetById(reviewId);
+        
+        return review.Customer.Id == User.GetId();
+    }
+
     private async Task<bool> IsMenuItemInCafe(long menuItemId)
     {
         var cafe = await cafeService.GetByAdminId(User.GetId());
