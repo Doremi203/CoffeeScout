@@ -30,4 +30,15 @@ public class OrdersController(
 
         return Created($"{RoutesV1.Orders}/{order.Id}", order.Adapt<OrderResponse>());
     }
+    
+    [HttpPatch("{id:long}/complete")]
+    [Authorize(Roles = nameof(Roles.CafeAdmin))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> CompleteCafeOrderPart(long id)
+    {
+        await orderService.CompleteCafeOrderPart(User.GetId(), id);
+
+        return NoContent();
+    }
+    
 }

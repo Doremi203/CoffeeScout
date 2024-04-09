@@ -65,6 +65,18 @@ public class OrderRepository(
         return orderEntities.Adapt<IReadOnlyCollection<Order>>();
     }
 
+    public async Task UpdateOrderItemCompletionStatus(long orderId, long menuItemId, bool isCompleted)
+    {
+        var orderItemEntity = await dbContext.OrderItems
+            .FirstAsync(oi => oi.OrderId == orderId && oi.MenuItemId == menuItemId);
+        
+        orderItemEntity.IsCompleted = isCompleted;
+        
+        dbContext.Update(orderItemEntity);
+        
+        await dbContext.SaveChangesAsync();
+    }
+
     private IIncludableQueryable<OrderEntity, CustomerEntity> GetOrderEntities()
     {
         return dbContext.Orders
