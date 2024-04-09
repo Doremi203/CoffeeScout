@@ -13,7 +13,8 @@ namespace CoffeeScoutBackend.Api.Controllers;
 [Route(RoutesV1.MenuItems)]
 public class MenuItemsController(
     IMenuItemService menuItemService,
-    ICafeService cafeService
+    ICafeService cafeService,
+    IReviewService reviewService
 ) : ControllerBase
 {
     [HttpGet]
@@ -90,6 +91,22 @@ public class MenuItemsController(
         await menuItemService.Delete(id);
 
         return NoContent();
+    }
+    
+    [HttpPost("{menuItemId:long}/reviews")]
+    [Authorize(Roles = nameof(Roles.Customer))]
+    [ProducesResponseType<ReviewResponse>(StatusCodes.Status201Created)]
+    public async Task<IActionResult> AddReview(long menuItemId, AddReviewRequest request)
+    {
+        var reviewToAdd = new Review
+        {
+            Rating = request.Rating,
+            Content = request.Content
+        };
+        
+        var review = await reviewService.AddReview(menuItemId, User.GetId(), reviewToAdd);
+
+        return Created($"{RoutesV1.MenuItems}/{menuItemId}/reviews/{review.Id}", review.Adapt<ReviewResponse>());
     }
     
     private async Task<bool> IsMenuItemInCafe(long menuItemId)

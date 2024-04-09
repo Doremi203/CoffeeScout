@@ -28,6 +28,7 @@ public static class DalServiceExtensions
         });
 
         services
+            .AddScoped<IReviewRepository, ReviewRepository>()
             .AddScoped<IBeverageTypeRepository, BeverageTypeRepository>()
             .AddScoped<IOrderRepository, OrderRepository>()
             .AddScoped<ICustomerRepository, CustomerRepository>()
