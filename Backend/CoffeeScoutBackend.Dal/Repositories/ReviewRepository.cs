@@ -46,4 +46,14 @@ public class ReviewRepository(
         
         await dbContext.SaveChangesAsync();
     }
+
+    public async Task DeleteReview(long reviewId)
+    {
+        var reviewEntity = await dbContext.Reviews
+            .FirstAsync(r => r.Id == reviewId);
+        
+        dbContext.Reviews.Remove(reviewEntity);
+        
+        await dbContext.SaveChangesAsync();
+    }
 }

@@ -133,6 +133,21 @@ public class MenuItemsController(
 
         return NoContent();
     }
+    
+    [HttpDelete("{menuItemId:long}/reviews/{reviewId:long}")]
+    [Authorize(Roles = nameof(Roles.Customer))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> DeleteReview(long menuItemId, long reviewId)
+    {
+        if (!await IsReviewOfCustomer(reviewId))
+            return Forbid();
+        if (!await IsReviewOfMenuItem(reviewId, menuItemId))
+            return NotFound();
+        
+        await reviewService.Delete(reviewId);
+
+        return NoContent();
+    }
 
     private async Task<bool> IsReviewOfMenuItem(long reviewId, long menuItemId)
     {

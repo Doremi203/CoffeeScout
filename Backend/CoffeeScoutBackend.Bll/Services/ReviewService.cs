@@ -47,4 +47,11 @@ public class ReviewService(
 
         await reviewRepository.UpdateReview(updatedReview);
     }
+    
+    public async Task Delete(long reviewId)
+    {
+        var review = await GetById(reviewId);
+        
+        await reviewRepository.DeleteReview(review.Id);
+    }
 }
