@@ -93,6 +93,23 @@ public class OrderService(
         transaction.Complete();
     }
 
+    public async Task CancelOrder(long id)
+    {
+        var order = await GetById(id);
+        AssertOrderNotCompleted(id, order);
+        
+        await orderRepository.UpdateStatus(id, OrderStatus.Cancelled);
+    }
+
+    private static void AssertOrderNotCompleted(long id, Order order)
+    {
+        if (order.Status == OrderStatus.Completed)
+            throw new InvalidOrderStatusException(
+                $"Order with id: {id} is already completed",
+                OrderStatus.Completed,
+                id);
+    }
+
     private static void AssertOrderStatus(Order order, OrderStatus expectedStatus)
     {
         if (order.Status != expectedStatus)
