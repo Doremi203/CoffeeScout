@@ -46,6 +46,10 @@ public static class DalServiceExtensions
 
     private static void ConfigureMapping(ILocationProvider locationProvider)
     {
+        TypeAdapterConfig<Review, ReviewEntity>.NewConfig()
+            .PreserveReference(true);
+        TypeAdapterConfig<ReviewEntity, Review>.NewConfig()
+            .PreserveReference(true);
         TypeAdapterConfig<Order, OrderEntity>.NewConfig()
             .PreserveReference(true);
         TypeAdapterConfig<OrderEntity, Order>.NewConfig()
