@@ -1,4 +1,4 @@
-
+/*
 import React, {useContext, useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import Form from "react-bootstrap/Form";
@@ -26,15 +26,7 @@ const RegistrationPage = () => {
 
 
 
-    /*const [users, setUsers] = useState([]);
-    useEffect(() => {
-        setUsers([]);
-        fetch("http://localhost:5000/api/user/auth")
-            .then((result) => result.json())
-            .then((data) => setUsers(data));
-    }, []);
 
-    console.log(users);*/
 
     return (
         <div className="regPage">
@@ -94,4 +86,4 @@ const RegistrationPage = () => {
     );
 };
 
-export default RegistrationPage;
+export default RegistrationPage;*/
