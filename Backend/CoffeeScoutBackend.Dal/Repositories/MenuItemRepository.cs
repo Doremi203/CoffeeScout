@@ -45,7 +45,7 @@ public class MenuItemRepository(
         menuItemEntity.Cafe = await dbContext.Cafes
             .FirstAsync(c => c.Id == menuItemEntity.CafeId);
 
-        await dbContext.MenuItems.AddAsync(menuItemEntity);
+        dbContext.MenuItems.Add(menuItemEntity);
         await dbContext.SaveChangesAsync();
 
         return menuItemEntity.Adapt<MenuItem>();
@@ -69,10 +69,9 @@ public class MenuItemRepository(
 
     public async Task Delete(long id)
     {
-        var menuItemEntity = await dbContext.MenuItems
-            .FirstAsync(m => m.Id == id);
-
-        dbContext.MenuItems.Remove(menuItemEntity);
+        await dbContext.MenuItems
+            .Where(mi => mi.Id == id)
+            .ExecuteDeleteAsync();
 
         await dbContext.SaveChangesAsync();
     }
