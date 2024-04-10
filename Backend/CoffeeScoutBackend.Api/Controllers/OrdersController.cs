@@ -31,6 +31,16 @@ public class OrdersController(
         return Created($"{RoutesV1.Orders}/{order.Id}", order.Adapt<OrderResponse>());
     }
     
+    [HttpGet("{id:long}")]
+    [Authorize(Roles = $"{nameof(Roles.Customer)},{nameof(Roles.CafeAdmin)},{nameof(Roles.SuperAdmin)}")]
+    [ProducesResponseType<OrderResponse>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetOrder(long id)
+    {
+        var order = await orderService.GetById(id);
+
+        return Ok(order.Adapt<OrderResponse>());
+    }
+    
     [HttpPatch("{id:long}/complete")]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
