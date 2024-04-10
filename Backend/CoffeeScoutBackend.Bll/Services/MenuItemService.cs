@@ -42,7 +42,8 @@ public class MenuItemService(
             Name = menuItem.Name,
             Price = menuItem.Price,
             BeverageType = beverageType,
-            Cafe = cafe
+            Cafe = cafe,
+            SizeInMl = menuItem.SizeInMl
         };
 
         return await menuItemRepository.Add(newMenuItem);
