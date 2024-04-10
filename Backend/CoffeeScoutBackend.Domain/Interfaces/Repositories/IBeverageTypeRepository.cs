@@ -10,4 +10,5 @@ public interface IBeverageTypeRepository
     
     Task UpdateBeverageType(BeverageType beverageType);
     Task DeleteBeverageType(long id);
+    Task<IReadOnlyCollection<BeverageType>> GetBeverageTypes(int pageSize, int pageNumber);
 }
