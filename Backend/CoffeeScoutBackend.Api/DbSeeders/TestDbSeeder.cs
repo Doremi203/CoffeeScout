@@ -48,7 +48,7 @@ public class TestDbSeeder(
             {
                 await userManager.AddToRoleAsync(admin, Roles.CafeAdmin.ToString());
                 var cafe = await dbContext.Cafes.FirstAsync();
-                await dbContext.CafeAdmins.AddAsync(new CafeAdminEntity
+                dbContext.CafeAdmins.Add(new CafeAdminEntity
                 {
                     User = admin,
                     Id = admin.Id,
@@ -73,7 +73,7 @@ public class TestDbSeeder(
                 new() { Name = "Cappuccino" },
                 new() { Name = "Espresso" }
             };
-            await dbContext.BeverageTypes.AddRangeAsync(beverageTypes);
+            dbContext.BeverageTypes.AddRange(beverageTypes);
             await dbContext.SaveChangesAsync();
         }
     }
@@ -100,7 +100,7 @@ public class TestDbSeeder(
                         55.697503, 37.500088)
                 }
             };
-            await dbContext.Cafes.AddRangeAsync(cafes);
+            dbContext.Cafes.AddRange(cafes);
             await dbContext.SaveChangesAsync();
         }
     }
@@ -143,7 +143,7 @@ public class TestDbSeeder(
                 }
             };
 
-            await dbContext.MenuItems.AddRangeAsync(menuItems);
+            dbContext.MenuItems.AddRange(menuItems);
             await dbContext.SaveChangesAsync();
         }
     }
