@@ -1,0 +1,11 @@
+
+.coffee {
+    width: 150px;
+    height: 150px;
+}
+
+.button {
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}

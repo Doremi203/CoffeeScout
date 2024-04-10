@@ -1,0 +1,96 @@
+import React, {useContext, useState} from 'react';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import Form from "react-bootstrap/Form";
+import './NewProduct.css'
+import {Context} from "../index";
+
+function NewProduct() {
+    const {cafe} = useContext(Context)
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    const [name, setName] = useState("")
+    const [price, setPrice] = useState("")
+    const [size, setSize] = useState("")
+    const [type, setType] = useState("")
+
+    const addProduct = async () => {
+        console.log(size)
+        console.log(type)
+        await cafe.addProduct(name, price, size, type)
+        setShow(false);
+    }
+
+    return (
+        <>
+            <Button variant="primary" onClick={handleShow} className="buttonPro">
+                Добавить напиток
+            </Button>
+
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Добавить напиток</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group>
+                            <Form.Control
+                                type="text"
+                                placeholder="Название напитка"
+                                className="boxPro"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                            />
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Form.Control
+                                type="number"
+                                placeholder="Размер"
+                                className="boxPro"
+                                value={size}
+                                onChange={(e) => setSize(e.target.value)}
+                            />
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Form.Control
+                                type="number"
+                                placeholder="Цена"
+                                className="boxPro"
+                                value={price}
+                                onChange={(e) => setPrice(e.target.value)}
+                            />
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Form.Select aria-label="Default select example"
+                                         className="boxPro"
+                                         value={type}
+                                         onChange={(e) => setType(e.target.value)}>
+                                <option>Тип напитка</option>
+                                <option>Cappuccino</option>
+                                <option>Espresso</option>
+
+                            </Form.Select>
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Закрыть
+                    </Button>
+                    <Button variant="primary" onClick={addProduct}>
+                        Добавить
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        </>
+    );
+}
+
+export default NewProduct;

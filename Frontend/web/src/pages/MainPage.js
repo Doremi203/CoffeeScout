@@ -1,72 +1,54 @@
-import React, {useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import "./MainPage.css"
 import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
+import NewProduct from "../components/NewProduct";
+import {Context} from "../index";
+import {ToastContainer} from "react-toastify";
+import {Product} from "../components/Product";
+import {Order} from "../components/Order";
 
 
-const Product = ({name, size, price}) => {
-    return(
-        <Card style={{ width: '14rem' }}>
-            <Card.Img variant="top" src="./coffee.png" className="coffee"/>
-            <Card.Body>
-                <Card.Title>{name}</Card.Title>
-                <Card.Text>
-                    size - {size} L <br/> price - {price} RUB <br/>
-                </Card.Text>
-            </Card.Body>
-        </Card>
-    );
-}
-
-const Order = () => {
-    return (
-        <Card>
-            <Card.Header> В процессе </Card.Header>
-            <Card.Body>
-                <Card.Title>Заказ №1</Card.Title>
-                <div className="productsInOrder">
-                    <Card.Text className="pro">
-                        capuchino - 0.3 L <br/> latte - 0.3 L <br/> price - 400 RUB
-                    </Card.Text>
-                    <Card.Text className="pro">
-                        capuchino - 0.3 L <br/> latte - 0.3 L <br/> price - 400 RUB
-                    </Card.Text>
-                    <Card.Text className="pro">
-                        capuchino - 0.3 L <br/> latte - 0.3 L <br/> price - 400 RUB
-                    </Card.Text>
-                </div>
-
-                <Button variant="primary">Изменить статус заказа</Button>
-            </Card.Body>
-        </Card>
-    );
-}
-
-
-// Главный компонент страницы с двумя разделами
 const MainPage = () => {
+
+    const {cafe} = useContext(Context)
+
+    const [menu, setMenu] = useState("")
+
+    useEffect(() => {
+        const fetchMenu = async () => {
+            const menuu = await cafe.getMenu();
+            setMenu(menuu);
+        }
+
+        fetchMenu();
+
+    }, []);
+
     return (
         <div>
-            <h1>One Price Coffee</h1>
-
+            <h1> Имя кофейни </h1>
             <Button className={"profileBut"}> Профиль </Button>
 
             <h2 className="menu"> Меню </h2>
             <div className="products">
-                <Product name={'capuchino'} size={0.3} price={200}/>
-                <Product name={'latte'} size={0.3} price={200}/>
+
+                {Array.isArray(menu) && menu.map((product) => (
+                    <Product name={product.name} size={product.sizeInMl} price={product.price}
+                             type={product.beverageType.name} menuItemId={product.id}/>
+                ))}
+
             </div>
 
-            <Button variant="primary" className="button">Добавить товар</Button>
-            <Button variant="primary" className="button">Удалить товар</Button>
+            <NewProduct/>
 
             <h2 className="orders"> Заказы </h2>
             <div>
-                <Order />
-                <Order />
-                <Order />
+                <Order/>
+                <Order/>
+                <Order/>
             </div>
 
+            <ToastContainer/>
         </div>
     );
 };
