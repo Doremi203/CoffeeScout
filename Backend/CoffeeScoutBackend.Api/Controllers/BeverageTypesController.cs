@@ -27,6 +27,16 @@ public class BeverageTypesController(
 
         return Created($"{RoutesV1.BeverageTypes}/{beverageType.Id}", beverageType.Adapt<BeverageTypeResponse>());
     }
+    
+    [HttpGet]
+    [Authorize(Roles = $"{nameof(Roles.SuperAdmin)},{nameof(Roles.CafeAdmin)},{nameof(Roles.Customer)}")]
+    [ProducesResponseType<IReadOnlyCollection<BeverageTypeResponse>>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetBeverageTypes([FromQuery] GetBeverageTypesRequest request)
+    {
+        var beverageTypes = await beverageTypeService.GetBeverageTypes(request.PageSize, request.PageNumber);
+
+        return Ok(beverageTypes.Adapt<IReadOnlyCollection<BeverageTypeResponse>>());
+    }
 
     [HttpPatch("{id:long}")]
     [Authorize(Roles = nameof(Roles.SuperAdmin))]

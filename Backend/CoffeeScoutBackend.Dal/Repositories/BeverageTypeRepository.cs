@@ -56,4 +56,14 @@ public class BeverageTypeRepository(
         
         await dbContext.SaveChangesAsync();
     }
+
+    public async Task<IReadOnlyCollection<BeverageType>> GetBeverageTypes(int pageSize, int pageNumber)
+    {
+        var beverageTypes = await dbContext.BeverageTypes
+            .Skip(pageSize * (pageNumber - 1))
+            .Take(pageSize)
+            .ToListAsync();
+        
+        return beverageTypes.Adapt<IReadOnlyCollection<BeverageType>>();
+    }
 }

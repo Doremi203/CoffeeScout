@@ -46,4 +46,9 @@ public class BeverageTypeService(
         
         await beverageTypeRepository.DeleteBeverageType(beverage.Id);
     }
+
+    public async Task<IReadOnlyCollection<BeverageType>> GetBeverageTypes(int pageSize, int pageNumber)
+    {
+        return await beverageTypeRepository.GetBeverageTypes(pageSize, pageNumber);
+    }
 }
