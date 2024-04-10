@@ -1,58 +1,16 @@
 
-
 .menu {
     margin-left: 15px;
 }
 
 .orders {
     margin-left: 15px;
-
-}
-
-
-.product {
-    height: 80px;
-    width: 300px;
-    border: 2px solid black;
-
-}
-
-.p {
-    font-size: 15px;
-    margin-left: 20px;
-    margin-top: 10px;
-}
-
-
-.coffee {
-    width: 150px;
-    height: 150px;
 }
 
 .products {
     display: flex;
     flex-direction: row;
-
 }
-
-
-.productsInOrder {
-    display: flex;
-    flex-direction: row;
-    margin-top: 10px;
-    margin-left: 10px;
-}
-
-.pro {
-    margin-right: 25px;
-}
-
-.button {
-    margin-top: 10px;
-    margin-left: 10px;
-    margin-right: 10px;
-}
-
 
 .profileBut {
     margin-top: -80px;
