@@ -17,6 +17,7 @@ export const loc = new LocationStore();
 
 export const order = new OrderStore();
 
+
 export const Context = createContext({
     user, product, cart, cafe, loc, order
 });

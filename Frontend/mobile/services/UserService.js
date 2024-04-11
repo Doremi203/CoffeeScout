@@ -19,21 +19,21 @@ export default class UserService {
     }
 
     static async getName() {
-        return $api.get('v1/customers/info')
+        return $api.get('/v1/customers/info')
     }
 
     static async getEmail() {
-        return $api.get('v1/accounts/manage/info')
+        return $api.get('/v1/accounts/manage/info')
     }
 
     static async changeName(name) {
-        return $api.patch('v1/customers/info', {
+        return $api.patch('/v1/customers/info', {
             firstName: name
         })
     }
 
     static async changeEmail(email) {
-        return $api.post('v1/accounts/manage/info', {
+        return $api.post('/v1/accounts/manage/info', {
             newEmail: email
         })
     }

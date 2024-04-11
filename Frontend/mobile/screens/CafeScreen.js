@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {StyleSheet, Text, TouchableWithoutFeedback, View} from "react-native";
+import {ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View} from "react-native";
 import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
 import Footer from "./Footer";
 import ProductInMenu from "../components/ProductInMenu";
@@ -29,17 +29,18 @@ export default function CafeScreen({navigation, route}) {
                 <Text style={styles.menu}> меню </Text>
 
                 <View style={styles.products}>
-                    <ProductInMenu name={'Капучино'} menuItemId={1}/>
-                    <ProductInMenu name={'Латте'} menuItemId={1}/>
+                    <ScrollView style={styles.scroll}>
+                        <ProductInMenu name={'Капучино'} menuItemId={1}/>
+                        <ProductInMenu name={'Латте'} menuItemId={1}/>
+                        <ProductInMenu name={'Латте'} menuItemId={1}/>
+                    </ScrollView>
                 </View>
-
 
                 <View style={styles.routeButton}>
                     <TouchableWithoutFeedback onPress={map}>
                         <Text style={styles.routeText}> МАРШРУТ </Text>
                     </TouchableWithoutFeedback>
                 </View>
-
 
             </View>
             <Footer navigation={navigation}/>
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
         width: RFValue(200),
         height: RFValue(40),
         borderRadius: 20,
-        marginTop: '20%',
+        marginTop: '10%',
         marginLeft: '20%'
 
     },
@@ -92,6 +93,9 @@ const styles = StyleSheet.create({
         fontFamily: 'MontserratAlternates',
         fontSize: RFValue(15),
         marginLeft: RFValue(15)
-    }
+    },
+    scroll: {
+        height: '50%',
+    },
 
 });

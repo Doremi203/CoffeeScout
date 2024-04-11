@@ -14,15 +14,18 @@ export default function Main({navigation}) {
     const {user} = useContext(Context);
 
     const [favTypes, setFavTypes] = useState([]);
+    const [types, setTypes] = useState([]);
     const [name, setName] = useState("")
 
     useEffect(() => {
 
         return navigation.addListener('focus', async () => {
-            const types = await product.getFavoredBeverageTypes();
-            setFavTypes(types);
+            const typesFav = await product.getFavoredBeverageTypes();
+            setFavTypes(typesFav);
             const name = await user.getName();
             setName(name);
+            const typess = await product.getTypes();
+            setTypes(typess)
         });
 
     }, [navigation]);
@@ -50,7 +53,6 @@ export default function Main({navigation}) {
         };
     }, [location, executed]);
 
-
     return (
 
         <View style={styles.container}>
@@ -70,14 +72,14 @@ export default function Main({navigation}) {
                 </View>
 
                 <View style={styles.body}>
-                    <Text style={[styles.header, {}]}> популярно сейчас</Text>
+                    <Text style={[styles.header, {}]}> типы напитков </Text>
 
                     <ScrollView horizontal={true} style={styles.scrollCont}>
                         <View style={styles.pro}>
-                            <Product name={'Капучино'} navigation={navigation}/>
-                            <Product name={'Латте'} navigation={navigation}/>
-                            <Product name={'Раф'} navigation={navigation}/>
-                            <Product name={'Американо'} navigation={navigation}/>
+                            {types && types.map((type) => (
+                                <Product name={type.name} navigation={navigation} type={type}/>
+                            ))}
+
 
                         </View>
                     </ScrollView>
