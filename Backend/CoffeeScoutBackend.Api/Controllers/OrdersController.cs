@@ -46,7 +46,7 @@ public class OrdersController(
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> CompleteCafeOrderPart(long id)
     {
-        await orderService.CompleteCafeOrderPart(User.GetId(), id);
+        await orderService.CompleteOrder(User.GetId(), id);
 
         return NoContent();
     }

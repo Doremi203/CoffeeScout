@@ -8,6 +8,5 @@ public interface IOrderRepository
     Task<Order?> GetById(long orderId);
     Task<IReadOnlyCollection<Order>> GetByUserId(string userId, OrderStatus status, DateTime from);
     Task<IReadOnlyCollection<Order>> GetByCafeId(long cafeId, OrderStatus status, DateTime from);
-    Task UpdateOrderItemCompletionStatus(long orderId, long menuItemId, bool isCompleted);
     Task UpdateStatus(long id, OrderStatus cancelled);
 }

@@ -20,11 +20,14 @@ public class OrderService(
     {
         var customer = await customerService.GetByUserId(orderData.CustomerId);
 
+        var (cafeId, orderItems) = await FormOrderItems(orderData.MenuItems);
+        var cafe = await cafeService.GetById(cafeId);
         var order = new Order
         {
             Customer = customer,
             Date = dateTimeProvider.UtcNow,
-            OrderItems = await FormOrderItems(orderData.MenuItems),
+            Cafe = cafe,
+            OrderItems = orderItems,
             Status = OrderStatus.Pending
         };
 
@@ -73,46 +76,38 @@ public class OrderService(
         return await orderRepository.GetByUserId(userId, status, from);
     }
 
-    public async Task CompleteCafeOrderPart(string adminId, long id)
+    public async Task CompleteOrder(string adminId, long id)
     {
-        using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-        
         var order = await GetById(id);
         AssertOrderStatus(order, OrderStatus.InProgress);
-
         var cafe = await cafeService.GetByAdminId(adminId);
 
-        foreach (var orderItem in order.OrderItems
-                     .Where(orderItem => orderItem.MenuItem.Cafe.Id == cafe.Id))
-        {
-            await orderRepository.UpdateOrderItemCompletionStatus(
-                orderItem.Order.Id, 
-                orderItem.MenuItem.Id,
-                true);
-        }
-        
-        transaction.Complete();
+        if (order.Cafe.Id != cafe.Id)
+            throw new OrderCafeMismatchException(
+                $"Order with id: {id} does not belong to cafe with id: {cafe.Id}");
+
+        await orderRepository.UpdateStatus(id, OrderStatus.Completed);
     }
 
     public async Task CancelOrder(long id)
     {
         var order = await GetById(id);
         AssertOrderNotCompleted(id, order);
-        
+
         await orderRepository.UpdateStatus(id, OrderStatus.Cancelled);
     }
 
     public async Task PayOrder(string getId, long id)
     {
         using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-        
+
         var order = await GetById(id);
         AssertOrderStatus(order, OrderStatus.Pending);
-        
+
         await paymentService.ProcessPayment(getId, GetTotalAmount(order));
 
         await orderRepository.UpdateStatus(id, OrderStatus.InProgress);
-        
+
         transaction.Complete();
     }
 
@@ -139,25 +134,31 @@ public class OrderService(
                 order.Id);
     }
 
-    private async Task<List<OrderItem>> FormOrderItems(
+    private async Task<(long cafeId, List<OrderItem> orderItems)> FormOrderItems(
         IReadOnlyCollection<CreateOrderData.MenuItemData> orderDataMenuItems)
     {
         var orderItems = new List<OrderItem>();
+        var cafes = new HashSet<long>();
 
         foreach (var orderDataMenuItem in orderDataMenuItems)
         {
             var menuItem = await menuItemService.GetById(orderDataMenuItem.Id);
+            cafes.Add(menuItem.Cafe.Id);
+
             var orderItem = new OrderItem
             {
                 MenuItem = menuItem,
                 Quantity = orderDataMenuItem.Quantity,
                 PricePerItem = menuItem.Price,
-                IsCompleted = false
             };
 
             orderItems.Add(orderItem);
         }
 
-        return orderItems;
+        if (cafes.Count != 1)
+            throw new InvalidOrderDataException(
+                "Order items must belong to the same cafe");
+
+        return (cafes.Single(), orderItems);
     }
 }

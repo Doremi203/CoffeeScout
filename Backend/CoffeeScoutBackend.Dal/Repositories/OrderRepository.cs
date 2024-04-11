@@ -16,6 +16,9 @@ public class OrderRepository(
     {
         using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
         var orderEntity = order.Adapt<OrderEntity>();
+        
+        orderEntity.Cafe = await dbContext.Cafes
+            .FirstAsync(c => c.Id == order.Cafe.Id);
 
         orderEntity.Customer = await dbContext.Customers
             .FirstAsync(c => c.Id == order.Customer.Id);
@@ -65,18 +68,6 @@ public class OrderRepository(
         return orderEntities.Adapt<IReadOnlyCollection<Order>>();
     }
 
-    public async Task UpdateOrderItemCompletionStatus(long orderId, long menuItemId, bool isCompleted)
-    {
-        var orderItemEntity = await dbContext.OrderItems
-            .FirstAsync(oi => oi.OrderId == orderId && oi.MenuItemId == menuItemId);
-        
-        orderItemEntity.IsCompleted = isCompleted;
-        
-        dbContext.Update(orderItemEntity);
-        
-        await dbContext.SaveChangesAsync();
-    }
-
     public async Task UpdateStatus(long id, OrderStatus cancelled)
     {
         var orderEntity = await dbContext.Orders
@@ -94,7 +85,7 @@ public class OrderRepository(
         return dbContext.Orders
             .Include(o => o.OrderItems)
             .ThenInclude(oi => oi.MenuItem)
-            .ThenInclude(mi => mi.Cafe)
+            .Include(o => o.Cafe)
             .Include(o => o.Customer);
     }
 }

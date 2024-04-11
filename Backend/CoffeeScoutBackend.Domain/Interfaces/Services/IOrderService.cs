@@ -12,7 +12,7 @@ public interface IOrderService
     Task<IReadOnlyCollection<Order>> GetCustomerOrders(
         string userId, OrderStatus status, DateTime from);
 
-    Task CompleteCafeOrderPart(string adminId, long id);
+    Task CompleteOrder(string adminId, long id);
     Task CancelOrder(long id);
     Task PayOrder(string getId, long id);
 }
