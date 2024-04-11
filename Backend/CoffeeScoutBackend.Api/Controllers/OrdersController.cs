@@ -25,16 +25,6 @@ public class OrdersController(
         return Ok(order.Adapt<OrderResponse>());
     }
     
-    [HttpPatch("{id:long}/complete")]
-    [Authorize(Roles = nameof(Roles.CafeAdmin))]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> CompleteCafeOrderPart(long id)
-    {
-        await orderService.CompleteOrder(User.GetId(), id);
-
-        return NoContent();
-    }
-    
     [HttpPatch("{id:long}/cancel")]
     [Authorize(Roles = $"{nameof(Roles.Customer)},{nameof(Roles.CafeAdmin)}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

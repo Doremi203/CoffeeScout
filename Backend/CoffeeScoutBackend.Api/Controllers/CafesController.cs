@@ -116,6 +116,16 @@ public class CafesController(
         return Ok(orders.Adapt<IReadOnlyCollection<OrderResponse>>());
     }
     
+    [HttpPatch("orders/{id:long}/complete")]
+    [Authorize(Roles = nameof(Roles.CafeAdmin))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> CompleteCafeOrderPart(long id)
+    {
+        await orderService.CompleteOrder(User.GetId(), id);
+
+        return NoContent();
+    }
+    
     [HttpGet("menuItems")]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
     [ProducesResponseType<IReadOnlyCollection<CafeMenuItemResponse>>(StatusCodes.Status200OK)]
