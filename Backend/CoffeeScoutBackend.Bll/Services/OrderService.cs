@@ -66,8 +66,9 @@ public class OrderService(
         var cafe = await cafeService.GetByAdminId(adminId);
 
         if (order.Cafe.Id != cafe.Id)
-            throw new OrderCafeMismatchException(
-                $"Order with id: {id} does not belong to cafe with id: {cafe.Id}");
+            throw new OrderNotFoundException(
+                $"Order with id: {id} not found in cafe with id: {cafe.Id}",
+                id);
 
         await orderRepository.UpdateStatus(id, OrderStatus.Completed);
     }
@@ -83,8 +84,6 @@ public class OrderService(
             throw new OrderNotFoundException(
                 $"Order with id: {id} not found in cafe with id: {cafe.Id}",
                 id);
-        
-        
 
         await orderRepository.UpdateStatus(id, OrderStatus.Cancelled);
     }
