@@ -205,6 +205,11 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("cafe_id");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text")

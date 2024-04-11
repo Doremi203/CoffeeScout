@@ -120,6 +120,7 @@ public class TestDbSeeder(
                 new()
                 {
                     Name = "Капучино малый",
+                    Description = "Вкусный кофе",
                     Cafe = coffeeCrew,
                     CafeId = coffeeCrew.Id,
                     BeverageType = cappuccino,
@@ -132,6 +133,7 @@ public class TestDbSeeder(
                 new()
                 {
                     Name = "Капучино большой",
+                    Description = "Большой вкусный кофе",
                     Cafe = starsCoffee,
                     CafeId = starsCoffee.Id,
                     BeverageType = cappuccino,
