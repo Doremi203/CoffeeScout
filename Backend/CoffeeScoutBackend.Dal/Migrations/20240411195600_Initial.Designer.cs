@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CoffeeScoutBackend.Dal.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240411183600_Initial")]
+    [Migration("20240411195600_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -280,10 +280,6 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     b.Property<long>("MenuItemId")
                         .HasColumnType("bigint")
                         .HasColumnName("menu_item_id");
-
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_completed");
 
                     b.Property<decimal>("PricePerItem")
                         .HasColumnType("numeric")

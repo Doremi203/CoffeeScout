@@ -278,10 +278,6 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("menu_item_id");
 
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_completed");
-
                     b.Property<decimal>("PricePerItem")
                         .HasColumnType("numeric")
                         .HasColumnName("price_per_item");
