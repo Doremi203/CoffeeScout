@@ -34,7 +34,6 @@ export default function ProductCard({menuItemId, name, price, size, cafe}) {
         fetchLiked();
     }, []);
 
-
     const like = async () => {
         console.log(menuItemId)
         if (isLiked) {

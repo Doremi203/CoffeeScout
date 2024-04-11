@@ -10,8 +10,6 @@ import {useFonts} from "expo-font";
 import Cart from "./screens/Cart";
 import MapScreen from "./screens/MapScreen";
 import ProductScreen from "./screens/ProductScreen";
-import Order from "./screens/Order";
-import OrderFin from "./screens/OrderFin";
 import Settings from "./screens/Settings";
 import OrderScreen from "./screens/OrderScreen";
 import SearchScreen from "./screens/SearchScreen";
@@ -72,16 +70,6 @@ export default function App() {
                 <Stack.Screen
                     name="product"
                     component={ProductScreen}
-                    options={{headerShown: false}}
-                />
-                <Stack.Screen
-                    name="order"
-                    component={Order}
-                    options={{headerShown: false}}
-                />
-                <Stack.Screen
-                    name="orderFin"
-                    component={OrderFin}
                     options={{headerShown: false}}
                 />
                 <Stack.Screen

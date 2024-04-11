@@ -24,7 +24,27 @@ export default function Profile({navigation}) {
     }, [navigation]);
 
 
-    console.log(email)
+    const {order} = useContext(Context)
+
+    const [orders1, setOrders1] = useState([])
+    const [orders2, setOrders2] = useState([])
+    const [orders3, setOrders3] = useState([])
+    const [orders4, setOrders4] = useState([])
+
+    useEffect(() => {
+        const fetchOrders = async () => {
+            const orderss1 = await order.getOrdersPending()
+            setOrders1(orderss1)
+            const orderss2 = await order.getOrdersInProgress()
+            setOrders2(orderss2)
+            const orderss3 = await order.getOrdersCompleted()
+            setOrders3(orderss3)
+            const orderss4 = await order.getOrdersCancelled()
+            setOrders4(orderss4)
+        }
+
+        fetchOrders()
+    }, []);
 
 
     return (
@@ -40,17 +60,29 @@ export default function Profile({navigation}) {
                     </View>
                 </TouchableWithoutFeedback>
 
-
                 <Text style={styles.historyHeader}> История заказов </Text>
 
                 <ScrollView style={styles.scroll}>
-                    <OrderComponent navigation={navigation}/>
-                    <OrderComponent navigation={navigation}/>
+                    {orders1 && orders1.map((order) => (
+                        <OrderComponent navigation={navigation} status={order.status} number={order.id}
+                                        items={order.orderItems}/>
+                    ))}
+                    {orders2 && orders2.map((order) => (
+                        <OrderComponent navigation={navigation} status={order.status} number={order.id}
+                                        items={order.orderItems}/>
+                    ))}
+                    {orders3 && orders3.map((order) => (
+                        <OrderComponent navigation={navigation} status={order.status} number={order.id}
+                                        items={order.orderItems}/>
+                    ))}
+                    {orders4 && orders4.map((order) => (
+                        <OrderComponent navigation={navigation} status={order.status} number={order.id}
+                                        items={order.orderItems}/>
+                    ))}
+
 
                 </ScrollView>
-
             </View>
-
             <Footer navigation={navigation}/>
         </View>
     );
@@ -88,10 +120,8 @@ const styles = StyleSheet.create({
         marginLeft: RFValue(90),
     },
     email: {
-
         marginTop: RFValue(7),
         marginLeft: RFValue(91),
-        //right: RFValue(62),
         fontFamily: 'MontserratAlternates',
         fontSize: RFValue(12),
     },
