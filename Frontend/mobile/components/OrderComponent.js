@@ -1,17 +1,18 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
 import {RFValue} from "react-native-responsive-fontsize";
 
 
-const OrderComponent = ({navigation}) => {
+const OrderComponent = ({navigation, status, number, items}) => {
     return (
-        <TouchableOpacity onPress={() => navigation.navigate('orderScreen')}>
+        <TouchableWithoutFeedback onPress={() => navigation.navigate('orderScreen', {number: number, items: items})}>
             <View style={styles.container}>
                 <Text style={styles.price}> 100₽ </Text>
                 <Text style={styles.data}> 28.03 </Text>
-                <Text style={styles.place}> One Price Coffee </Text>
+                <Text style={styles.status}> {status} </Text>
+                <Text style={styles.cafe}> One Price Coffee </Text>
             </View>
-        </TouchableOpacity>
+        </TouchableWithoutFeedback>
 
     );
 }
@@ -19,7 +20,6 @@ const OrderComponent = ({navigation}) => {
 
 const styles = StyleSheet.create({
     container: {
-
         backgroundColor: '#E2E9E6',
         width: '100%',
         height: RFValue(70),
@@ -39,11 +39,18 @@ const styles = StyleSheet.create({
         right: RFValue(65),
         marginTop: RFValue(34)
     },
-    place: {
+    status: {
         fontFamily: 'MontserratAlternatesMedium',
         fontSize: RFValue(18),
-        marginTop: RFValue(18),
+        marginTop: RFValue(10),
         right: RFValue(10)
+    },
+    cafe: {
+        fontFamily: 'MontserratAlternatesMedium',
+        fontSize: RFValue(15),
+        marginTop: RFValue(40),
+        right: RFValue(100),
+        color: 'gray'
     }
 });
 

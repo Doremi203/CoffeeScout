@@ -5,7 +5,13 @@ import {RFValue} from "react-native-responsive-fontsize";
 import ProductInHistory from "../components/ProductInHistory";
 
 
-export default function OrderScreen({navigation}) {
+export default function OrderScreen({navigation, route}) {
+
+    const number = route.params.number
+    console.log(number)
+    const items = route.params.items
+    console.log(items)
+
     return (
         <View style={styles.container}>
             <View style={styles.main}>
@@ -14,25 +20,24 @@ export default function OrderScreen({navigation}) {
                     <Image source={require('../assets/icons/left-arrow.png')} style={styles.arrow}/>
                 </TouchableOpacity>
 
-                <Text style={styles.number}> №101 </Text>
+                <Text style={styles.number}> №{number} </Text>
 
                 <View>
                     <ScrollView style={styles.scroll}>
-                        <ProductInHistory name={'Капучино'}/>
-                        <ProductInHistory name={'Латте'}/>
+                        {items && items.map((item) => (
+                            <ProductInHistory name={'Капучино'} price={item.pricePerItem} count={item.quantity}
+                                              menuItemId={item.menuItemId}/>
+                        ))}
+                        <ProductInHistory name={'Капучино'} price={100}/>
 
-                        <View>
+                        <View style={styles.paid}>
                             <Text style={[styles.text, {left: RFValue(15), top: RFValue(10)}]}> Оплачено </Text>
                             <Text style={[styles.text, {left: RFValue(290), top: RFValue(-15)}]}> 200₽ </Text>
                             <View style={[styles.line]}/>
                         </View>
-
-
                     </ScrollView>
                 </View>
-
             </View>
-
             <Footer navigation={navigation}/>
         </View>
     );

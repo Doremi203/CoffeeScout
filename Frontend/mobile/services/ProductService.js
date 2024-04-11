@@ -24,4 +24,16 @@ export default class ProductService {
         return $api.delete(`/v1/customers/favored-menu-items/${menuItemId}`)
     }
 
+    static async getTypes() {
+        return $api.get(`/v1/beverage-types?PageSize=100&PageNumber=1`)
+    }
+
+
+    static async leaveReview(menuItemId, content, rating) {
+        return $api.post(`/v1/menu-items/${menuItemId}/reviews`, {
+            content : content,
+            rating : rating
+        })
+    }
+
 }
