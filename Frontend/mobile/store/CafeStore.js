@@ -12,7 +12,7 @@ export default class CafeStore {
             const response = await CafeService.getNearbyCafes(longitude, latitude, radius);
             return response.data;
         } catch (error) {
-            console.error('Error fetching data: NEAR', error);
+            console.error('Error fetching data: NEAR cafe', error);
         }
     }
 

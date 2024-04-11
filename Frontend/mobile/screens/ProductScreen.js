@@ -4,8 +4,10 @@ import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
 import Footer from "./Footer";
 import ProductCard from "../components/ProductCard";
 import {Context} from "../index";
-export default function ProductScreen({navigation}) {
 
+export default function ProductScreen({navigation, route}) {
+
+    const name = route.params.type.name
 
     const {product} = useContext(Context);
     const {loc} = useContext(Context);
@@ -26,7 +28,7 @@ export default function ProductScreen({navigation}) {
     return (
         <View style={styles.container}>
             <View style={styles.main}>
-                <Text style={styles.header}> капучино </Text>
+                <Text style={styles.header}> {name} </Text>
                 <Text style={styles.description}>
                     Капучино - это идеальное сочетание эспрессо и молока, создающее насыщенный вкус и неповторимую
                     текстуру. Его аромат и бархатистая молочная пена станут настоящим утешением в любой момент
@@ -36,7 +38,8 @@ export default function ProductScreen({navigation}) {
                     <ScrollView style={styles.scroll}>
 
                         {nearProducts && nearProducts.map((product) => (
-                            <ProductCard menuItemId={product.id} name={product.name} price={product.price} size={product.sizeInMl} cafe={product.cafe}/>
+                            <ProductCard menuItemId={product.id} name={product.name} price={product.price}
+                                         size={product.sizeInMl} cafe={product.cafe}/>
                         ))}
 
                     </ScrollView>

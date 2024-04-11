@@ -3,16 +3,15 @@ import {Image, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-nat
 import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
 
 
-export default function Product({navigation, name}) {
+export default function Product({navigation, name, type}) {
     return (
         <View style={styles.square}>
-            <TouchableWithoutFeedback onPress={() => navigation.navigate('product')}>
+            <TouchableWithoutFeedback onPress={() => navigation.navigate('product', {type: type})}>
                 <View>
                     <Image source={require('../assets/icons/coffee.png')} style={styles.image}/>
                     <Text style={styles.label}> {name} </Text>
                 </View>
             </TouchableWithoutFeedback>
-
         </View>
     );
 };
