@@ -15,22 +15,6 @@ public class OrdersController(
     IOrderService orderService
 ) : ControllerBase
 {
-    [HttpPost]
-    [Authorize(Roles = nameof(Roles.Customer))]
-    [ProducesResponseType<OrderResponse>(StatusCodes.Status201Created)]
-    public async Task<IActionResult> PlaceOrder(PlaceOrderRequest request)
-    {
-        var orderData = new CreateOrderData
-        {
-            CustomerId = User.GetId(),
-            MenuItems = request.MenuItems
-                .Adapt<IReadOnlyCollection<CreateOrderData.MenuItemData>>()
-        };
-        var order = await orderService.CreateOrder(orderData);
-
-        return Created($"{RoutesV1.Orders}/{order.Id}", order.Adapt<OrderResponse>());
-    }
-    
     [HttpGet("{id:long}")]
     [Authorize(Roles = $"{nameof(Roles.Customer)},{nameof(Roles.CafeAdmin)},{nameof(Roles.SuperAdmin)}")]
     [ProducesResponseType<OrderResponse>(StatusCodes.Status200OK)]

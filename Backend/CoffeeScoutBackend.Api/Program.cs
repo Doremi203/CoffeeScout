@@ -2,6 +2,7 @@ using CoffeeScoutBackend.Api.Config;
 using CoffeeScoutBackend.Api.DbSeeders;
 using CoffeeScoutBackend.Api.Identity;
 using CoffeeScoutBackend.Api.Middlewares;
+using CoffeeScoutBackend.Api.Responses.Mappers;
 using CoffeeScoutBackend.Bll;
 using CoffeeScoutBackend.Dal;
 using CoffeeScoutBackend.Dal.Config;
@@ -19,6 +20,7 @@ builder.Services
         builder.Configuration.GetSection(nameof(AdminSettings)))
     .Configure<DatabaseSettings>(
         builder.Configuration.GetSection(nameof(DatabaseSettings)));
+ResponseMapperConfiguration.Configure();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

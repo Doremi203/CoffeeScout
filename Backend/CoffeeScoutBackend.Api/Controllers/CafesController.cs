@@ -1,5 +1,6 @@
 using CoffeeScoutBackend.Api.Extensions;
 using CoffeeScoutBackend.Api.Requests.V1.Cafes;
+using CoffeeScoutBackend.Api.Requests.V1.Orders;
 using CoffeeScoutBackend.Api.Responses;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
@@ -82,6 +83,25 @@ public class CafesController(
         await cafeService.DeleteCafe(id);
 
         return NoContent();
+    }
+    
+    [HttpPost("{id:long}/orders")]
+    [Authorize(Roles = nameof(Roles.Customer))]
+    [ProducesResponseType<OrderResponse>(StatusCodes.Status201Created)]
+    public async Task<IActionResult> PlaceOrder(
+        [FromRoute] long id,
+        PlaceOrderRequest request)
+    {
+        var orderData = new CreateOrderData
+        {
+            CustomerId = User.GetId(),
+            CafeId = id,
+            MenuItems = request.MenuItems
+                .Adapt<IReadOnlyCollection<CreateOrderData.MenuItemData>>()
+        };
+        var order = await orderService.CreateOrder(orderData);
+
+        return Created($"{RoutesV1.Orders}/{order.Id}", order.Adapt<OrderResponse>());
     }
 
     [HttpGet("orders")]

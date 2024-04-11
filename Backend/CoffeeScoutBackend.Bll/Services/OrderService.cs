@@ -20,8 +20,9 @@ public class OrderService(
     {
         var customer = await customerService.GetByUserId(orderData.CustomerId);
 
-        var (cafeId, orderItems) = await FormOrderItems(orderData.MenuItems);
-        var cafe = await cafeService.GetById(cafeId);
+        var orderItems = await FormOrderItems(
+            orderData.MenuItems, orderData.CafeId);
+        var cafe = await cafeService.GetById(orderData.CafeId);
         var order = new Order
         {
             Customer = customer,
@@ -134,17 +135,19 @@ public class OrderService(
                 order.Id);
     }
 
-    private async Task<(long cafeId, List<OrderItem> orderItems)> FormOrderItems(
-        IReadOnlyCollection<CreateOrderData.MenuItemData> orderDataMenuItems)
+    private async Task<List<OrderItem>> FormOrderItems(
+        IReadOnlyCollection<CreateOrderData.MenuItemData> orderDataMenuItems,
+        long cafeId)
     {
         var orderItems = new List<OrderItem>();
-        var cafes = new HashSet<long>();
 
         foreach (var orderDataMenuItem in orderDataMenuItems)
         {
             var menuItem = await menuItemService.GetById(orderDataMenuItem.Id);
-            cafes.Add(menuItem.Cafe.Id);
-
+            if (menuItem.Cafe.Id != cafeId)
+                throw new InvalidOrderDataException(
+                    "Order items must belong to the same cafe");
+            
             var orderItem = new OrderItem
             {
                 MenuItem = menuItem,
@@ -155,10 +158,6 @@ public class OrderService(
             orderItems.Add(orderItem);
         }
 
-        if (cafes.Count != 1)
-            throw new InvalidOrderDataException(
-                "Order items must belong to the same cafe");
-
-        return (cafes.Single(), orderItems);
+        return orderItems;
     }
 }
