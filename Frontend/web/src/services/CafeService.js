@@ -20,5 +20,8 @@ export default class CafeService {
         return $api.delete(`v1/menu-items/${menuItemId}`)
     }
 
+    static async getTypes() {
+        return $api.get(`v1/beverage-types?PageSize=100&PageNumber=1`)
+    }
 
 }

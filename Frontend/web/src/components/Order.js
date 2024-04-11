@@ -1,28 +1,54 @@
 import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
-import React from "react";
+import React, {useContext} from "react";
 import "./Order.css"
+import {Context} from "../index";
+import Dropdown from 'react-bootstrap/Dropdown';
+import {DropdownButton} from "react-bootstrap";
 
 
-export const Order = () => {
+export const Order = ({number, status, orderItems}) => {
+
+    const {order} = useContext(Context)
+
+    const cancelOrder = async () => {
+        await order.cancelOrder(number)
+    }
+
+    const completeOrder = async () => {
+        await order.completeOrder(number)
+
+    }
+
+
     return (
         <Card>
-            <Card.Header> В процессе </Card.Header>
+            <Card.Header> {status} </Card.Header>
             <Card.Body>
-                <Card.Title>Заказ №1</Card.Title>
+                <Card.Title>Заказ №{number}</Card.Title>
                 <div className="productsInOrder">
-                    <Card.Text className="pro">
-                        capuchino - 0.3 L <br/> latte - 0.3 L <br/> price - 400 RUB
-                    </Card.Text>
-                    <Card.Text className="pro">
-                        capuchino - 0.3 L <br/> latte - 0.3 L <br/> price - 400 RUB
-                    </Card.Text>
-                    <Card.Text className="pro">
-                        capuchino - 0.3 L <br/> latte - 0.3 L <br/> price - 400 RUB
-                    </Card.Text>
-                </div>
+                    <div>
+                        {Array.isArray(orderItems) && orderItems.map((item) => (
+                            <Card.Text className="pro">
+                                имя напитка - размер ml - количество - 3
+                            </Card.Text>
+                        ))}
+                    </div>
+                    <div>
+                        {Array.isArray(orderItems) && orderItems.map((item) => (
+                            <Card.Text className="pro">
+                                цена - 400 Rub
+                            </Card.Text>
+                        ))}
+                    </div>
 
-                <Button variant="primary">Изменить статус заказа</Button>
+                </div>
+                <Card.Text className="totalPrice"> Сумма заказа - 1000 RUB</Card.Text>
+
+                {(status === 'Pending' || status === 'InProgress') &&
+                    <DropdownButton id="dropdown-basic-button" title="Изменить статус заказа">
+                        <Dropdown.Item onClick={cancelOrder}>Отменить заказ</Dropdown.Item>
+                        <Dropdown.Item onClick={completeOrder}>Завершить заказ</Dropdown.Item>
+                    </DropdownButton>}
             </Card.Body>
         </Card>
     );

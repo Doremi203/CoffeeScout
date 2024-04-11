@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from "react-bootstrap/Form";
@@ -24,6 +24,15 @@ function NewProduct() {
         await cafe.addProduct(name, price, size, type)
         setShow(false);
     }
+
+    const [types, setTypes] = useState([])
+    useEffect(() => {
+        const fetchTypes = async () => {
+            const typess = await cafe.getTypes()
+            setTypes(typess)
+        }
+        fetchTypes();
+    }, []);
 
     return (
         <>
@@ -73,8 +82,9 @@ function NewProduct() {
                                          value={type}
                                          onChange={(e) => setType(e.target.value)}>
                                 <option>Тип напитка</option>
-                                <option>Cappuccino</option>
-                                <option>Espresso</option>
+                                {Array.isArray(types) && types.map((type) => (
+                                    <option> {type.name} </option>
+                                ))}
 
                             </Form.Select>
                         </Form.Group>
