@@ -266,13 +266,19 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     customer_id = table.Column<string>(type: "text", nullable: false),
-                    status_id = table.Column<long>(type: "bigint", nullable: false),
+                    cafe_id = table.Column<long>(type: "bigint", nullable: false),
                     date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     status = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_orders", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_orders_cafes_cafe_id",
+                        column: x => x.cafe_id,
+                        principalTable: "cafes",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "fk_orders_customers_customer_id",
                         column: x => x.customer_id,
@@ -340,8 +346,7 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     order_id = table.Column<long>(type: "bigint", nullable: false),
                     menu_item_id = table.Column<long>(type: "bigint", nullable: false),
                     quantity = table.Column<int>(type: "integer", nullable: false),
-                    price_per_item = table.Column<decimal>(type: "numeric", nullable: false),
-                    is_completed = table.Column<bool>(type: "boolean", nullable: false)
+                    price_per_item = table.Column<decimal>(type: "numeric", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -427,6 +432,11 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 name: "ix_order_items_menu_item_id",
                 table: "order_items",
                 column: "menu_item_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_orders_cafe_id",
+                table: "orders",
+                column: "cafe_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_orders_customer_id",

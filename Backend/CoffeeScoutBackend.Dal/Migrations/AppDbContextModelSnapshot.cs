@@ -239,6 +239,10 @@ namespace CoffeeScoutBackend.Dal.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
+                    b.Property<long>("CafeId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("cafe_id");
+
                     b.Property<string>("CustomerId")
                         .IsRequired()
                         .HasColumnType("text")
@@ -252,12 +256,11 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("status");
 
-                    b.Property<long>("StatusId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("status_id");
-
                     b.HasKey("Id")
                         .HasName("pk_orders");
+
+                    b.HasIndex("CafeId")
+                        .HasDatabaseName("ix_orders_cafe_id");
 
                     b.HasIndex("CustomerId")
                         .HasDatabaseName("ix_orders_customer_id");
@@ -274,10 +277,6 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     b.Property<long>("MenuItemId")
                         .HasColumnType("bigint")
                         .HasColumnName("menu_item_id");
-
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_completed");
 
                     b.Property<decimal>("PricePerItem")
                         .HasColumnType("numeric")
@@ -574,12 +573,21 @@ namespace CoffeeScoutBackend.Dal.Migrations
 
             modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.OrderEntity", b =>
                 {
+                    b.HasOne("CoffeeScoutBackend.Dal.Entities.CafeEntity", "Cafe")
+                        .WithMany()
+                        .HasForeignKey("CafeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_orders_cafes_cafe_id");
+
                     b.HasOne("CoffeeScoutBackend.Dal.Entities.CustomerEntity", "Customer")
                         .WithMany("Orders")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_orders_customers_customer_id");
+
+                    b.Navigation("Cafe");
 
                     b.Navigation("Customer");
                 });

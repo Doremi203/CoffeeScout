@@ -4,5 +4,6 @@ namespace CoffeeScoutBackend.Api.Requests.V1.Cafes;
 
 public record GetOrdersRequest(
     OrderStatus Status,
-    DateTime From
+    int PageSize,
+    int PageNumber
 );

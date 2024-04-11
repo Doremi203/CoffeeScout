@@ -20,11 +20,15 @@ public class OrderService(
     {
         var customer = await customerService.GetByUserId(orderData.CustomerId);
 
+        var orderItems = await FormOrderItems(
+            orderData.MenuItems, orderData.CafeId);
+        var cafe = await cafeService.GetById(orderData.CafeId);
         var order = new Order
         {
             Customer = customer,
             Date = dateTimeProvider.UtcNow,
-            OrderItems = await FormOrderItems(orderData.MenuItems),
+            Cafe = cafe,
+            OrderItems = orderItems,
             Status = OrderStatus.Pending
         };
 
@@ -40,79 +44,74 @@ public class OrderService(
         return order;
     }
 
-    public async Task<IReadOnlyCollection<Order>> GetCafeOrders(
-        string currentCafeAdminId,
-        OrderStatus status,
-        DateTime from
-    )
+    public async Task<IReadOnlyCollection<Order>> GetCafeOrders(string adminId, GetOrdersModel model)
     {
-        var cafe = await cafeService.GetByAdminId(currentCafeAdminId);
-        var orders = await orderRepository.GetByCafeId(cafe.Id, status, from);
-
-        FilterOutUnrelatedOrderItems();
-
-        return orders;
-
-        void FilterOutUnrelatedOrderItems()
-        {
-            foreach (var order in orders)
-            {
-                order.OrderItems = order.OrderItems
-                    .Where(oi => oi.MenuItem.Cafe.Id == cafe.Id)
-                    .ToList();
-            }
-        }
+        var cafe = await cafeService.GetByAdminId(adminId);
+        
+        return await orderRepository.GetByCafeId(cafe.Id, model);
     }
 
     public async Task<IReadOnlyCollection<Order>> GetCustomerOrders(
         string userId,
-        OrderStatus status,
-        DateTime from
+        GetOrdersModel model
     )
     {
-        return await orderRepository.GetByUserId(userId, status, from);
+        return await orderRepository.GetByUserId(userId, model);
     }
 
-    public async Task CompleteCafeOrderPart(string adminId, long id)
+    public async Task CompleteOrder(string adminId, long id)
     {
-        using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-        
         var order = await GetById(id);
         AssertOrderStatus(order, OrderStatus.InProgress);
-
         var cafe = await cafeService.GetByAdminId(adminId);
 
-        foreach (var orderItem in order.OrderItems
-                     .Where(orderItem => orderItem.MenuItem.Cafe.Id == cafe.Id))
-        {
-            await orderRepository.UpdateOrderItemCompletionStatus(
-                orderItem.Order.Id, 
-                orderItem.MenuItem.Id,
-                true);
-        }
-        
-        transaction.Complete();
+        if (order.Cafe.Id != cafe.Id)
+            throw new OrderNotFoundException(
+                $"Order with id: {id} not found in cafe with id: {cafe.Id}",
+                id);
+
+        await orderRepository.UpdateStatus(id, OrderStatus.Completed);
     }
 
-    public async Task CancelOrder(long id)
+    public async Task CafeCancelOrder(string adminId, long id)
     {
         var order = await GetById(id);
         AssertOrderNotCompleted(id, order);
-        
+
+        var cafe = await cafeService.GetByAdminId(adminId);
+
+        if (order.Cafe.Id != cafe.Id)
+            throw new OrderNotFoundException(
+                $"Order with id: {id} not found in cafe with id: {cafe.Id}",
+                id);
+
+        await orderRepository.UpdateStatus(id, OrderStatus.Cancelled);
+    }
+    
+    public async Task CustomerCancelOrder(string userId, long id)
+    {
+        var order = await GetById(id);
+        AssertOrderNotCompleted(id, order);
+
+        if (order.Customer.Id != userId)
+            throw new OrderNotFoundException(
+                $"Order with id: {id} not found for user with id: {userId}",
+                id);
+
         await orderRepository.UpdateStatus(id, OrderStatus.Cancelled);
     }
 
     public async Task PayOrder(string getId, long id)
     {
         using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-        
+
         var order = await GetById(id);
         AssertOrderStatus(order, OrderStatus.Pending);
-        
+
         await paymentService.ProcessPayment(getId, GetTotalAmount(order));
 
         await orderRepository.UpdateStatus(id, OrderStatus.InProgress);
-        
+
         transaction.Complete();
     }
 
@@ -140,19 +139,23 @@ public class OrderService(
     }
 
     private async Task<List<OrderItem>> FormOrderItems(
-        IReadOnlyCollection<CreateOrderData.MenuItemData> orderDataMenuItems)
+        IReadOnlyCollection<CreateOrderData.MenuItemData> orderDataMenuItems,
+        long cafeId)
     {
         var orderItems = new List<OrderItem>();
 
         foreach (var orderDataMenuItem in orderDataMenuItems)
         {
             var menuItem = await menuItemService.GetById(orderDataMenuItem.Id);
+            if (menuItem.Cafe.Id != cafeId)
+                throw new InvalidOrderDataException(
+                    "Order items must belong to the same cafe");
+
             var orderItem = new OrderItem
             {
                 MenuItem = menuItem,
                 Quantity = orderDataMenuItem.Quantity,
                 PricePerItem = menuItem.Price,
-                IsCompleted = false
             };
 
             orderItems.Add(orderItem);

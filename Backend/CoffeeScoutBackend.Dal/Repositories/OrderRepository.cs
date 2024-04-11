@@ -16,6 +16,9 @@ public class OrderRepository(
     {
         using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
         var orderEntity = order.Adapt<OrderEntity>();
+        
+        orderEntity.Cafe = await dbContext.Cafes
+            .FirstAsync(c => c.Id == order.Cafe.Id);
 
         orderEntity.Customer = await dbContext.Customers
             .FirstAsync(c => c.Id == order.Customer.Id);
@@ -41,40 +44,28 @@ public class OrderRepository(
         return orderEntity?.Adapt<Order>();
     }
 
-    public async Task<IReadOnlyCollection<Order>> GetByUserId(string userId, OrderStatus status, DateTime from)
+    public async Task<IReadOnlyCollection<Order>> GetByUserId(string userId, GetOrdersModel model)
     {
         var orderEntities = await GetOrderEntities()
-            .Where(o => 
-                o.Customer.Id == userId 
-                && o.Status == status 
-                && o.Date >= from)
+            .Where(o => o.Customer.Id == userId)
+            .OrderByDescending(o => o.Date)
+            .Skip(model.PageSize * (model.PageNumber - 1))
+            .Take(model.PageSize)
             .ToListAsync();
 
         return orderEntities.Adapt<IReadOnlyCollection<Order>>();
     }
 
-    public async Task<IReadOnlyCollection<Order>> GetByCafeId(long cafeId, OrderStatus status, DateTime from)
+    public async Task<IReadOnlyCollection<Order>> GetByCafeId(long cafeId, GetOrdersModel model)
     {
         var orderEntities = await GetOrderEntities()
-            .Where(o => 
-                o.Status == status 
-                && o.Date >= from 
-                && o.OrderItems.Any(oi => oi.MenuItem.Cafe.Id == cafeId))
+            .Where(o => o.Cafe.Id == cafeId)
+            .OrderByDescending(o => o.Date)
+            .Skip(model.PageSize * (model.PageNumber - 1))
+            .Take(model.PageSize)
             .ToListAsync();
 
         return orderEntities.Adapt<IReadOnlyCollection<Order>>();
-    }
-
-    public async Task UpdateOrderItemCompletionStatus(long orderId, long menuItemId, bool isCompleted)
-    {
-        var orderItemEntity = await dbContext.OrderItems
-            .FirstAsync(oi => oi.OrderId == orderId && oi.MenuItemId == menuItemId);
-        
-        orderItemEntity.IsCompleted = isCompleted;
-        
-        dbContext.Update(orderItemEntity);
-        
-        await dbContext.SaveChangesAsync();
     }
 
     public async Task UpdateStatus(long id, OrderStatus cancelled)
@@ -94,7 +85,8 @@ public class OrderRepository(
         return dbContext.Orders
             .Include(o => o.OrderItems)
             .ThenInclude(oi => oi.MenuItem)
-            .ThenInclude(mi => mi.Cafe)
+            .ThenInclude(mi => mi.BeverageType)
+            .Include(o => o.Cafe)
             .Include(o => o.Customer);
     }
 }

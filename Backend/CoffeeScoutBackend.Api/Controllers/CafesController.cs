@@ -1,5 +1,6 @@
 using CoffeeScoutBackend.Api.Extensions;
 using CoffeeScoutBackend.Api.Requests.V1.Cafes;
+using CoffeeScoutBackend.Api.Requests.V1.Orders;
 using CoffeeScoutBackend.Api.Responses;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
@@ -83,17 +84,63 @@ public class CafesController(
 
         return NoContent();
     }
+    
+    [HttpPost("{id:long}/orders")]
+    [Authorize(Roles = nameof(Roles.Customer))]
+    [ProducesResponseType<OrderResponse>(StatusCodes.Status201Created)]
+    public async Task<IActionResult> PlaceOrder(
+        [FromRoute] long id,
+        PlaceOrderRequest request)
+    {
+        var orderData = new CreateOrderData
+        {
+            CustomerId = User.GetId(),
+            CafeId = id,
+            MenuItems = request.MenuItems
+                .Adapt<IReadOnlyCollection<CreateOrderData.MenuItemData>>()
+        };
+        var order = await orderService.CreateOrder(orderData);
+
+        return Created($"{RoutesV1.Orders}/{order.Id}", order.Adapt<OrderResponse>());
+    }
 
     [HttpGet("orders")]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
     [ProducesResponseType<IReadOnlyCollection<OrderResponse>>(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetCafeOrders([FromQuery] GetOrdersRequest request)
+    public async Task<IActionResult> GetCafeOrders(
+        [FromQuery] GetOrdersRequest request)
     {
         var orders =
             await orderService.GetCafeOrders(
-                User.GetId(), request.Status, request.From);
+                User.GetId(),
+                new GetOrdersModel
+                {
+                    Status = request.Status,
+                    PageSize = request.PageSize,
+                    PageNumber = request.PageNumber
+                });
 
         return Ok(orders.Adapt<IReadOnlyCollection<OrderResponse>>());
+    }
+    
+    [HttpPatch("orders/{id:long}/complete")]
+    [Authorize(Roles = nameof(Roles.CafeAdmin))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> CompleteCafeOrderPart(long id)
+    {
+        await orderService.CompleteOrder(User.GetId(), id);
+
+        return NoContent();
+    }
+    
+    [HttpPatch("orders/{id:long}/cancel")]
+    [Authorize(Roles = nameof(Roles.CafeAdmin))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> CancelOrder(long id)
+    {
+        await orderService.CafeCancelOrder(User.GetId(), id);
+
+        return NoContent();
     }
     
     [HttpGet("menuItems")]

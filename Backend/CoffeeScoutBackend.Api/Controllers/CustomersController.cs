@@ -76,12 +76,39 @@ public class CustomersController(
     
     [HttpGet("orders")]
     [ProducesResponseType<IReadOnlyCollection<OrderResponse>>(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetOrders([FromQuery] GetOrdersRequest request)
+    public async Task<IActionResult> GetOrders(
+        [FromQuery] GetOrdersRequest request)
     {
         var orders = 
             await orderService.GetCustomerOrders(
-                User.GetId(), request.Status, request.From);
+                User.GetId(),
+                new GetOrdersModel
+                {
+                    Status = request.Status,
+                    PageSize = request.PageSize,
+                    PageNumber = request.PageNumber
+                });
 
         return Ok(orders.Adapt<IReadOnlyCollection<OrderResponse>>());
+    }
+    
+    [HttpPatch("orders/{id:long}/pay")]
+    [Authorize(Roles = nameof(Roles.Customer))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> PayOrder(long id)
+    {
+        await orderService.PayOrder(User.GetId(), id);
+
+        return NoContent();
+    }
+    
+    [HttpPatch("orders/{id:long}/cancel")]
+    [Authorize(Roles = nameof(Roles.Customer))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> CancelOrder(long id)
+    {
+        await orderService.CustomerCancelOrder(User.GetId(), id);
+
+        return NoContent();
     }
 }
