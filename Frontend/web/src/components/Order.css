@@ -3,8 +3,14 @@
     flex-direction: row;
     margin-top: 10px;
     margin-left: 10px;
+
 }
 
 .pro {
+    margin-right: 25px;
+}
+
+.totalPrice {
+    margin-top: 20px;
     margin-right: 25px;
 }

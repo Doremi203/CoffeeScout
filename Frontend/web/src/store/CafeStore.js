@@ -22,6 +22,7 @@ export default class CafeStore {
     async addProduct(name, price, size, type) {
         try {
             await CafeService.addProduct(name, price, size, type);
+            window.location.reload();
         } catch (error) {
             switch (error.response.status) {
                 case 400:
@@ -36,7 +37,17 @@ export default class CafeStore {
     async deleteProduct(menuItemId) {
         try {
             await CafeService.deleteProduct(menuItemId);
+            window.location.reload();
         } catch (error) {
+            toast.error("Что-то пошло не так")
+        }
+    }
+
+    async getTypes() {
+        try{
+            const response = await CafeService.getTypes();
+            return response.data;
+        } catch(error) {
             toast.error("Что-то пошло не так")
         }
     }
