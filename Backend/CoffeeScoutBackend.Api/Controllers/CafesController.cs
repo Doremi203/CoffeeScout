@@ -126,6 +126,16 @@ public class CafesController(
         return NoContent();
     }
     
+    [HttpPatch("orders/{id:long}/cancel")]
+    [Authorize(Roles = nameof(Roles.CafeAdmin))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> CancelOrder(long id)
+    {
+        await orderService.CafeCancelOrder(User.GetId(), id);
+
+        return NoContent();
+    }
+    
     [HttpGet("menuItems")]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
     [ProducesResponseType<IReadOnlyCollection<CafeMenuItemResponse>>(StatusCodes.Status200OK)]

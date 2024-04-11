@@ -90,10 +90,32 @@ public class OrderService(
         await orderRepository.UpdateStatus(id, OrderStatus.Completed);
     }
 
-    public async Task CancelOrder(long id)
+    public async Task CafeCancelOrder(string adminId, long id)
     {
         var order = await GetById(id);
         AssertOrderNotCompleted(id, order);
+
+        var cafe = await cafeService.GetByAdminId(adminId);
+
+        if (order.Cafe.Id != cafe.Id)
+            throw new OrderNotFoundException(
+                $"Order with id: {id} not found in cafe with id: {cafe.Id}",
+                id);
+        
+        
+
+        await orderRepository.UpdateStatus(id, OrderStatus.Cancelled);
+    }
+    
+    public async Task CustomerCancelOrder(string userId, long id)
+    {
+        var order = await GetById(id);
+        AssertOrderNotCompleted(id, order);
+
+        if (order.Customer.Id != userId)
+            throw new OrderNotFoundException(
+                $"Order with id: {id} not found for user with id: {userId}",
+                id);
 
         await orderRepository.UpdateStatus(id, OrderStatus.Cancelled);
     }
@@ -147,7 +169,7 @@ public class OrderService(
             if (menuItem.Cafe.Id != cafeId)
                 throw new InvalidOrderDataException(
                     "Order items must belong to the same cafe");
-            
+
             var orderItem = new OrderItem
             {
                 MenuItem = menuItem,

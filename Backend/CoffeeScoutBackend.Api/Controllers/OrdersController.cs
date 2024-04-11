@@ -24,24 +24,4 @@ public class OrdersController(
 
         return Ok(order.Adapt<OrderResponse>());
     }
-    
-    [HttpPatch("{id:long}/cancel")]
-    [Authorize(Roles = $"{nameof(Roles.Customer)},{nameof(Roles.CafeAdmin)}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> CancelOrder(long id)
-    {
-        await orderService.CancelOrder(id);
-
-        return NoContent();
-    }
-    
-    [HttpPatch("{id:long}/pay")]
-    [Authorize(Roles = nameof(Roles.Customer))]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> PayOrder(long id)
-    {
-        await orderService.PayOrder(User.GetId(), id);
-
-        return NoContent();
-    }
 }

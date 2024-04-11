@@ -13,6 +13,7 @@ public interface IOrderService
         string userId, OrderStatus status, DateTime from);
 
     Task CompleteOrder(string adminId, long id);
-    Task CancelOrder(long id);
+    Task CafeCancelOrder(string adminId, long id);
+    Task CustomerCancelOrder(string userId, long id);
     Task PayOrder(string getId, long id);
 }
