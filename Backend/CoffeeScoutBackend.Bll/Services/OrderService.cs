@@ -44,37 +44,19 @@ public class OrderService(
         return order;
     }
 
-    public async Task<IReadOnlyCollection<Order>> GetCafeOrders(
-        string currentCafeAdminId,
-        OrderStatus status,
-        DateTime from
-    )
+    public async Task<IReadOnlyCollection<Order>> GetCafeOrders(string adminId, GetOrdersModel model)
     {
-        var cafe = await cafeService.GetByAdminId(currentCafeAdminId);
-        var orders = await orderRepository.GetByCafeId(cafe.Id, status, from);
-
-        FilterOutUnrelatedOrderItems();
-
-        return orders;
-
-        void FilterOutUnrelatedOrderItems()
-        {
-            foreach (var order in orders)
-            {
-                order.OrderItems = order.OrderItems
-                    .Where(oi => oi.MenuItem.Cafe.Id == cafe.Id)
-                    .ToList();
-            }
-        }
+        var cafe = await cafeService.GetByAdminId(adminId);
+        
+        return await orderRepository.GetByCafeId(cafe.Id, model);
     }
 
     public async Task<IReadOnlyCollection<Order>> GetCustomerOrders(
         string userId,
-        OrderStatus status,
-        DateTime from
+        GetOrdersModel model
     )
     {
-        return await orderRepository.GetByUserId(userId, status, from);
+        return await orderRepository.GetByUserId(userId, model);
     }
 
     public async Task CompleteOrder(string adminId, long id)

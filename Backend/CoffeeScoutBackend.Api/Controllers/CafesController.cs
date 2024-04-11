@@ -107,11 +107,18 @@ public class CafesController(
     [HttpGet("orders")]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
     [ProducesResponseType<IReadOnlyCollection<OrderResponse>>(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetCafeOrders([FromQuery] GetOrdersRequest request)
+    public async Task<IActionResult> GetCafeOrders(
+        [FromQuery] GetOrdersRequest request)
     {
         var orders =
             await orderService.GetCafeOrders(
-                User.GetId(), request.Status, request.From);
+                User.GetId(),
+                new GetOrdersModel
+                {
+                    Status = request.Status,
+                    PageSize = request.PageSize,
+                    PageNumber = request.PageNumber
+                });
 
         return Ok(orders.Adapt<IReadOnlyCollection<OrderResponse>>());
     }

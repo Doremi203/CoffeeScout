@@ -6,7 +6,7 @@ public interface IOrderRepository
 {
     Task<Order> Add(Order order);
     Task<Order?> GetById(long orderId);
-    Task<IReadOnlyCollection<Order>> GetByUserId(string userId, OrderStatus status, DateTime from);
-    Task<IReadOnlyCollection<Order>> GetByCafeId(long cafeId, OrderStatus status, DateTime from);
+    Task<IReadOnlyCollection<Order>> GetByUserId(string userId, GetOrdersModel model);
+    Task<IReadOnlyCollection<Order>> GetByCafeId(long cafeId, GetOrdersModel model);
     Task UpdateStatus(long id, OrderStatus cancelled);
 }
