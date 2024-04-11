@@ -40,6 +40,7 @@ public class MenuItemService(
         var newMenuItem = new MenuItem
         {
             Name = menuItem.Name,
+            Description = menuItem.Description,
             Price = menuItem.Price,
             BeverageType = beverageType,
             Cafe = cafe,

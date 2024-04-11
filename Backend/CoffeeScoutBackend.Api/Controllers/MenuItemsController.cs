@@ -44,6 +44,7 @@ public class MenuItemsController(
         var newMenuItem = new MenuItem
         {
             Name = request.Name,
+            Description = request.Description,
             Price = request.Price,
             SizeInMl = request.SizeInMl,
             BeverageType = new BeverageType
@@ -68,6 +69,7 @@ public class MenuItemsController(
         {
             Id = id,
             Name = request.Name,
+            Description = request.Description,
             Price = request.Price,
             SizeInMl = request.SizeInMl,
             BeverageType = new BeverageType
