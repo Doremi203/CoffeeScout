@@ -85,6 +85,7 @@ public class OrderRepository(
         return dbContext.Orders
             .Include(o => o.OrderItems)
             .ThenInclude(oi => oi.MenuItem)
+            .ThenInclude(mi => mi.BeverageType)
             .Include(o => o.Cafe)
             .Include(o => o.Customer);
     }
