@@ -346,8 +346,7 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     order_id = table.Column<long>(type: "bigint", nullable: false),
                     menu_item_id = table.Column<long>(type: "bigint", nullable: false),
                     quantity = table.Column<int>(type: "integer", nullable: false),
-                    price_per_item = table.Column<decimal>(type: "numeric", nullable: false),
-                    is_completed = table.Column<bool>(type: "boolean", nullable: false)
+                    price_per_item = table.Column<decimal>(type: "numeric", nullable: false)
                 },
                 constraints: table =>
                 {
