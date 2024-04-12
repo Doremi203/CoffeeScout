@@ -1,9 +1,7 @@
 using CoffeeScoutBackend.Dal.Config;
-using CoffeeScoutBackend.Dal.Entities;
 using CoffeeScoutBackend.Dal.Infrastructure;
 using CoffeeScoutBackend.Dal.Repositories;
 using CoffeeScoutBackend.Domain.Interfaces.Repositories;
-using CoffeeScoutBackend.Domain.Models;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,31 +44,13 @@ public static class DalServiceExtensions
 
     private static void ConfigureMapping(ILocationProvider locationProvider)
     {
-        TypeAdapterConfig<Customer, CustomerEntity>.NewConfig()
-            .PreserveReference(true);
-        TypeAdapterConfig<CustomerEntity, Customer>.NewConfig()
-            .PreserveReference(true);
-        TypeAdapterConfig<Review, ReviewEntity>.NewConfig()
-            .PreserveReference(true);
-        TypeAdapterConfig<ReviewEntity, Review>.NewConfig()
-            .PreserveReference(true);
-        TypeAdapterConfig<Order, OrderEntity>.NewConfig()
-            .PreserveReference(true);
-        TypeAdapterConfig<OrderEntity, Order>.NewConfig()
-            .PreserveReference(true);
-        TypeAdapterConfig<Cafe, CafeEntity>.NewConfig()
-            .PreserveReference(true);
-        TypeAdapterConfig<CafeEntity, Cafe>.NewConfig()
-            .PreserveReference(true);
-        TypeAdapterConfig<MenuItem, MenuItemEntity>.NewConfig()
-            .PreserveReference(true)
-            .Map(dest => dest.BeverageTypeId,
-                src => src.BeverageType.Id);
+        TypeAdapterConfig.GlobalSettings.Default.PreserveReference(true);
+        
         TypeAdapterConfig<Point, Location>.NewConfig()
-            .PreserveReference(true)
-            .MapWith(dest => new Location { Latitude = dest.Y, Longitude = dest.X });
+            .MapWith(dest => 
+                new Location { Latitude = dest.Y, Longitude = dest.X });
         TypeAdapterConfig<Location, Point>.NewConfig()
-            .PreserveReference(true)
-            .MapWith(dest => locationProvider.CreatePoint(dest.Latitude, dest.Longitude));
+            .MapWith(dest => 
+                locationProvider.CreatePoint(dest.Latitude, dest.Longitude));
     }
 }
