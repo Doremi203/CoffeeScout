@@ -8,5 +8,18 @@ public record AddCafeRequest(
     double Longitude,
     string Address,
     long CoffeeChainId,
-    IReadOnlyCollection<WorkingHours> WorkingHours
-);
+    IReadOnlyCollection<AddCafeRequest.WorkingHoursRequest> WorkingHours
+)
+{
+    public class WorkingHoursRequest
+    {
+        public record TimeRequest
+        {
+            public int Hour { get; init; }
+            public int Minute { get; init; }
+        }
+        public DayOfWeek Day { get; init; }
+        public TimeRequest OpeningTime { get; init; }
+        public TimeRequest ClosingTime { get; init; }
+    }
+}

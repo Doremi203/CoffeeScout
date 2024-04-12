@@ -53,7 +53,7 @@ public class CafesController(
             {
                 Id = request.CoffeeChainId
             },
-            WorkingHours = request.WorkingHours
+            WorkingHours = request.WorkingHours.Adapt<IReadOnlyCollection<WorkingHours>>()
         };
 
         var newCafe = await cafeService.AddCafe(cafe);

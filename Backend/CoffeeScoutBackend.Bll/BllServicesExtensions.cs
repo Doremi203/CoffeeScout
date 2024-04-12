@@ -16,6 +16,7 @@ public static class BllServicesExtensions
             .AddScoped<IBeverageTypeService, BeverageTypeService>()
             .AddScoped<IOrderService, OrderService>()
             .AddScoped<ICustomerService, CustomerService>()
+            .AddScoped<ICoffeeChainService, CoffeeChainService>()
             .AddScoped<ICafeService, CafeService>()
             .AddScoped<IMenuItemService, MenuItemService>()
             .AddScoped<ISuperAdminService, SuperAdminService>()

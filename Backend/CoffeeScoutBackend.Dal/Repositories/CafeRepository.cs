@@ -53,6 +53,8 @@ public class CafeRepository(
     public async Task<Cafe> Add(Cafe cafe)
     {
         var cafeEntity = cafe.Adapt<CafeEntity>();
+        cafeEntity.CoffeeChain = await dbContext.CoffeeChains
+            .FirstAsync(cc => cc.Id == cafe.CoffeeChain.Id);
         
         await dbContext.Cafes.AddAsync(cafeEntity);
         await dbContext.SaveChangesAsync();
