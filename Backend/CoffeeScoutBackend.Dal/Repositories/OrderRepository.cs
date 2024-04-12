@@ -58,6 +58,7 @@ public class OrderRepository(
 
     public async Task<IReadOnlyCollection<Order>> GetByCafeId(long cafeId, GetOrdersModel model)
     {
+        // TODO: Fix status filtering
         var orderEntities = await GetOrderEntities()
             .Where(o => o.Cafe.Id == cafeId)
             .OrderByDescending(o => o.Date)

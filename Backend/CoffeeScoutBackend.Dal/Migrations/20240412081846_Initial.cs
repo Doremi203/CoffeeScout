@@ -69,17 +69,16 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "cafes",
+                name: "coffee_chains",
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: true),
-                    location = table.Column<Point>(type: "geometry", nullable: false)
+                    name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_cafes", x => x.id);
+                    table.PrimaryKey("pk_coffee_chains", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -207,6 +206,28 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "cafes",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    coffee_chain_id = table.Column<long>(type: "bigint", nullable: false),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    location = table.Column<Point>(type: "geometry", nullable: false),
+                    address = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_cafes", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_cafes_coffee_chains_coffee_chain_id",
+                        column: x => x.coffee_chain_id,
+                        principalTable: "coffee_chains",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "cafe_admins",
                 columns: table => new
                 {
@@ -284,6 +305,28 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         name: "fk_orders_customers_customer_id",
                         column: x => x.customer_id,
                         principalTable: "customers",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "working_hours_entity",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    cafe_id = table.Column<long>(type: "bigint", nullable: false),
+                    day_of_week = table.Column<int>(type: "integer", nullable: false),
+                    opening_time = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
+                    closing_time = table.Column<TimeOnly>(type: "time without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_working_hours_entity", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_working_hours_entity_cafes_cafe_id",
+                        column: x => x.cafe_id,
+                        principalTable: "cafes",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -415,6 +458,11 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 column: "cafe_id");
 
             migrationBuilder.CreateIndex(
+                name: "ix_cafes_coffee_chain_id",
+                table: "cafes",
+                column: "coffee_chain_id");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_customer_favorite_items_favorite_menu_items_id",
                 table: "customer_favorite_items",
                 column: "favorite_menu_items_id");
@@ -453,6 +501,11 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 name: "ix_reviews_menu_item_id",
                 table: "reviews",
                 column: "menu_item_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_working_hours_entity_cafe_id",
+                table: "working_hours_entity",
+                column: "cafe_id");
         }
 
         /// <inheritdoc />
@@ -486,6 +539,9 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 name: "reviews");
 
             migrationBuilder.DropTable(
+                name: "working_hours_entity");
+
+            migrationBuilder.DropTable(
                 name: "asp_net_roles");
 
             migrationBuilder.DropTable(
@@ -505,6 +561,9 @@ namespace CoffeeScoutBackend.Dal.Migrations
 
             migrationBuilder.DropTable(
                 name: "asp_net_users");
+
+            migrationBuilder.DropTable(
+                name: "coffee_chains");
         }
     }
 }
