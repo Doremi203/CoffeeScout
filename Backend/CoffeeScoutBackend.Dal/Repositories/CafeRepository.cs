@@ -53,6 +53,8 @@ public class CafeRepository(
     public async Task<Cafe> Add(Cafe cafe)
     {
         var cafeEntity = cafe.Adapt<CafeEntity>();
+        cafeEntity.CoffeeChain = await dbContext.CoffeeChains
+            .FirstAsync(cc => cc.Id == cafe.CoffeeChain.Id);
         
         await dbContext.Cafes.AddAsync(cafeEntity);
         await dbContext.SaveChangesAsync();
@@ -86,6 +88,8 @@ public class CafeRepository(
     {
         return dbContext.Cafes
             .Include(ca => ca.Admins)
+            .Include(ca => ca.CoffeeChain)
+            .Include(ca => ca.WorkingHours)
             .Include(ca => ca.MenuItems)
             .ThenInclude(mi => mi.BeverageType);
     }

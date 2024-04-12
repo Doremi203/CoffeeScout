@@ -91,13 +91,47 @@ public class TestDbSeeder(
                 {
                     Name = "Coffee Crew",
                     Location = locationProvider.CreatePoint(
-                        55.698964, 37.499202)
+                        55.698964, 37.499202),
+                    Address = "ул. Ленинградская, 10",
+                    CoffeeChain = new CoffeeChainEntity { Name = "Coffee Crew" },
+                    WorkingHours = new List<WorkingHoursEntity>()
+                    {
+                        new()
+                        {
+                            DayOfWeek = DayOfWeek.Monday,
+                            OpeningTime = new TimeOnly(8, 0),
+                            ClosingTime = new TimeOnly(20, 0)
+                        },
+                        new()
+                        {
+                            DayOfWeek = DayOfWeek.Tuesday,
+                            OpeningTime = new TimeOnly(8, 0),
+                            ClosingTime = new TimeOnly(20, 0)
+                        },
+                    }
                 },
                 new()
                 {
                     Name = "Stars Coffee",
                     Location = locationProvider.CreatePoint(
-                        55.697503, 37.500088)
+                        55.697503, 37.500088),
+                    Address = "ул. Ленинградская, 12",
+                    CoffeeChain = new CoffeeChainEntity { Name = "Stars Coffee" },
+                    WorkingHours = new List<WorkingHoursEntity>()
+                    {
+                        new()
+                        {
+                            DayOfWeek = DayOfWeek.Monday,
+                            OpeningTime = new TimeOnly(8, 0),
+                            ClosingTime = new TimeOnly(20, 0)
+                        },
+                        new()
+                        {
+                            DayOfWeek = DayOfWeek.Tuesday,
+                            OpeningTime = new TimeOnly(8, 0),
+                            ClosingTime = new TimeOnly(20, 0)
+                        },
+                    }
                 }
             };
             dbContext.Cafes.AddRange(cafes);

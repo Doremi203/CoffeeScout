@@ -47,12 +47,28 @@ public class CafesController(
             {
                 Latitude = request.Latitude,
                 Longitude = request.Longitude
-            }
+            },
+            Address = request.Address,
+            CoffeeChain = new CoffeeChain
+            {
+                Id = request.CoffeeChainId
+            },
+            WorkingHours = request.WorkingHours.Adapt<IReadOnlyCollection<WorkingHours>>()
         };
 
         var newCafe = await cafeService.AddCafe(cafe);
 
         return Created($"{RoutesV1.Cafes}/{newCafe.Id}", newCafe.Adapt<CafeResponse>());
+    }
+    
+    [HttpGet("{id:long}")]
+    [Authorize(Roles = nameof(Roles.Customer))]
+    [ProducesResponseType<CafeResponse>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetCafe([FromRoute] long id)
+    {
+        var cafe = await cafeService.GetById(id);
+
+        return Ok(cafe.Adapt<CafeResponse>());
     }
 
     [HttpPatch]
@@ -67,7 +83,9 @@ public class CafesController(
             {
                 Latitude = request.Latitude,
                 Longitude = request.Longitude
-            }
+            },
+            Address = request.Address,
+            WorkingHours = request.WorkingHours.Adapt<IReadOnlyCollection<WorkingHours>>()
         };
 
         await cafeService.UpdateCafe(User.GetId(), cafe);
@@ -84,7 +102,7 @@ public class CafesController(
 
         return NoContent();
     }
-    
+
     [HttpPost("{id:long}/orders")]
     [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType<OrderResponse>(StatusCodes.Status201Created)]
@@ -122,7 +140,7 @@ public class CafesController(
 
         return Ok(orders.Adapt<IReadOnlyCollection<OrderResponse>>());
     }
-    
+
     [HttpPatch("orders/{id:long}/complete")]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -132,7 +150,7 @@ public class CafesController(
 
         return NoContent();
     }
-    
+
     [HttpPatch("orders/{id:long}/cancel")]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -142,7 +160,7 @@ public class CafesController(
 
         return NoContent();
     }
-    
+
     [HttpGet("menuItems")]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
     [ProducesResponseType<IReadOnlyCollection<CafeMenuItemResponse>>(StatusCodes.Status200OK)]
