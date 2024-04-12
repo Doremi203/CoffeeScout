@@ -8,9 +8,9 @@ import ProductInHistory from "../components/ProductInHistory";
 export default function OrderScreen({navigation, route}) {
 
     const number = route.params.number
-    console.log(number)
     const items = route.params.items
-    console.log(items)
+    const totalPrice = route.params.totalPrice
+
 
     return (
         <View style={styles.container}>
@@ -28,11 +28,10 @@ export default function OrderScreen({navigation, route}) {
                             <ProductInHistory name={'Капучино'} price={item.pricePerItem} count={item.quantity}
                                               menuItemId={item.menuItemId}/>
                         ))}
-                        <ProductInHistory name={'Капучино'} price={100}/>
 
                         <View style={styles.paid}>
                             <Text style={[styles.text, {left: RFValue(15), top: RFValue(10)}]}> Оплачено </Text>
-                            <Text style={[styles.text, {left: RFValue(290), top: RFValue(-15)}]}> 200₽ </Text>
+                            <Text style={[styles.text, {left: RFValue(290), top: RFValue(-15)}]}> {totalPrice}₽ </Text>
                             <View style={[styles.line]}/>
                         </View>
                     </ScrollView>
@@ -48,20 +47,15 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
         minHeight: '100%',
-
     },
     main: {
         flex: 1,
-
     },
-
     number: {
         fontFamily: 'MontserratAlternatesMedium',
         fontSize: RFValue(20),
         textAlign: 'center',
     },
-
-
     arrow: {
         width: RFValue(15),
         height: RFValue(15),

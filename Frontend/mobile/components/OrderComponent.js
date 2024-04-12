@@ -1,16 +1,30 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
 import {RFValue} from "react-native-responsive-fontsize";
+import {Context} from "../index";
 
 
-const OrderComponent = ({navigation, status, number, items}) => {
+const OrderComponent = ({navigation, status, number, items, date, cafe}) => {
+
+    const parts = date.split("T")[0].split("-");
+    const day = parts[2];
+    const month = parts[1];
+    const year = parts[0];
+
+    const newDate = `${day}.${month}.${year}`;
+
+    const {order} = useContext(Context)
+
+    const totalPrice = order.totalPrice(items)
+
     return (
-        <TouchableWithoutFeedback onPress={() => navigation.navigate('orderScreen', {number: number, items: items})}>
+        <TouchableWithoutFeedback
+            onPress={() => navigation.navigate('orderScreen', {number: number, items: items, totalPrice: totalPrice})}>
             <View style={styles.container}>
-                <Text style={styles.price}> 100₽ </Text>
-                <Text style={styles.data}> 28.03 </Text>
+                <Text style={styles.price}> {totalPrice}₽ </Text>
+                <Text style={styles.data}> {newDate} </Text>
                 <Text style={styles.status}> {status} </Text>
-                <Text style={styles.cafe}> One Price Coffee </Text>
+                <Text style={styles.cafe}> {cafe.name} </Text>
             </View>
         </TouchableWithoutFeedback>
 
@@ -21,10 +35,9 @@ const OrderComponent = ({navigation, status, number, items}) => {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#E2E9E6',
-        width: '100%',
+        width: RFValue(330),
         height: RFValue(70),
         marginTop: '3%',
-        flexDirection: 'row',
         borderRadius: 15,
     },
     price: {
@@ -36,20 +49,20 @@ const styles = StyleSheet.create({
     data: {
         fontFamily: 'MontserratAlternatesMedium',
         fontSize: RFValue(18),
-        right: RFValue(65),
-        marginTop: RFValue(34)
+        marginTop: RFValue(6),
+        marginLeft: RFValue(10)
     },
     status: {
         fontFamily: 'MontserratAlternatesMedium',
         fontSize: RFValue(18),
-        marginTop: RFValue(10),
-        right: RFValue(10)
+        marginTop: RFValue(-55),
+        marginLeft: RFValue(180)
     },
     cafe: {
         fontFamily: 'MontserratAlternatesMedium',
         fontSize: RFValue(15),
-        marginTop: RFValue(40),
-        right: RFValue(100),
+        marginTop: RFValue(10),
+        marginLeft: RFValue(180),
         color: 'gray'
     }
 });
