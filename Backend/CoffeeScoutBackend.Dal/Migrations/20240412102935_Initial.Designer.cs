@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CoffeeScoutBackend.Dal.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240412081846_Initial")]
+    [Migration("20240412102935_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -401,12 +401,12 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         .HasColumnName("opening_time");
 
                     b.HasKey("Id")
-                        .HasName("pk_working_hours_entity");
+                        .HasName("pk_working_hours");
 
                     b.HasIndex("CafeId")
-                        .HasDatabaseName("ix_working_hours_entity_cafe_id");
+                        .HasDatabaseName("ix_working_hours_cafe_id");
 
-                    b.ToTable("working_hours_entity", (string)null);
+                    b.ToTable("working_hours", (string)null);
                 });
 
             modelBuilder.Entity("CustomerEntityMenuItemEntity", b =>
@@ -728,7 +728,7 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         .HasForeignKey("CafeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_working_hours_entity_cafes_cafe_id");
+                        .HasConstraintName("fk_working_hours_cafes_cafe_id");
 
                     b.Navigation("Cafe");
                 });

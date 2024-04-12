@@ -18,6 +18,7 @@ public class AppDbContext(
     public required DbSet<BeverageTypeEntity> BeverageTypes { get; set; }
     public required DbSet<CafeEntity> Cafes { get; set; }
     public required DbSet<CoffeeChainEntity> CoffeeChains { get; set; }
+    public required DbSet<WorkingHoursEntity> WorkingHours { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

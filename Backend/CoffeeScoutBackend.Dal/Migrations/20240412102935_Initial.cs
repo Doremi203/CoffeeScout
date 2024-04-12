@@ -310,7 +310,7 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "working_hours_entity",
+                name: "working_hours",
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
@@ -322,9 +322,9 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_working_hours_entity", x => x.id);
+                    table.PrimaryKey("pk_working_hours", x => x.id);
                     table.ForeignKey(
-                        name: "fk_working_hours_entity_cafes_cafe_id",
+                        name: "fk_working_hours_cafes_cafe_id",
                         column: x => x.cafe_id,
                         principalTable: "cafes",
                         principalColumn: "id",
@@ -503,8 +503,8 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 column: "menu_item_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_working_hours_entity_cafe_id",
-                table: "working_hours_entity",
+                name: "ix_working_hours_cafe_id",
+                table: "working_hours",
                 column: "cafe_id");
         }
 
@@ -539,7 +539,7 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 name: "reviews");
 
             migrationBuilder.DropTable(
-                name: "working_hours_entity");
+                name: "working_hours");
 
             migrationBuilder.DropTable(
                 name: "asp_net_roles");
