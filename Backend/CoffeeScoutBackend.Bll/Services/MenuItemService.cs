@@ -19,6 +19,13 @@ public class MenuItemService(
                    id);
     }
 
+    public async Task<IReadOnlyCollection<MenuItem>> GetByCafeId(long id)
+    {
+        var cafe = await cafeService.GetById(id);
+
+        return cafe.MenuItems;
+    }
+
     public async Task<IReadOnlyCollection<MenuItem>> GetAllInAreaByBeverageType(
         Location location,
         double radiusInMeters,
@@ -67,7 +74,7 @@ public class MenuItemService(
         await menuItemRepository.Update(newMenuItem);
     }
 
-    public async Task<IReadOnlyCollection<MenuItem>> GetCafeMenuItems(string cafeAdminId)
+    public async Task<IReadOnlyCollection<MenuItem>> GetByCafeAdmin(string cafeAdminId)
     {
         var cafe = await cafeService.GetByAdminId(cafeAdminId);
 

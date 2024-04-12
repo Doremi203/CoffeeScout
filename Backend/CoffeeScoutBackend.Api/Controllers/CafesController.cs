@@ -160,13 +160,23 @@ public class CafesController(
 
         return NoContent();
     }
+    
+    [HttpGet("{id:long}/menuItems")]
+    [Authorize(Roles = nameof(Roles.Customer))]
+    [ProducesResponseType<IReadOnlyCollection<CafeMenuItemResponse>>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetCafeMenuItems(long id)
+    {
+        var menuItems = await menuItemService.GetByCafeId(id);
+
+        return Ok(menuItems.Adapt<IReadOnlyCollection<CafeMenuItemResponse>>());
+    }
 
     [HttpGet("menuItems")]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
     [ProducesResponseType<IReadOnlyCollection<CafeMenuItemResponse>>(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetCafeMenuItems()
+    public async Task<IActionResult> GetMenuItemsForCafeAdmin()
     {
-        var menuItems = await menuItemService.GetCafeMenuItems(User.GetId());
+        var menuItems = await menuItemService.GetByCafeAdmin(User.GetId());
 
         return Ok(menuItems.Adapt<IReadOnlyCollection<CafeMenuItemResponse>>());
     }
