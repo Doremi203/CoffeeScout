@@ -60,6 +60,16 @@ public class CafesController(
 
         return Created($"{RoutesV1.Cafes}/{newCafe.Id}", newCafe.Adapt<CafeResponse>());
     }
+    
+    [HttpGet("{id:long}")]
+    [Authorize(Roles = nameof(Roles.Customer))]
+    [ProducesResponseType<CafeResponse>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetCafe([FromRoute] long id)
+    {
+        var cafe = await cafeService.GetById(id);
+
+        return Ok(cafe.Adapt<CafeResponse>());
+    }
 
     [HttpPatch]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]

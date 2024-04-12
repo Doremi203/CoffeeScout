@@ -88,6 +88,8 @@ public class CafeRepository(
     {
         return dbContext.Cafes
             .Include(ca => ca.Admins)
+            .Include(ca => ca.CoffeeChain)
+            .Include(ca => ca.WorkingHours)
             .Include(ca => ca.MenuItems)
             .ThenInclude(mi => mi.BeverageType);
     }

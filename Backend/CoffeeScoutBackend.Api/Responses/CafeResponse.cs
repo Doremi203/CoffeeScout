@@ -5,6 +5,7 @@ namespace CoffeeScoutBackend.Api.Responses;
 public class CafeResponse
 {
     public required long Id { get; set; }
+    public required CoffeeChainResponse CoffeeChain { get; set; }
     public required string Name { get; set; }
     public required Location Location { get; set; }
     public required string Address { get; set; }
@@ -12,7 +13,7 @@ public class CafeResponse
 
     public record WorkingHoursResponse
     {
-        public required DayOfWeek Day { get; set; }
+        public required DayOfWeek DayOfWeek { get; set; }
         public required TimeResponse OpeningTime { get; set; }
         public required TimeResponse ClosingTime { get; set; }
 

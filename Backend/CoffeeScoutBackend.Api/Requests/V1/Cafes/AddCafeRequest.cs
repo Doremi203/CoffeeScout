@@ -1,5 +1,3 @@
-using CoffeeScoutBackend.Domain.Models;
-
 namespace CoffeeScoutBackend.Api.Requests.V1.Cafes;
 
 public record AddCafeRequest(
@@ -11,15 +9,15 @@ public record AddCafeRequest(
     IReadOnlyCollection<AddCafeRequest.WorkingHoursRequest> WorkingHours
 )
 {
-    public class WorkingHoursRequest
+    public record WorkingHoursRequest(
+        DayOfWeek Day,
+        WorkingHoursRequest.TimeRequest OpeningTime,
+        WorkingHoursRequest.TimeRequest ClosingTime
+    )
     {
-        public record TimeRequest
-        {
-            public int Hour { get; init; }
-            public int Minute { get; init; }
-        }
-        public DayOfWeek Day { get; init; }
-        public TimeRequest OpeningTime { get; init; }
-        public TimeRequest ClosingTime { get; init; }
+        public record TimeRequest(
+            int Hour,
+            int Minute
+        );
     }
 }
