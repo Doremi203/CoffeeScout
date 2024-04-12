@@ -6,7 +6,8 @@ using CoffeeScoutBackend.Domain.Models;
 namespace CoffeeScoutBackend.Bll.Services;
 
 public class CafeService(
-    ICafeRepository cafeRepository
+    ICafeRepository cafeRepository,
+    ICoffeeChainService coffeeChainService
 ) : ICafeService
 {
     public async Task<Cafe> GetById(long id)
@@ -41,7 +42,14 @@ public class CafeService(
 
     public async Task<Cafe> AddCafe(Cafe cafe)
     {
-        return await cafeRepository.Add(cafe);
+        var coffeeChain = await coffeeChainService.GetById(cafe.CoffeeChain.Id);
+        
+        var newCafe = cafe with
+        {
+            CoffeeChain = coffeeChain
+        };
+        
+        return await cafeRepository.Add(newCafe);
     }
 
     public async Task UpdateCafe(string cafeAdminId, Cafe cafe)
