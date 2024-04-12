@@ -84,7 +84,8 @@ public class CafesController(
                 Latitude = request.Latitude,
                 Longitude = request.Longitude
             },
-            Address = request.Address
+            Address = request.Address,
+            WorkingHours = request.WorkingHours.Adapt<IReadOnlyCollection<WorkingHours>>()
         };
 
         await cafeService.UpdateCafe(User.GetId(), cafe);

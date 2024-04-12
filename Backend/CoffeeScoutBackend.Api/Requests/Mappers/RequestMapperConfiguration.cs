@@ -7,7 +7,7 @@ public class RequestMapperConfiguration
 {
     public static void Configure()
     {
-        TypeAdapterConfig<AddCafeRequest.WorkingHoursRequest.TimeRequest, TimeOnly>.NewConfig()
+        TypeAdapterConfig<WorkingHoursRequest.TimeRequest, TimeOnly>.NewConfig()
             .MapWith(dest => new TimeOnly(dest.Hour, dest.Minute));
     }
 }
