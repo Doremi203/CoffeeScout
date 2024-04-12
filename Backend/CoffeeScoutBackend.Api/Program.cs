@@ -1,4 +1,5 @@
 using CoffeeScoutBackend.Api.Config;
+using CoffeeScoutBackend.Api.Config.Swager;
 using CoffeeScoutBackend.Api.DbSeeders;
 using CoffeeScoutBackend.Api.Identity;
 using CoffeeScoutBackend.Api.Middlewares;
@@ -32,6 +33,7 @@ builder.Services.AddSwaggerGen(options =>
             Type = SecuritySchemeType.ApiKey
         });
         options.OperationFilter<SecurityRequirementsOperationFilter>();
+        options.OperationFilter<AuthorizeCheckOperationFilter>();
 
         options.DocumentFilter<RemovePathsDocumentFilter>();
     }
