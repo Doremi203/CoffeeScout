@@ -47,6 +47,7 @@ export default function Profile({navigation}) {
     }, []);
 
 
+
     return (
         <View style={styles.container}>
             <View style={styles.main}>
@@ -65,19 +66,19 @@ export default function Profile({navigation}) {
                 <ScrollView style={styles.scroll}>
                     {orders1 && orders1.map((order) => (
                         <OrderComponent navigation={navigation} status={order.status} number={order.id}
-                                        items={order.orderItems}/>
+                                        items={order.orderItems} key={order.id} date={order.date} cafe={order.cafe}/>
                     ))}
                     {orders2 && orders2.map((order) => (
                         <OrderComponent navigation={navigation} status={order.status} number={order.id}
-                                        items={order.orderItems}/>
+                                        items={order.orderItems} key={order.id} date={order.date} cafe={order.cafe}/>
                     ))}
                     {orders3 && orders3.map((order) => (
                         <OrderComponent navigation={navigation} status={order.status} number={order.id}
-                                        items={order.orderItems}/>
+                                        items={order.orderItems} key={order.id} date={order.date} cafe={order.cafe}/>
                     ))}
                     {orders4 && orders4.map((order) => (
                         <OrderComponent navigation={navigation} status={order.status} number={order.id}
-                                        items={order.orderItems}/>
+                                        items={order.orderItems} key={order.id} date={order.date} cafe={order.cafe}/>
                     ))}
 
 

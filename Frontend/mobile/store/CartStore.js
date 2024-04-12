@@ -1,7 +1,8 @@
 import {makeAutoObservable} from "mobx";
+import {Alert} from "react-native";
 
 
-export default class CartStore  {
+export default class CartStore {
 
     constructor() {
         makeAutoObservable(this);
@@ -9,12 +10,22 @@ export default class CartStore  {
 
     cart = [];
 
-    addProductToCart(menuItemId, name, price) {
+    cafeId
+
+    addProductToCart(menuItemId, name, price, cafeId) {
+        if (this.cart.length === 0) {
+            this.cafeId = cafeId
+        } else {
+            if (this.cafeId !== cafeId) {
+                Alert.alert('Нельзя добавлять в один заказ напитки из разных кофеен')
+                return
+            }
+        }
         let product = {
             id: menuItemId,
             name: name,
             price: price,
-            quantity: 1
+            quantity: 1,
         };
         this.cart.push(product);
     }

@@ -8,11 +8,18 @@ export default class OrderStore {
         makeAutoObservable(this);
     }
 
-    async makeNewOrder(menuItems) {
+    async makeNewOrder(menuItems, cafeId) {
         try {
-            const response = await OrderService.makeNewOrder(menuItems);
-            console.log('new')
-            console.log(response.status)
+            const response = await OrderService.makeNewOrder(menuItems, cafeId);
+            return response.data.id
+        } catch (error) {
+            Alert.alert('Ошибка', 'Что-то пошло не так')
+        }
+    }
+
+    async payForOrder(id) {
+        try {
+            await OrderService.payForOrder(id);
         } catch (error) {
             Alert.alert('Ошибка', 'Что-то пошло не так')
         }
@@ -55,5 +62,10 @@ export default class OrderStore {
         }
     }
 
+    totalPrice(items) {
+        let totalPrice = 0
+        items.map((item) => totalPrice += item.pricePerItem * item.quantity)
+        return totalPrice;
+    }
 
 }

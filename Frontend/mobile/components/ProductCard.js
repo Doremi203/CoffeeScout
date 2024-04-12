@@ -47,8 +47,9 @@ export default function ProductCard({menuItemId, name, price, size, cafe}) {
     const {cart} = useContext(Context);
 
     const addToCart = () => {
-        cart.addProductToCart(menuItemId, name, price);
+        cart.addProductToCart(menuItemId, name, price, cafe.id);
     }
+
 
     return (
         <View style={styles.square}>

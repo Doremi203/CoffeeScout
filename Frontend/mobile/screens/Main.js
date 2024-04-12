@@ -53,6 +53,7 @@ export default function Main({navigation}) {
         };
     }, [location, executed]);
 
+
     return (
 
         <View style={styles.container}>
@@ -77,7 +78,7 @@ export default function Main({navigation}) {
                     <ScrollView horizontal={true} style={styles.scrollCont}>
                         <View style={styles.pro}>
                             {types && types.map((type) => (
-                                <Product name={type.name} navigation={navigation} type={type}/>
+                                <Product name={type.name} navigation={navigation} type={type} key={type.id}/>
                             ))}
 
 
@@ -89,7 +90,7 @@ export default function Main({navigation}) {
                     <ScrollView horizontal={true} style={styles.scrollCont2}>
                         <View style={styles.pro2}>
                             {cafes && cafes.map((cafe) => (
-                                <Cafe navigation={navigation} cafe={cafe}/>
+                                <Cafe navigation={navigation} cafe={cafe} key={cafe.id}/>
                             ))}
                         </View>
                     </ScrollView>

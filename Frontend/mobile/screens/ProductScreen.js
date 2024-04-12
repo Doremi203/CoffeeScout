@@ -39,7 +39,7 @@ export default function ProductScreen({navigation, route}) {
 
                         {nearProducts && nearProducts.map((product) => (
                             <ProductCard menuItemId={product.id} name={product.name} price={product.price}
-                                         size={product.sizeInMl} cafe={product.cafe}/>
+                                         size={product.sizeInMl} cafe={product.cafe} key={product.id}/>
                         ))}
 
                     </ScrollView>

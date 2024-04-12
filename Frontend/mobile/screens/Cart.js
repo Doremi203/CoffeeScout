@@ -14,12 +14,11 @@ export default function Cart({navigation}) {
         if (cart.cart.length > 0) {
             navigation.navigate('payment')
             const menuItems = cart.getMenuItems()
-            console.log(menuItems)
-            await order.makeNewOrder(menuItems)
+            const id = await order.makeNewOrder(menuItems, cart.cafeId)
+            await order.payForOrder(id)
             cart.clearCart()
         }
     }
-
 
     const [cartPro, setCartPro] = useState([])
 
@@ -50,7 +49,8 @@ export default function Cart({navigation}) {
                             <ScrollView style={styles.scroll}>
 
                                 {cartPro.map((product) => (
-                                    <ProductInCart name={product.name} menuItemId={product.id} price={product.price}/>
+                                    <ProductInCart name={product.name} menuItemId={product.id} price={product.price}
+                                                   key={product.id}/>
                                 ))}
 
                             </ScrollView>
