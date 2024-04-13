@@ -10,4 +10,5 @@ public interface IMenuItemRepository
     Task<MenuItem> Add(MenuItem menuItem);
     Task Update(MenuItem menuItem);
     Task Delete(long id);
+    Task<IReadOnlyCollection<MenuItem>> Search(string name, int limit);
 }

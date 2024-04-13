@@ -87,4 +87,9 @@ public class MenuItemService(
 
         await menuItemRepository.Delete(menuItem.Id);
     }
+
+    public async Task<IReadOnlyCollection<MenuItem>> Search(string name, int limit)
+    {
+        return await menuItemRepository.Search(name, limit);
+    }
 }

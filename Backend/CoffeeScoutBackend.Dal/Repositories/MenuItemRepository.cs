@@ -4,6 +4,8 @@ using CoffeeScoutBackend.Domain.Interfaces.Repositories;
 using CoffeeScoutBackend.Domain.Models;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using Npgsql;
 
 namespace CoffeeScoutBackend.Dal.Repositories;
 
@@ -14,9 +16,7 @@ public class MenuItemRepository(
 {
     public async Task<MenuItem?> GetById(long id)
     {
-        var menuItemEntity = await dbContext.MenuItems
-            .Include(m => m.BeverageType)
-            .Include(m => m.Cafe)
+        var menuItemEntity = await GetMenuItems()
             .FirstOrDefaultAsync(m => m.Id == id);
         return menuItemEntity?.Adapt<MenuItem>();
     }
@@ -55,7 +55,7 @@ public class MenuItemRepository(
     {
         var menuItemEntity = await dbContext.MenuItems
             .FirstAsync(m => m.Id == menuItem.Id);
-        
+
         menuItemEntity.BeverageType = await dbContext.BeverageTypes
             .FirstAsync(bt => bt.Id == menuItemEntity.BeverageTypeId);
         menuItemEntity.Name = menuItem.Name;
@@ -74,5 +74,25 @@ public class MenuItemRepository(
             .ExecuteDeleteAsync();
 
         await dbContext.SaveChangesAsync();
+    }
+
+    public async Task<IReadOnlyCollection<MenuItem>> Search(string name, int limit)
+    {
+        var searchName = string.Join(" & ", name.Trim().Split().Select(w => $"{w}:*"));
+        
+        var menuItems = await GetMenuItems()
+            .Where(m => m.SearchVector.Matches(EF.Functions.ToTsQuery("russian", searchName)))
+            .OrderByDescending(m => m.SearchVector.Rank(EF.Functions.ToTsQuery("russian", searchName)))
+            .Take(limit)
+            .ToListAsync();
+
+        return menuItems.Adapt<IReadOnlyCollection<MenuItem>>();
+    }
+    
+    private IIncludableQueryable<MenuItemEntity, CafeEntity> GetMenuItems()
+    {
+        return dbContext.MenuItems
+            .Include(m => m.BeverageType)
+            .Include(m => m.Cafe);
     }
 }
