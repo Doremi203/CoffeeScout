@@ -36,6 +36,19 @@ public class MenuItemsController(
         return Ok(menuItems.Adapt<IEnumerable<MenuItemResponse>>());
     }
 
+    [HttpPost("search")]
+    [Authorize(Roles = nameof(Roles.Customer))]
+    [ProducesResponseType<IReadOnlyCollection<MenuItemResponse>>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> SearchMenuItems(
+        string name,
+        int limit
+    )
+    {
+        var menuItems = await menuItemService.Search(name, limit);
+
+        return Ok(menuItems.Adapt<IReadOnlyCollection<MenuItemResponse>>());
+    }
+
     [HttpPost]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -56,7 +69,7 @@ public class MenuItemsController(
 
         return Created($"{RoutesV1.MenuItems}/{menuItem.Id}", menuItem.Adapt<MenuItemResponse>());
     }
-    
+
     [HttpPatch("{id:long}")]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -64,7 +77,7 @@ public class MenuItemsController(
     {
         if (!await IsMenuItemInCafe(id))
             return Forbid();
-        
+
         var menuItem = new MenuItem
         {
             Id = id,
@@ -81,7 +94,7 @@ public class MenuItemsController(
 
         return NoContent();
     }
-    
+
     [HttpDelete("{id:long}")]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -89,12 +102,12 @@ public class MenuItemsController(
     {
         if (!await IsMenuItemInCafe(id))
             return Forbid();
-        
+
         await menuItemService.Delete(id);
 
         return NoContent();
     }
-    
+
     [HttpPost("{menuItemId:long}/reviews")]
     [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType<ReviewResponse>(StatusCodes.Status201Created)]
@@ -105,12 +118,12 @@ public class MenuItemsController(
             Rating = request.Rating,
             Content = request.Content
         };
-        
+
         var review = await reviewService.Add(menuItemId, User.GetId(), reviewToAdd);
 
         return Created($"{RoutesV1.MenuItems}/{menuItemId}/reviews/{review.Id}", review.Adapt<ReviewResponse>());
     }
-    
+
     [HttpGet("{menuItemId:long}/reviews")]
     [Authorize(Roles = $"{nameof(Roles.Customer)},{nameof(Roles.CafeAdmin)}")]
     [ProducesResponseType<IReadOnlyCollection<ReviewResponse>>(StatusCodes.Status200OK)]
@@ -120,32 +133,32 @@ public class MenuItemsController(
 
         return Ok(reviews.Adapt<IReadOnlyCollection<ReviewResponse>>());
     }
-    
+
     [HttpPatch("{menuItemId:long}/reviews/{reviewId:long}")]
     [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateReview(
         [FromRoute] long menuItemId,
-        [FromRoute] long reviewId, 
+        [FromRoute] long reviewId,
         UpdateReviewRequest request)
     {
         if (!await IsReviewOfCustomer(reviewId))
             return Forbid();
         if (!await IsReviewOfMenuItem(reviewId, menuItemId))
             return NotFound();
-        
+
         var review = new Review
         {
             Id = reviewId,
             Rating = request.Rating,
             Content = request.Content
         };
-        
+
         await reviewService.UpdateReview(reviewId, review);
 
         return NoContent();
     }
-    
+
     [HttpDelete("{menuItemId:long}/reviews/{reviewId:long}")]
     [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -155,7 +168,7 @@ public class MenuItemsController(
             return Forbid();
         if (!await IsReviewOfMenuItem(reviewId, menuItemId))
             return NotFound();
-        
+
         await reviewService.Delete(reviewId);
 
         return NoContent();
@@ -164,21 +177,21 @@ public class MenuItemsController(
     private async Task<bool> IsReviewOfMenuItem(long reviewId, long menuItemId)
     {
         var review = await reviewService.GetById(reviewId);
-        
+
         return review.MenuItem.Id == menuItemId;
     }
 
     private async Task<bool> IsReviewOfCustomer(long reviewId)
     {
         var review = await reviewService.GetById(reviewId);
-        
+
         return review.Customer.Id == User.GetId();
     }
 
     private async Task<bool> IsMenuItemInCafe(long menuItemId)
     {
         var cafe = await cafeService.GetByAdminId(User.GetId());
-        
+
         return cafe.MenuItems.Any(m => m.Id == menuItemId);
     }
 }

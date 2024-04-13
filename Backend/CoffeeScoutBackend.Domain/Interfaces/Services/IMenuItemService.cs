@@ -12,4 +12,5 @@ public interface IMenuItemService
     Task Update(long id, MenuItem menuItem);
     Task<IReadOnlyCollection<MenuItem>> GetByCafeAdmin(string cafeAdminId);
     Task Delete(long id);
+    Task<IReadOnlyCollection<MenuItem>> Search(string name, int limit);
 }
