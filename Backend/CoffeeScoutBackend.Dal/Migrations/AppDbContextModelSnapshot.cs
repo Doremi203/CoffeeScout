@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using NpgsqlTypes;
 
 #nullable disable
 
@@ -252,6 +253,14 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         .HasColumnType("numeric")
                         .HasColumnName("price");
 
+                    b.Property<NpgsqlTsVector>("SearchVector")
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("tsvector")
+                        .HasColumnName("search_vector")
+                        .HasAnnotation("Npgsql:TsVectorConfig", "russian")
+                        .HasAnnotation("Npgsql:TsVectorProperties", new[] { "Name" });
+
                     b.Property<int>("SizeInMl")
                         .HasColumnType("integer")
                         .HasColumnName("size_in_ml");
@@ -264,6 +273,11 @@ namespace CoffeeScoutBackend.Dal.Migrations
 
                     b.HasIndex("CafeId")
                         .HasDatabaseName("ix_menu_items_cafe_id");
+
+                    b.HasIndex("SearchVector")
+                        .HasDatabaseName("ix_menu_items_search_vector");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("SearchVector"), "GIN");
 
                     b.ToTable("menu_items", (string)null);
                 });

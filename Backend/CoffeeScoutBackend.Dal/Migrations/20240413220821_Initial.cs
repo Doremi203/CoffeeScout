@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using NpgsqlTypes;
 
 #nullable disable
 
@@ -260,6 +261,9 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     beverage_type_id = table.Column<int>(type: "integer", nullable: false),
                     cafe_id = table.Column<long>(type: "bigint", nullable: false),
                     name = table.Column<string>(type: "text", nullable: false),
+                    search_vector = table.Column<NpgsqlTsVector>(type: "tsvector", nullable: false)
+                        .Annotation("Npgsql:TsVectorConfig", "russian")
+                        .Annotation("Npgsql:TsVectorProperties", new[] { "name" }),
                     description = table.Column<string>(type: "text", nullable: false),
                     price = table.Column<decimal>(type: "numeric", nullable: false),
                     size_in_ml = table.Column<int>(type: "integer", nullable: false)
@@ -476,6 +480,12 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 name: "ix_menu_items_cafe_id",
                 table: "menu_items",
                 column: "cafe_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_menu_items_search_vector",
+                table: "menu_items",
+                column: "search_vector")
+                .Annotation("Npgsql:IndexMethod", "GIN");
 
             migrationBuilder.CreateIndex(
                 name: "ix_order_items_menu_item_id",

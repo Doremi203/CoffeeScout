@@ -47,6 +47,16 @@ public static class ModelBuilderExtensions
 
     public static ModelBuilder ConfigureMenuItemEntity(this ModelBuilder modelBuilder)
     {
+        var entity = modelBuilder.Entity<MenuItemEntity>();
+
+        entity
+            .HasGeneratedTsVectorColumn(
+                m => m.SearchVector,
+                "russian",
+                m => new { m.Name })
+            .HasIndex(m => m.SearchVector)
+            .HasMethod("GIN");
+        
         return modelBuilder;
     }
 
@@ -63,8 +73,6 @@ public static class ModelBuilderExtensions
 
     public static ModelBuilder ConfigureOrderEntity(this ModelBuilder modelBuilder)
     {
-        var entity = modelBuilder.Entity<OrderEntity>();
-
         return modelBuilder;
     }
     
