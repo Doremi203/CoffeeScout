@@ -47,7 +47,7 @@ public class OrderRepository(
     public async Task<IReadOnlyCollection<Order>> GetByUserId(string userId, GetOrdersModel model)
     {
         var orderEntities = await GetOrderEntities()
-            .Where(o => o.Customer.Id == userId)
+            .Where(o => o.Customer.Id == userId && o.Status == model.Status)
             .OrderByDescending(o => o.Date)
             .Skip(model.PageSize * (model.PageNumber - 1))
             .Take(model.PageSize)
@@ -58,9 +58,8 @@ public class OrderRepository(
 
     public async Task<IReadOnlyCollection<Order>> GetByCafeId(long cafeId, GetOrdersModel model)
     {
-        // TODO: Fix status filtering
         var orderEntities = await GetOrderEntities()
-            .Where(o => o.Cafe.Id == cafeId)
+            .Where(o => o.Cafe.Id == cafeId && o.Status == model.Status)
             .OrderByDescending(o => o.Date)
             .Skip(model.PageSize * (model.PageNumber - 1))
             .Take(model.PageSize)
