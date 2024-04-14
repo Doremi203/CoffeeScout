@@ -34,6 +34,7 @@ export default function MapScreen({navigation}) {
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
             name: cafe.name,
+            id: cafe.id
         })));
     }, [cafes]);
 
@@ -66,7 +67,7 @@ export default function MapScreen({navigation}) {
                         provider={PROVIDER_GOOGLE}
                         showsUserLocation>
                         {markers.map((marker, index) => (
-                            <MarkerMap index={index} marker={marker}/>
+                            <MarkerMap index={index} marker={marker} key={marker.id}/>
                         ))}
                     </MapView>
                 )}

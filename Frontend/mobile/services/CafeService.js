@@ -7,4 +7,12 @@ export default class CafeService {
         return $api.get(`/v1/cafes?Latitude=${latitude}&Longitude=${longitude}&RadiusInMeters=${radius}`)
     }
 
+    static async getMenu(cafeId) {
+        return $api.get(`/v1/cafes/${cafeId}/menuItems`)
+    }
+
+    static async getInfo(cafeId) {
+        return $api.get(`/v1/cafes/${cafeId}`)
+    }
+
 }

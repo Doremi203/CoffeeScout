@@ -16,4 +16,25 @@ export default class CafeStore {
         }
     }
 
+    async getMenu(cafeId) {
+        try {
+            const response = await CafeService.getMenu(cafeId);
+
+            console.log(response.status)
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching data', error);
+        }
+    }
+
+    async getInfo(cafeId) {
+        try {
+            const response = await CafeService.getInfo(cafeId);
+            console.log(response.status)
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching data', error);
+        }
+    }
+
 }

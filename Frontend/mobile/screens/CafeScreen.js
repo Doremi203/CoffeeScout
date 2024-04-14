@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View} from "react-native";
 import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
 import Footer from "./Footer";
@@ -7,32 +7,62 @@ import {Context} from "../index";
 
 export default function CafeScreen({navigation, route}) {
 
-    const {cafe} = route.params;
-    console.log(cafe)
+    const {cafe} = useContext(Context)
+
+    const {cafeParam} = route.params;
+    console.log(cafeParam)
+
+    console.log(cafeParam.workingHours)
+    console.log(cafeParam.location)
 
     const {loc} = useContext(Context);
-    const urlYandex = loc.getUrlYandex(cafe.location.latitude, cafe.location.longitude)._j;
-    const urlGoogle = loc.getUrlGoogle(cafe.location.latitude, cafe.location.longitude)._j;
+    const urlYandex = loc.getUrlYandex(cafeParam.location.latitude, cafeParam.location.longitude)._j;
+    const urlGoogle = loc.getUrlGoogle(cafeParam.location.latitude, cafeParam.location.longitude)._j;
 
     const map = () => {
         loc.openMap(urlYandex, urlGoogle)
     }
 
+    const [menu, setMenu] = useState([])
+    const [info, setInfo] = useState([])
+    useEffect(() => {
+        const fetchMenu = async() => {
+            const menuu = await cafe.getMenu(cafeParam.id);
+            setMenu(menuu)
+            const infoo = await cafe.getInfo(cafeParam.id);
+            setInfo(infoo)
+        }
+
+        fetchMenu();
+
+    }, []);
+
+
+
+   // let hours = days[info.workingHours[0]]
+
+
+
+
+    /* {menu && menu.map((item) => (
+                            <ProductInMenu name={'Капучино'} menuItemId={1}/>
+                        ))} */
+
     return (
         <View style={styles.container}>
             <View style={styles.main}>
 
-                <Text style={styles.header}> {cafe.name} </Text>
-                <Text style={styles.info}> Адрес: ул.Виницкая 8к4</Text>
+                <Text style={styles.header}> {cafeParam.name} </Text>
+                <Text style={styles.info}> Адрес: {cafeParam.address}</Text>
                 <Text style={styles.info}> Часы работы: ПН-ВС 8:00 - 22:00</Text>
 
                 <Text style={styles.menu}> меню </Text>
 
                 <View style={styles.products}>
                     <ScrollView style={styles.scroll}>
-                        <ProductInMenu name={'Капучино'} menuItemId={1}/>
-                        <ProductInMenu name={'Латте'} menuItemId={1}/>
-                        <ProductInMenu name={'Латте'} menuItemId={1}/>
+                        {menu && menu.map((item) => (
+                        <ProductInMenu name={item.name} menuItemId={item.id} price={item.price} size={item.sizeInMl}/>
+                        ))}
                     </ScrollView>
                 </View>
 

@@ -5,7 +5,7 @@ import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
 export default function Cafe({navigation, cafe}) {
     return (
         <View style={styles.square}>
-            <TouchableWithoutFeedback onPress={() => navigation.navigate('cafeScreen', {cafe: cafe})}>
+            <TouchableWithoutFeedback onPress={() => navigation.navigate('cafeScreen', {cafeParam: cafe})}>
                 <View>
                     <Image source={require('../assets/icons/shop2.png')} style={styles.image}/>
                     <Text style={styles.label}> {cafe.name} </Text>
