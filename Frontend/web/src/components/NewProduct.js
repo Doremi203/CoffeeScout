@@ -16,12 +16,10 @@ function NewProduct() {
     const [name, setName] = useState("")
     const [price, setPrice] = useState("")
     const [size, setSize] = useState("")
-    const [type, setType] = useState("")
+    const [typeId, setTypeId] = useState("")
 
     const addProduct = async () => {
-        console.log(size)
-        console.log(type)
-        await cafe.addProduct(name, price, size, type)
+        await cafe.addProduct(name, price, size, typeId)
         setShow(false);
     }
 
@@ -79,11 +77,11 @@ function NewProduct() {
                         <Form.Group>
                             <Form.Select aria-label="Default select example"
                                          className="boxPro"
-                                         value={type}
-                                         onChange={(e) => setType(e.target.value)}>
+                                         value={typeId}
+                                         onChange={(e) => setTypeId(e.target.value)}>
                                 <option>Тип напитка</option>
                                 {Array.isArray(types) && types.map((type) => (
-                                    <option> {type.name} </option>
+                                    <option value={type.id}> {type.name} </option>
                                 ))}
 
                             </Form.Select>

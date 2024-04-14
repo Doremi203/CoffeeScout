@@ -7,13 +7,12 @@ export default class CafeService {
         return $api.get('v1/cafes/menuItems')
     }
 
-    static async addProduct(name, price, size, typeName, description) {
+    static async addProduct(name, price, size, typeId) {
         return $api.post('v1/menu-items', {
             name: name,
-            description: description,
             price: price,
             sizeInMl: size,
-            beverageTypeName: typeName
+            beverageTypeId: typeId
         })
     }
 

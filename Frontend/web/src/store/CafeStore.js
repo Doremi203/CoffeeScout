@@ -19,9 +19,9 @@ export default class CafeStore {
         }
     }
 
-    async addProduct(name, price, size, type, description) {
+    async addProduct(name, price, size, typeId) {
         try {
-            await CafeService.addProduct(name, price, size, type, description);
+            await CafeService.addProduct(name, price, size, typeId);
             window.location.reload();
         } catch (error) {
             switch (error.response.status) {
