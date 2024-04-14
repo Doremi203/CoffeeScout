@@ -2,7 +2,6 @@ using CoffeeScoutBackend.Api.Config;
 using CoffeeScoutBackend.Api.Config.Swager;
 using CoffeeScoutBackend.Api.DbSeeders;
 using CoffeeScoutBackend.Api.Identity;
-using CoffeeScoutBackend.Api.Middlewares;
 using CoffeeScoutBackend.Api.Requests.Mappers;
 using CoffeeScoutBackend.Api.Responses.Mappers;
 using CoffeeScoutBackend.Bll;
@@ -58,9 +57,10 @@ builder.Services
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddFluentValidationAutoValidation();
 
+builder.Services.AddHttpLogging(_ => { });
+
 var app = builder.Build();
 
-app.UseMiddleware<RequestResponseLoggingMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     using var scope = app.Services.CreateScope();
@@ -69,6 +69,8 @@ if (app.Environment.IsDevelopment())
     await dbContext.Database.MigrateAsync();
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    app.UseHttpLogging();
 }
 
 //app.UseHttpsRedirection();
