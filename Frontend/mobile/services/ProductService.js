@@ -36,4 +36,8 @@ export default class ProductService {
         })
     }
 
+    static async search(name, limit) {
+        return $api.post(`/v1/menu-items/search?name=${name}&limit=${limit}`)
+    }
+
 }
