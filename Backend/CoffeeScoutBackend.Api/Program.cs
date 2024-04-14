@@ -2,12 +2,16 @@ using CoffeeScoutBackend.Api;
 using CoffeeScoutBackend.Api.Config;
 using CoffeeScoutBackend.Api.DbSeeders;
 using CoffeeScoutBackend.Api.Identity;
+using CoffeeScoutBackend.Api.Identity.Services;
 using CoffeeScoutBackend.Api.Middlewares;
 using CoffeeScoutBackend.Bll;
 using CoffeeScoutBackend.Dal;
 using CoffeeScoutBackend.Dal.Config;
 using CoffeeScoutBackend.Dal.Entities;
 using FluentValidation;
+using MailerSendNetCore.Common.Extensions;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
@@ -51,6 +55,11 @@ builder.Services
     .AddIdentityServices()
     .AddBllServices()
     .AddDalServices(databaseSettings);
+
+builder.Services.AddMailerSendEmailClient(
+    builder.Configuration.GetSection(nameof(MailerSendSettings)));
+
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddFluentValidationAutoValidation();

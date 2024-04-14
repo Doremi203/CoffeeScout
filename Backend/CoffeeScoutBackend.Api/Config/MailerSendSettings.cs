@@ -6,4 +6,5 @@ public record MailerSendSettings
     public required string ApiToken { get; init; }
     public required bool UseRetryPolicy { get; init; }
     public required int RetryCount { get; init; }
+    public required string SenderEmail { get; init; }
 }

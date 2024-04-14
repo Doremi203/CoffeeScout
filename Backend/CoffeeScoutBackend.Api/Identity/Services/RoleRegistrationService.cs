@@ -24,10 +24,14 @@ public class RoleRegistrationService(
         var roleResult = await userManager.AddToRoleAsync(user, role.ToString());
         if (!roleResult.Succeeded) 
             AddRegistrationErrors(roleResult, errors);
-        
-        
 
-        throw new RegistrationException("Registration failed", errors);
+        await emailConfirmationService.SendRegistrationConfirmationEmail(user);
+        
+        if (errors.Count != 0)
+            throw new RegistrationException("Registration failed", errors);
+        
+        scope.Complete();
+        return user;
     }
 
     private static void AddRegistrationErrors(IdentityResult result, Dictionary<string, string[]> errors)

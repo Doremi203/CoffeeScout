@@ -9,11 +9,19 @@ namespace CoffeeScoutBackend.Api.Identity.Services;
 public class EmailConfirmationService(
     UserManager<AppUser> userManager,
     IEmailSender<AppUser> emailSender,
-    LinkGenerator linkGenerator
+    LinkGenerator linkGenerator,
+    IHttpContextAccessor httpContextAccessor
 ) : IEmailConfirmationService
 {
-    public async Task SendConfirmationEmail(AppUser user)
+    public async Task SendRegistrationConfirmationEmail(AppUser user)
     {
+        if (user.Email is null)
+            throw new InvalidOperationException("User email is null");
+        
+        var httpContext = httpContextAccessor.HttpContext;
+        if (httpContext is null)
+            throw new InvalidOperationException("Email cannot be sent outside of an HTTP request context");
+        
         var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
         var code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
         
@@ -22,12 +30,9 @@ public class EmailConfirmationService(
             ["userId"] = user.Id,
             ["code"] = code
         };
-
-        //var callbackUrl = LinkGeneratorEndpointNameAddressExtensions.GetUriByName();
-    }
-
-    public Task ConfirmEmail(string email, string token)
-    {
-        throw new NotImplementedException();
+        const string confirmEndpoint = "MapIdentityApi-api/v1/accounts/confirmEmail";
+        
+        var callbackUrl = linkGenerator.GetUriByName(httpContext,confirmEndpoint, values);
+        await emailSender.SendConfirmationLinkAsync(user, user.Email, callbackUrl);
     }
 }

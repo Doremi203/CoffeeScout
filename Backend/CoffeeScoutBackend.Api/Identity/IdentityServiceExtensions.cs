@@ -3,6 +3,7 @@ using CoffeeScoutBackend.Bll.Interfaces;
 using CoffeeScoutBackend.Dal;
 using CoffeeScoutBackend.Dal.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace CoffeeScoutBackend.Api.Identity;
 
@@ -36,7 +37,8 @@ public static class IdentityServiceExtensions
 
         services
             .AddScoped<IRoleRegistrationService, RoleRegistrationService>()
-            .AddScoped<IEmailConfirmationService, EmailConfirmationService>();
+            .AddTransient<IEmailSender, EmailSender>()
+            .AddTransient<IEmailConfirmationService, EmailConfirmationService>();
 
         return services;
     }
