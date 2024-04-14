@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using NpgsqlTypes;
 
 #nullable disable
 
@@ -113,6 +114,11 @@ namespace CoffeeScoutBackend.Dal.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text")
@@ -156,19 +162,52 @@ namespace CoffeeScoutBackend.Dal.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("address");
+
+                    b.Property<long>("CoffeeChainId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("coffee_chain_id");
+
                     b.Property<Point>("Location")
                         .IsRequired()
                         .HasColumnType("geometry")
                         .HasColumnName("location");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("name");
 
                     b.HasKey("Id")
                         .HasName("pk_cafes");
 
+                    b.HasIndex("CoffeeChainId")
+                        .HasDatabaseName("ix_cafes_coffee_chain_id");
+
                     b.ToTable("cafes", (string)null);
+                });
+
+            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.CoffeeChainEntity", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_coffee_chains");
+
+                    b.ToTable("coffee_chains", (string)null);
                 });
 
             modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.CustomerEntity", b =>
@@ -214,6 +253,14 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         .HasColumnType("numeric")
                         .HasColumnName("price");
 
+                    b.Property<NpgsqlTsVector>("SearchVector")
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("tsvector")
+                        .HasColumnName("search_vector")
+                        .HasAnnotation("Npgsql:TsVectorConfig", "russian")
+                        .HasAnnotation("Npgsql:TsVectorProperties", new[] { "Name" });
+
                     b.Property<int>("SizeInMl")
                         .HasColumnType("integer")
                         .HasColumnName("size_in_ml");
@@ -227,6 +274,11 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     b.HasIndex("CafeId")
                         .HasDatabaseName("ix_menu_items_cafe_id");
 
+                    b.HasIndex("SearchVector")
+                        .HasDatabaseName("ix_menu_items_search_vector");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("SearchVector"), "GIN");
+
                     b.ToTable("menu_items", (string)null);
                 });
 
@@ -238,6 +290,10 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("CafeId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("cafe_id");
 
                     b.Property<string>("CustomerId")
                         .IsRequired()
@@ -252,12 +308,11 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("status");
 
-                    b.Property<long>("StatusId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("status_id");
-
                     b.HasKey("Id")
                         .HasName("pk_orders");
+
+                    b.HasIndex("CafeId")
+                        .HasDatabaseName("ix_orders_cafe_id");
 
                     b.HasIndex("CustomerId")
                         .HasDatabaseName("ix_orders_customer_id");
@@ -275,10 +330,6 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("menu_item_id");
 
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_completed");
-
                     b.Property<decimal>("PricePerItem")
                         .HasColumnType("numeric")
                         .HasColumnName("price_per_item");
@@ -294,6 +345,79 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         .HasDatabaseName("ix_order_items_menu_item_id");
 
                     b.ToTable("order_items", (string)null);
+                });
+
+            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.ReviewEntity", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("content");
+
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("customer_id");
+
+                    b.Property<long>("MenuItemId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("menu_item_id");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("integer")
+                        .HasColumnName("rating");
+
+                    b.HasKey("Id")
+                        .HasName("pk_reviews");
+
+                    b.HasIndex("CustomerId")
+                        .HasDatabaseName("ix_reviews_customer_id");
+
+                    b.HasIndex("MenuItemId")
+                        .HasDatabaseName("ix_reviews_menu_item_id");
+
+                    b.ToTable("reviews", (string)null);
+                });
+
+            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.WorkingHoursEntity", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("CafeId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("cafe_id");
+
+                    b.Property<TimeOnly>("ClosingTime")
+                        .HasColumnType("time without time zone")
+                        .HasColumnName("closing_time");
+
+                    b.Property<int>("DayOfWeek")
+                        .HasColumnType("integer")
+                        .HasColumnName("day_of_week");
+
+                    b.Property<TimeOnly>("OpeningTime")
+                        .HasColumnType("time without time zone")
+                        .HasColumnName("opening_time");
+
+                    b.HasKey("Id")
+                        .HasName("pk_working_hours");
+
+                    b.HasIndex("CafeId")
+                        .HasDatabaseName("ix_working_hours_cafe_id");
+
+                    b.ToTable("working_hours", (string)null);
                 });
 
             modelBuilder.Entity("CustomerEntityMenuItemEntity", b =>
@@ -500,6 +624,18 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.CafeEntity", b =>
+                {
+                    b.HasOne("CoffeeScoutBackend.Dal.Entities.CoffeeChainEntity", "CoffeeChain")
+                        .WithMany()
+                        .HasForeignKey("CoffeeChainId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_cafes_coffee_chains_coffee_chain_id");
+
+                    b.Navigation("CoffeeChain");
+                });
+
             modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.CustomerEntity", b =>
                 {
                     b.HasOne("CoffeeScoutBackend.Dal.Entities.AppUser", "User")
@@ -535,12 +671,21 @@ namespace CoffeeScoutBackend.Dal.Migrations
 
             modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.OrderEntity", b =>
                 {
+                    b.HasOne("CoffeeScoutBackend.Dal.Entities.CafeEntity", "Cafe")
+                        .WithMany()
+                        .HasForeignKey("CafeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_orders_cafes_cafe_id");
+
                     b.HasOne("CoffeeScoutBackend.Dal.Entities.CustomerEntity", "Customer")
                         .WithMany("Orders")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_orders_customers_customer_id");
+
+                    b.Navigation("Cafe");
 
                     b.Navigation("Customer");
                 });
@@ -564,6 +709,39 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     b.Navigation("MenuItem");
 
                     b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.ReviewEntity", b =>
+                {
+                    b.HasOne("CoffeeScoutBackend.Dal.Entities.CustomerEntity", "Customer")
+                        .WithMany("Reviews")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_reviews_customers_customer_id");
+
+                    b.HasOne("CoffeeScoutBackend.Dal.Entities.MenuItemEntity", "MenuItem")
+                        .WithMany("Reviews")
+                        .HasForeignKey("MenuItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_reviews_menu_items_menu_item_id");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("MenuItem");
+                });
+
+            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.WorkingHoursEntity", b =>
+                {
+                    b.HasOne("CoffeeScoutBackend.Dal.Entities.CafeEntity", "Cafe")
+                        .WithMany("WorkingHours")
+                        .HasForeignKey("CafeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_working_hours_cafes_cafe_id");
+
+                    b.Navigation("Cafe");
                 });
 
             modelBuilder.Entity("CustomerEntityMenuItemEntity", b =>
@@ -657,11 +835,20 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     b.Navigation("Admins");
 
                     b.Navigation("MenuItems");
+
+                    b.Navigation("WorkingHours");
                 });
 
             modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.CustomerEntity", b =>
                 {
                     b.Navigation("Orders");
+
+                    b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.MenuItemEntity", b =>
+                {
+                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("CoffeeScoutBackend.Dal.Entities.OrderEntity", b =>

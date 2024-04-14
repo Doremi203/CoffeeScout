@@ -1,6 +1,5 @@
 import 'react-native-gesture-handler';
-import {StyleSheet} from 'react-native';
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Registration from "./screens/Registration";
@@ -11,20 +10,16 @@ import {useFonts} from "expo-font";
 import Cart from "./screens/Cart";
 import MapScreen from "./screens/MapScreen";
 import ProductScreen from "./screens/ProductScreen";
-import Order from "./screens/Order";
-import OrderFin from "./screens/OrderFin";
 import Settings from "./screens/Settings";
 import OrderScreen from "./screens/OrderScreen";
 import SearchScreen from "./screens/SearchScreen";
 import {Context} from "./index";
-import ShopScreen from "./screens/ShopScreen";
-import * as SplashScreen from 'expo-splash-screen';
-import Entypo from "react-native-vector-icons/Entypo";
-import {Asset as Font} from "expo-asset";
+import CafeScreen from "./screens/CafeScreen";
+import Payment from "./screens/Payment";
+import Splash from "./screens/Splash";
 
 
 const Stack = createStackNavigator();
-
 
 
 export default function App() {
@@ -36,94 +31,106 @@ export default function App() {
     });
 
 
-    const {user} = useContext(Context);
+    const {loc} = useContext(Context);
+
+    const [location, setLocation] = useState({coords: {longitude: 0, latitude: 0}})
+    useEffect(() => {
+
+        const fetchLocation = async () => {
+            const loca = await loc.setLocation();
+            setLocation(loca)
+        }
+        fetchLocation()
+
+    }, []);
 
 
+    if (location.coords.latitude === 0) {
+        return (
+            <NavigationContainer>
+                <Stack.Navigator>
+                    <Stack.Screen
+                        name="splash"
+                        component={Splash}
+                        options={{headerShown: false}}
+                    />
+                </Stack.Navigator>
+            </NavigationContainer>
+        );
+    } else {
+        return (
+            <NavigationContainer>
+                <Stack.Navigator>
+                    <Stack.Screen
+                        name="registration"
+                        component={Registration}
+                        options={{headerShown: false}}
+                    />
+                    <Stack.Screen
+                        name="auth"
+                        component={Login}
+                        options={{headerShown: false}}
+                    />
+                    <Stack.Screen
+                        name="profile"
+                        component={Profile}
+                        options={{headerShown: false}}
+                    />
+                    <Stack.Screen
+                        name="main"
+                        component={Main}
+                        options={{headerShown: false}}
+                    />
+                    <Stack.Screen
+                        name="cart"
+                        component={Cart}
+                        options={{headerShown: false}}
+                    />
+                    <Stack.Screen
+                        name="map"
+                        component={MapScreen}
+                        options={{headerShown: false}}
+                    />
+                    <Stack.Screen
+                        name="product"
+                        component={ProductScreen}
+                        options={{headerShown: false}}
+                    />
+                    <Stack.Screen
+                        name="settings"
+                        component={Settings}
+                        options={{headerShown: false}}
+                    />
+                    <Stack.Screen
+                        name="orderScreen"
+                        component={OrderScreen}
+                        options={{headerShown: false}}
+                    />
+                    <Stack.Screen
+                        name="searchScreen"
+                        component={SearchScreen}
+                        options={{headerShown: false}}
+                    />
+                    <Stack.Screen
+                        name="cafeScreen"
+                        component={CafeScreen}
+                        options={{headerShown: false}}
+                    />
+                    <Stack.Screen
+                        name="payment"
+                        component={Payment}
+                        options={{headerShown: false}}
+                    />
+                </Stack.Navigator>
+            </NavigationContainer>
+
+        );
+
+    }
 
 
-
-    return (
-        <NavigationContainer>
-            <Stack.Navigator>
-                <Stack.Screen
-                    name="registration"
-                    component={Registration}
-                    options={{headerShown: false}}
-                />
-                <Stack.Screen
-                    name="auth"
-                    component={Login}
-                    options={{headerShown: false}}
-                />
-                <Stack.Screen
-                    name="profile"
-                    component={Profile}
-                    options={{headerShown: false}}
-                />
-                <Stack.Screen
-                    name="main"
-                    component={Main}
-                    options={{headerShown: false}}
-                />
-                <Stack.Screen
-                    name="cart"
-                    component={Cart}
-                    options={{headerShown: false}}
-                />
-                <Stack.Screen
-                    name="map"
-                    component={MapScreen}
-                    options={{headerShown: false}}
-                />
-                <Stack.Screen
-                    name="product"
-                    component={ProductScreen}
-                    options={{headerShown: false}}
-                />
-                <Stack.Screen
-                    name="order"
-                    component={Order}
-                    options={{headerShown: false}}
-                />
-                <Stack.Screen
-                    name="orderFin"
-                    component={OrderFin}
-                    options={{headerShown: false}}
-                />
-                <Stack.Screen
-                    name="settings"
-                    component={Settings}
-                    options={{headerShown: false}}
-                />
-                <Stack.Screen
-                    name="orderScreen"
-                    component={OrderScreen}
-                    options={{headerShown: false}}
-                />
-                <Stack.Screen
-                    name="searchScreen"
-                    component={SearchScreen}
-                    options={{headerShown: false}}
-                />
-                <Stack.Screen
-                    name="shopScreen"
-                    component={ShopScreen}
-                    options={{headerShown: false}}
-                />
-            </Stack.Navigator>
-        </NavigationContainer>
-
-    );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});
 
 
-//export default App;
+

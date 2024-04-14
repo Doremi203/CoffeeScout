@@ -14,8 +14,7 @@ public class CafeRepository(
 {
     public async Task<Cafe?> GetById(long id)
     {
-        var cafeEntity = await dbContext.Cafes
-            .Include(ca => ca.Admins)
+        var cafeEntity = await GetCafes()
             .FirstOrDefaultAsync(ca => ca.Id == id);
 
         return cafeEntity?.Adapt<Cafe>();
@@ -23,11 +22,10 @@ public class CafeRepository(
 
     public async Task<Cafe?> GetByAdminId(string adminId)
     {
-        var admin = await dbContext.CafeAdmins
-            .Include(ca => ca.Cafe)
-            .FirstOrDefaultAsync(ca => ca.Id == adminId);
+        var cafe = await GetCafes()
+            .FirstOrDefaultAsync(ca => ca.Admins.Any(ad => ad.Id == adminId));
 
-        return admin?.Cafe.Adapt<Cafe>();
+        return cafe.Adapt<Cafe>();
     }
 
     public async Task AddCafeAdmin(CafeAdmin admin)
@@ -55,6 +53,8 @@ public class CafeRepository(
     public async Task<Cafe> Add(Cafe cafe)
     {
         var cafeEntity = cafe.Adapt<CafeEntity>();
+        cafeEntity.CoffeeChain = await dbContext.CoffeeChains
+            .FirstAsync(cc => cc.Id == cafe.CoffeeChain.Id);
         
         await dbContext.Cafes.AddAsync(cafeEntity);
         await dbContext.SaveChangesAsync();
@@ -82,5 +82,15 @@ public class CafeRepository(
 
         dbContext.Cafes.Remove(cafe);
         await dbContext.SaveChangesAsync();
+    }
+
+    private IQueryable<CafeEntity> GetCafes()
+    {
+        return dbContext.Cafes
+            .Include(ca => ca.Admins)
+            .Include(ca => ca.CoffeeChain)
+            .Include(ca => ca.WorkingHours)
+            .Include(ca => ca.MenuItems)
+            .ThenInclude(mi => mi.BeverageType);
     }
 }

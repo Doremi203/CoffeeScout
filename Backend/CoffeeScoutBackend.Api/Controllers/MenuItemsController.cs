@@ -12,7 +12,9 @@ namespace CoffeeScoutBackend.Api.Controllers;
 [ApiController]
 [Route(RoutesV1.MenuItems)]
 public class MenuItemsController(
-    IMenuItemService menuItemService
+    IMenuItemService menuItemService,
+    ICafeService cafeService,
+    IReviewService reviewService
 ) : ControllerBase
 {
     [HttpGet]
@@ -34,23 +36,100 @@ public class MenuItemsController(
         return Ok(menuItems.Adapt<IEnumerable<MenuItemResponse>>());
     }
 
+    [HttpGet("search")]
+    [Authorize(Roles = nameof(Roles.Customer))]
+    [ProducesResponseType<IReadOnlyCollection<MenuItemResponse>>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> SearchMenuItems(
+        string name,
+        int limit
+    )
+    {
+        var menuItems = await menuItemService.Search(name, limit);
+
+        return Ok(menuItems.Adapt<IReadOnlyCollection<MenuItemResponse>>());
+    }
+
     [HttpPost]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> AddMenuItem(AddMenuItemRequest request)
     {
-        var newMenuItem = new MenuItem
+        var menuItem = await menuItemService.Add(
+            new AddMenuItemModel
+            {
+                CafeAdminId = User.GetId(),
+                Name = request.Name,
+                Price = request.Price,
+                SizeInMl = request.SizeInMl,
+                BeverageTypeId = request.BeverageTypeId
+            });
+
+        return Created($"{RoutesV1.MenuItems}/{menuItem.Id}", menuItem.Adapt<MenuItemResponse>());
+    }
+
+    [HttpPatch("{id:long}")]
+    [Authorize(Roles = nameof(Roles.CafeAdmin))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> UpdateMenuItem(long id, UpdateMenuItemRequest request)
+    {
+        if (!await IsMenuItemInCafe(id))
+            return Forbid();
+        
+        await menuItemService.Update(new UpdateMenuItemModel
         {
+            Id = id,
             Name = request.Name,
             Price = request.Price,
             SizeInMl = request.SizeInMl,
-            BeverageType = new BeverageType
-            {
-                Name = request.BeverageTypeName
-            }
-        };
-        var menuItem = await menuItemService.Add(User.GetId(), newMenuItem);
+            BeverageTypeId = request.BeverageTypeId
+        });
 
-        return Created($"{RoutesV1.MenuItems}/{menuItem.Id}", menuItem.Adapt<MenuItemResponse>());
+        return NoContent();
+    }
+
+    [HttpDelete("{id:long}")]
+    [Authorize(Roles = nameof(Roles.CafeAdmin))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> DeleteMenuItem(long id)
+    {
+        if (!await IsMenuItemInCafe(id))
+            return Forbid();
+
+        await menuItemService.Delete(id);
+
+        return NoContent();
+    }
+
+    [HttpPost("{menuItemId:long}/reviews")]
+    [Authorize(Roles = nameof(Roles.Customer))]
+    [ProducesResponseType<ReviewResponse>(StatusCodes.Status201Created)]
+    public async Task<IActionResult> AddReview(long menuItemId, AddReviewRequest request)
+    {
+        var reviewToAdd = new Review
+        {
+            Rating = request.Rating,
+            Content = request.Content
+        };
+
+        var review = await reviewService.Add(menuItemId, User.GetId(), reviewToAdd);
+
+        return Created($"{RoutesV1.MenuItems}/{menuItemId}/reviews/{review.Id}", review.Adapt<ReviewResponse>());
+    }
+
+    [HttpGet("{menuItemId:long}/reviews")]
+    [Authorize(Roles = $"{nameof(Roles.Customer)},{nameof(Roles.CafeAdmin)}")]
+    [ProducesResponseType<IReadOnlyCollection<ReviewResponse>>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetReviews(long menuItemId)
+    {
+        var reviews = await reviewService.GetByMenuItemId(menuItemId);
+
+        return Ok(reviews.Adapt<IReadOnlyCollection<ReviewResponse>>());
+    }
+
+    private async Task<bool> IsMenuItemInCafe(long menuItemId)
+    {
+        var cafe = await cafeService.GetByAdminId(User.GetId());
+
+        return cafe.MenuItems.Any(m => m.Id == menuItemId);
     }
 }

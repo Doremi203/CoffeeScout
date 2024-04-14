@@ -19,13 +19,20 @@ public class BeverageTypesController(
     [ProducesResponseType<BeverageTypeResponse>(StatusCodes.Status201Created)]
     public async Task<IActionResult> AddBeverageType(AddBeverageTypeRequest request)
     {
-        var newBeverageType = new BeverageType
-        {
-            Name = request.Name
-        };
-        var beverageType = await beverageTypeService.AddBeverageType(newBeverageType);
+        var addedBeverageType = 
+            await beverageTypeService.Add(request.Adapt<BeverageType>());
 
-        return Created($"{RoutesV1.BeverageTypes}/{beverageType.Id}", beverageType.Adapt<BeverageTypeResponse>());
+        return Created($"{RoutesV1.BeverageTypes}/{addedBeverageType.Id}", addedBeverageType.Adapt<BeverageTypeResponse>());
+    }
+    
+    [HttpGet]
+    [Authorize(Roles = $"{nameof(Roles.SuperAdmin)},{nameof(Roles.CafeAdmin)},{nameof(Roles.Customer)}")]
+    [ProducesResponseType<IReadOnlyCollection<BeverageTypeResponse>>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetBeverageTypes([FromQuery] GetBeverageTypesRequest request)
+    {
+        var beverageTypes = await beverageTypeService.GetPage(request.PageSize, request.PageNumber);
+
+        return Ok(beverageTypes.Adapt<IReadOnlyCollection<BeverageTypeResponse>>());
     }
 
     [HttpPatch("{id:long}")]
@@ -35,7 +42,7 @@ public class BeverageTypesController(
         [FromRoute] long id,
         UpdateBeverageTypeRequest request)
     {
-        await beverageTypeService.UpdateBeverageTypeName(id, request.Name);
+        await beverageTypeService.Update(id, request.Adapt<BeverageType>());
 
         return NoContent();
     }
@@ -45,7 +52,7 @@ public class BeverageTypesController(
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> DeleteBeverageType([FromRoute] long id)
     {
-        await beverageTypeService.DeleteBeverageType(id);
+        await beverageTypeService.Delete(id);
 
         return NoContent();
     }

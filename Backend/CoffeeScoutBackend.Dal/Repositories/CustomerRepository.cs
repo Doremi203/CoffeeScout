@@ -15,8 +15,11 @@ public class CustomerRepository(
         var customer = await dbContext.Customers
             .Include(c => c.User)
             .Include(c => c.FavoriteMenuItems)
-            .ThenInclude(mi => mi.BeverageType)
+                .ThenInclude(mi => mi.BeverageType)
+            .Include(c => c.FavoriteMenuItems)
+                .ThenInclude(mi => mi.Cafe)
             .FirstOrDefaultAsync(c => c.Id == userId);
+        
         return customer?.Adapt<Customer>();
     }
 
@@ -35,7 +38,20 @@ public class CustomerRepository(
             .FirstAsync(mi => mi.Id == menuItem.Id);
 
         customerEntity.FavoriteMenuItems.Add(menuItemEntity);
-        
+
+        await dbContext.SaveChangesAsync();
+    }
+
+    public async Task RemoveFavoredMenuItem(Customer customer, MenuItem menuItem)
+    {
+        var customerEntity = await dbContext.Customers
+            .Include(c => c.FavoriteMenuItems)
+            .FirstAsync(c => c.Id == customer.Id);
+        var menuItemEntity = await dbContext.MenuItems
+            .FirstAsync(mi => mi.Id == menuItem.Id);
+
+        customerEntity.FavoriteMenuItems.Remove(menuItemEntity);
+
         await dbContext.SaveChangesAsync();
     }
 
@@ -43,9 +59,9 @@ public class CustomerRepository(
     {
         var customerEntity = await dbContext.Customers
             .FirstAsync(c => c.Id == customer.Id);
-        
+
         customerEntity.FirstName = customer.FirstName;
-        
+
         dbContext.Customers.Update(customerEntity);
         await dbContext.SaveChangesAsync();
     }

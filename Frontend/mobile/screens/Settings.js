@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
     StyleSheet,
     Text,
@@ -11,30 +11,58 @@ import {
 } from 'react-native';
 import Footer from "./Footer";
 import {RFValue} from "react-native-responsive-fontsize";
-import * as SecureStorage from "expo-secure-store";
+import {Context} from "../index";
 
 
 export default function Settings({navigation}) {
 
+    const {user} = useContext(Context);
 
-    const [email, setEmail] = useState(SecureStorage.getItem('email'));
+    const [email, setEmail] = useState("")
+
+    useEffect(() => {
+        const fetchEmail = async () => {
+            const email = await user.getEmail();
+            setEmail(email);
+        };
+
+        fetchEmail();
+    }, []);
+
+
     const [editableEmail, setEditableEmail] = useState(false);
 
 
-    const handleSaveEmail = () => {
+    const handleSaveEmail = async () => {
         // добавить логику для сохранения нового email
         setEditableEmail(false);
-        SecureStorage.setItem('email', email)
+        await user.changeEmail(email);
     };
 
-    const [name, setName] = useState(SecureStorage.getItem('username'));
+
+    const [name, setName] = useState("")
     const [editableName, setEditableName] = useState(false);
 
-    const handleSaveName = () => {
-        // добавить логику для сохранения нового email
+    useEffect(() => {
+        const fetchName = async () => {
+            const name = await user.getName();
+            setName(name);
+        };
+
+        fetchName();
+    }, []);
+
+    const handleSaveName = async () => {
         setEditableName(false);
-        SecureStorage.setItem('username', name)
+        await user.changeName(name);
     };
+
+
+    const logout = async () => {
+        await user.logOut()
+        navigation.navigate('registration')
+    }
+
 
     return (
         <View style={styles.container}>
@@ -76,7 +104,7 @@ export default function Settings({navigation}) {
                         editable={editableEmail}
                     />
                     {!editableEmail && (
-                        <TouchableOpacity onPress={() => setEditableEmail(true)} >
+                        <TouchableOpacity onPress={() => setEditableEmail(true)}>
                             <Image source={require('../assets/icons/edit.png')} style={styles.edit}/>
                         </TouchableOpacity>
                     )}
@@ -89,7 +117,7 @@ export default function Settings({navigation}) {
                 <View style={styles.line}/>
 
 
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button} onPress={logout}>
                     <Text style={styles.out}> Выйти </Text>
                 </TouchableOpacity>
 

@@ -4,13 +4,22 @@
       linux/amd64
     depends_on:
       - backend
+    environment:
+      CHOKIDAR_USEPOLLING : "true"
+      WATCHPACK_POLLING : "true"
+    volumes:
+      - ../Frontend/web/src:/app/src
+
     restart:
       always
     networks:
       - app-network
-    image: mayaffia/coffee-scout-web:dev
     ports:
       - "3000:3000"
+    build:
+      context: ../Frontend/web
+      dockerfile: ./Dockerfile
+
 
   backend:
     depends_on:

@@ -1,8 +1,7 @@
 import {makeAutoObservable} from "mobx";
-import AuthService from "../services/AuthService";
+import UserService from "../services/UserService";
 import * as SecureStorage from "expo-secure-store";
 import {Alert} from "react-native";
-
 
 export default class UserStore {
 
@@ -11,30 +10,10 @@ export default class UserStore {
     }
 
 
-    async getName() {
-        try {
-            const response = await AuthService.getName();
-            return response.data.firstName;
-        } catch (error) {
-            Alert.alert('Ошибка', 'Что-то пошло не так')
-        }
-    }
-
-
-    async getEmail() {
-        try {
-            const response = await AuthService.getEmail();
-            console.log(response.data)
-            return response.data.email;
-        } catch (error) {
-            Alert.alert('Ошибка', 'Что-то пошло не так')
-        }
-    }
-
     async registration(name, email, password, navigation) {
         try {
-            await AuthService.registration(name, email, password).then(async () => {
-                await AuthService.login(email, password).then(response2 => {
+            await UserService.registration(name, email, password).then(async () => {
+                await UserService.login(email, password).then(response2 => {
                     let accessTokenName = "accessToken";
                     let accessToken = response2.data[accessTokenName];
 
@@ -58,7 +37,7 @@ export default class UserStore {
 
     async login(email, password, navigation) {
         try {
-            const response = await AuthService.login(email, password);
+            const response = await UserService.login(email, password);
 
             let accessTokenName = "accessToken";
             let accessToken = response.data[accessTokenName];
@@ -74,6 +53,55 @@ export default class UserStore {
                 default:
                     Alert.alert('Ошибка', 'Что-то пошло не так');
             }
+        }
+    }
+
+    async logOut() {
+        try {
+            await SecureStorage.deleteItemAsync('accessToken');
+        } catch (error) {
+            Alert.alert('Ошибка', 'Что-то пошло не так')
+        }
+    }
+
+
+    async getName() {
+        try {
+            const response = await UserService.getName();
+            return response.data.firstName;
+        } catch (error) {
+            Alert.alert('Ошибка', 'Что-то пошло не так')
+        }
+    }
+
+
+    async getEmail() {
+        try {
+            const response = await UserService.getEmail();
+            console.log('dddd')
+            console.log(response.data.email)
+            return response.data.email;
+        } catch (error) {
+            Alert.alert('Ошибка', 'Что-то пошло не так')
+        }
+    }
+
+    async changeName(name) {
+        try {
+            await UserService.changeName(name);
+        } catch (error) {
+            Alert.alert('Ошибка', 'Что-то пошло не так')
+        }
+    }
+
+    async changeEmail(email) {
+        try {
+            console.log('change')
+            const response = await UserService.changeEmail(email);
+            console.log(response.status)
+
+        } catch (error) {
+            Alert.alert('Ошибка', 'Что-то пошло не так')
         }
     }
 }

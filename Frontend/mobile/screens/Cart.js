@@ -1,17 +1,35 @@
-import React, {useContext} from 'react';
-import {ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View, Image} from 'react-native';
 import Footer from "./Footer";
 import ProductInCart from "../components/ProductInCart";
 import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
-import Product from "../components/Product";
 import {Context} from "../index";
 
 
 export default function Cart({navigation}) {
 
-    const {cart} = useContext(Context);
+    const {cart, order} = useContext(Context);
 
-    console.log(cart.cart)
+    const pay = async () => {
+        if (cart.cart.length > 0) {
+            navigation.navigate('payment')
+            const menuItems = cart.getMenuItems()
+            const id = await order.makeNewOrder(menuItems, cart.cafeId)
+            await order.payForOrder(id)
+            cart.clearCart()
+        }
+    }
+
+    const [cartPro, setCartPro] = useState([])
+
+    useEffect(() => {
+        return navigation.addListener('focus', async () => {
+            const cartt = cart.cart
+            setCartPro(cartt)
+        });
+
+    }, [navigation]);
+
 
     return (
         <View style={styles.container}>
@@ -19,26 +37,35 @@ export default function Cart({navigation}) {
             <View style={styles.main}>
                 <Text style={styles.header}>корзина</Text>
 
-                <View style={styles.products}>
-                    <ScrollView style={styles.scroll}>
+                {cartPro.length === 0 ? (
+                    <View style={styles.empty}>
+                        <Text style={styles.emptyText}> Упс, корзина пуста...</Text>
+                        <Image source={require('../assets/icons/emptyCart.png')} style={styles.cart}/>
+                    </View>
 
-                        {cart.cart.map((product) => (
-                            <ProductInCart name={product.name} menuItemId={product.id} price={product.price}/>
-                        ))}
+                ) : (
+                    <View>
+                        <View style={styles.products}>
+                            <ScrollView style={styles.scroll}>
 
-                    </ScrollView>
-                </View>
+                                {cartPro.map((product) => (
+                                    <ProductInCart name={product.name} menuItemId={product.id} price={product.price}
+                                                   key={product.id}/>
+                                ))}
 
-                <View style={styles.button}>
-                    <TouchableWithoutFeedback onPress={() => navigation.navigate('main')} >
-                        <Text style={styles.buttonText}> к оплате </Text>
-                    </TouchableWithoutFeedback>
-                </View>
+                            </ScrollView>
+                        </View>
+
+                        <View style={styles.button}>
+                            <TouchableWithoutFeedback onPress={pay}>
+                                <Text style={styles.buttonText}> к оплате </Text>
+                            </TouchableWithoutFeedback>
+                        </View>
+                    </View>
+                )}
+
             </View>
-
-
             <Footer navigation={navigation}/>
-
         </View>
     );
 }
@@ -50,69 +77,49 @@ const styles = StyleSheet.create({
         minHeight: '100%',
         alignItems: 'center',
     },
-    main : {
+    main: {
         flex: 1,
     },
-    /*container : {
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'space-between', // Это свойство добавляет расстояние между элементами
-        alignItems: 'center',
-        top: 100
-    },
-    main : {
-
-    },*/
     header: {
         fontSize: RFPercentage(4),
-        marginTop:'16%',
-       // position: 'absolute',
-       // top: 70,
-        //left: '32%',
+        marginTop: '16%',
         fontFamily: 'MontserratAlternates',
         textAlign: 'center'
     },
 
-    button : {
+    button: {
         backgroundColor: '#169366',
-       // position: 'relative',
-        //top: 700,
-        //width: 350,
-       // width: RFValue(300),
         height: RFValue(45),
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 10,
         elevation: 3,
-        //left: 33,
-        //right: 0,
-        marginRight: 10,
-        marginLeft: 10
+        marginTop: RFValue(20)
     },
-
-    products : {
-        //flex : 1,
-        //padding : 60
-       // backgroundColor:'blue',
-        //marginTop: '0%'
+    products: {
         height: '80%'
     },
-    scroll : {
-        //height: 600
-        //backgroundColor: 'red',
-        //height: 630,
-        //marginTop: 70,
+    scroll: {
         height: '80%',
 
     },
     buttonText: {
         fontSize: RFValue(15),
-        //fontWeight: 'bold',
         color: 'white',
         fontFamily: 'MontserratAlternates',
+    },
+    emptyText: {
+        fontFamily: 'MontserratAlternates',
+        fontSize: RFPercentage(3),
+        marginTop: '80%'
+    },
+    cart: {
+        width: RFValue(60),
+        height: RFValue(60),
+    },
+    empty: {
+        alignItems: 'center',
     }
-
-
 
 });
 

@@ -16,6 +16,9 @@ public class OrderRepository(
     {
         using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
         var orderEntity = order.Adapt<OrderEntity>();
+        
+        orderEntity.Cafe = await dbContext.Cafes
+            .FirstAsync(c => c.Id == order.Cafe.Id);
 
         orderEntity.Customer = await dbContext.Customers
             .FirstAsync(c => c.Id == order.Customer.Id);
@@ -41,18 +44,40 @@ public class OrderRepository(
         return orderEntity?.Adapt<Order>();
     }
 
-    public async Task<IReadOnlyCollection<Order>> GetByUserId(string userId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<IReadOnlyCollection<Order>> GetOrders(OrderStatus status, DateTime from)
+    public async Task<IReadOnlyCollection<Order>> GetByUserId(string userId, GetOrdersModel model)
     {
         var orderEntities = await GetOrderEntities()
-            .Where(o => o.Status == status && o.Date >= from)
+            .Where(o => o.Customer.Id == userId && o.Status == model.Status)
+            .OrderByDescending(o => o.Date)
+            .Skip(model.PageSize * (model.PageNumber - 1))
+            .Take(model.PageSize)
             .ToListAsync();
 
         return orderEntities.Adapt<IReadOnlyCollection<Order>>();
+    }
+
+    public async Task<IReadOnlyCollection<Order>> GetByCafeId(long cafeId, GetOrdersModel model)
+    {
+        var orderEntities = await GetOrderEntities()
+            .Where(o => o.Cafe.Id == cafeId && o.Status == model.Status)
+            .OrderByDescending(o => o.Date)
+            .Skip(model.PageSize * (model.PageNumber - 1))
+            .Take(model.PageSize)
+            .ToListAsync();
+
+        return orderEntities.Adapt<IReadOnlyCollection<Order>>();
+    }
+
+    public async Task UpdateStatus(long id, OrderStatus cancelled)
+    {
+        var orderEntity = await dbContext.Orders
+            .FirstAsync(o => o.Id == id);
+
+        orderEntity.Status = cancelled;
+
+        dbContext.Update(orderEntity);
+
+        await dbContext.SaveChangesAsync();
     }
 
     private IIncludableQueryable<OrderEntity, CustomerEntity> GetOrderEntities()
@@ -60,7 +85,8 @@ public class OrderRepository(
         return dbContext.Orders
             .Include(o => o.OrderItems)
             .ThenInclude(oi => oi.MenuItem)
-            .ThenInclude(mi => mi.Cafe)
+            .ThenInclude(mi => mi.BeverageType)
+            .Include(o => o.Cafe)
             .Include(o => o.Customer);
     }
 }

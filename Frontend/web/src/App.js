@@ -1,22 +1,18 @@
-import logo from './logo.svg';
-import './App.css';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-
-
 import Login from "./pages/Login";
 import MainPage from "./pages/MainPage";
-import Reg from "./pages/Reg";
+import Profile from "./pages/Profile";
 
 function App() {
-  return (
-      <BrowserRouter>
-        <Routes>
-           <Route path="/" exact Component={Reg} />
-            <Route path="/login" exact Component={Login} />
-            <Route path="/main" exact Component={MainPage} />
-        </Routes>
-      </BrowserRouter>
-  );
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path="/login" exact Component={Login}/>
+                <Route path="/main" exact Component={MainPage}/>
+                <Route path="/profile" exact Component={Profile}/>
+            </Routes>
+        </BrowserRouter>
+    );
 }
 
 export default App;

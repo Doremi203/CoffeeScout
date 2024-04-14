@@ -48,7 +48,7 @@ public class TestDbSeeder(
             {
                 await userManager.AddToRoleAsync(admin, Roles.CafeAdmin.ToString());
                 var cafe = await dbContext.Cafes.FirstAsync();
-                await dbContext.CafeAdmins.AddAsync(new CafeAdminEntity
+                dbContext.CafeAdmins.Add(new CafeAdminEntity
                 {
                     User = admin,
                     Id = admin.Id,
@@ -70,10 +70,18 @@ public class TestDbSeeder(
         {
             var beverageTypes = new List<BeverageTypeEntity>
             {
-                new() { Name = "Cappuccino" },
-                new() { Name = "Espresso" }
+                new()
+                {
+                    Name = "Капучино",
+                    Description = "Кофе с молоком и молочной пенкой"
+                },
+                new()
+                {
+                    Name = "Эспрессо",
+                    Description = "Крепкий кофе без добавок"
+                }
             };
-            await dbContext.BeverageTypes.AddRangeAsync(beverageTypes);
+            dbContext.BeverageTypes.AddRange(beverageTypes);
             await dbContext.SaveChangesAsync();
         }
     }
@@ -91,16 +99,50 @@ public class TestDbSeeder(
                 {
                     Name = "Coffee Crew",
                     Location = locationProvider.CreatePoint(
-                        55.698964, 37.499202)
+                        55.698964, 37.499202),
+                    Address = "ул. Ленинградская, 10",
+                    CoffeeChain = new CoffeeChainEntity { Name = "Coffee Crew" },
+                    WorkingHours = new List<WorkingHoursEntity>()
+                    {
+                        new()
+                        {
+                            DayOfWeek = DayOfWeek.Monday,
+                            OpeningTime = new TimeOnly(8, 0),
+                            ClosingTime = new TimeOnly(20, 0)
+                        },
+                        new()
+                        {
+                            DayOfWeek = DayOfWeek.Tuesday,
+                            OpeningTime = new TimeOnly(8, 0),
+                            ClosingTime = new TimeOnly(20, 0)
+                        },
+                    }
                 },
                 new()
                 {
                     Name = "Stars Coffee",
                     Location = locationProvider.CreatePoint(
-                        55.697503, 37.500088)
+                        55.697503, 37.500088),
+                    Address = "ул. Ленинградская, 12",
+                    CoffeeChain = new CoffeeChainEntity { Name = "Stars Coffee" },
+                    WorkingHours = new List<WorkingHoursEntity>()
+                    {
+                        new()
+                        {
+                            DayOfWeek = DayOfWeek.Monday,
+                            OpeningTime = new TimeOnly(8, 0),
+                            ClosingTime = new TimeOnly(20, 0)
+                        },
+                        new()
+                        {
+                            DayOfWeek = DayOfWeek.Tuesday,
+                            OpeningTime = new TimeOnly(8, 0),
+                            ClosingTime = new TimeOnly(20, 0)
+                        },
+                    }
                 }
             };
-            await dbContext.Cafes.AddRangeAsync(cafes);
+            dbContext.Cafes.AddRange(cafes);
             await dbContext.SaveChangesAsync();
         }
     }
@@ -112,9 +154,13 @@ public class TestDbSeeder(
 
         if (!dbContext.MenuItems.Any())
         {
-            var coffeeCrew = await dbContext.Cafes.FirstAsync(c => c.Name == "Coffee Crew");
-            var starsCoffee = await dbContext.Cafes.FirstAsync(c => c.Name == "Stars Coffee");
-            var cappuccino = await dbContext.BeverageTypes.FirstAsync(b => b.Name == "Cappuccino");
+            var coffeeCrew = await dbContext.Cafes
+                .FirstAsync(c => c.Name == "Coffee Crew");
+            var starsCoffee = await dbContext.Cafes
+                .FirstAsync(c => c.Name == "Stars Coffee");
+            var cappuccino = await dbContext.BeverageTypes
+                .FirstAsync(b => b.Name == "Капучино");
+            
             var menuItems = new List<MenuItemEntity>
             {
                 new()
@@ -125,7 +171,9 @@ public class TestDbSeeder(
                     BeverageType = cappuccino,
                     BeverageTypeId = cappuccino.Id,
                     Price = 240,
-                    SizeInMl = 180
+                    SizeInMl = 180,
+                    Reviews = new List<ReviewEntity>(),
+                    CustomersFavoredBy = new List<CustomerEntity>()
                 },
                 new()
                 {
@@ -135,11 +183,13 @@ public class TestDbSeeder(
                     BeverageType = cappuccino,
                     BeverageTypeId = cappuccino.Id,
                     Price = 325,
-                    SizeInMl = 300
+                    SizeInMl = 300,
+                    Reviews = new List<ReviewEntity>(),
+                    CustomersFavoredBy = new List<CustomerEntity>()
                 }
             };
 
-            await dbContext.MenuItems.AddRangeAsync(menuItems);
+            dbContext.MenuItems.AddRange(menuItems);
             await dbContext.SaveChangesAsync();
         }
     }

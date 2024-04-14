@@ -4,29 +4,35 @@
     "slug": "coffeeScout",
     "version": "1.0.0",
     "orientation": "portrait",
+    "icon": "./assets/icons/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/icons/splashpic.png",
-
       "backgroundColor": "#05704A"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.coffeescout"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.coffeescout"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "bb96db98-8b79-4ffe-ac40-33f5efecea68"
+      }
+    }
   }
 }

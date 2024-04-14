@@ -1,8 +1,4 @@
 import {makeAutoObservable} from "mobx";
-import AuthService from "../services/AuthService";
-import * as SecureStorage from "expo-secure-store";
-import {Alert} from "react-native";
-import ProductService from "../services/ProductService";
 import CafeService from "../services/CafeService";
 
 export default class CafeStore {
@@ -13,16 +9,32 @@ export default class CafeStore {
 
     async getNearbyCafes(longitude, latitude, radius) {
         try {
-            console.log('JJJJJJJJj')
             const response = await CafeService.getNearbyCafes(longitude, latitude, radius);
-            console.log('JJJJJJJJj')
-            console.log(response.status)
-            console.log(response.data)
-            return response.body;
+            return response.data;
         } catch (error) {
-            console.error('Error fetching data: NEAR', error);
+            console.error('Error fetching data: NEAR cafe', error);
         }
     }
 
+    async getMenu(cafeId) {
+        try {
+            const response = await CafeService.getMenu(cafeId);
+
+            console.log(response.status)
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching data', error);
+        }
+    }
+
+    async getInfo(cafeId) {
+        try {
+            const response = await CafeService.getInfo(cafeId);
+            console.log(response.status)
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching data', error);
+        }
+    }
 
 }

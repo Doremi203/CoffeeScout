@@ -1,9 +1,12 @@
 using CoffeeScoutBackend.Api;
 using CoffeeScoutBackend.Api.Config;
+using CoffeeScoutBackend.Api.Config.Swager;
 using CoffeeScoutBackend.Api.DbSeeders;
 using CoffeeScoutBackend.Api.Identity;
 using CoffeeScoutBackend.Api.Identity.Services;
 using CoffeeScoutBackend.Api.Middlewares;
+using CoffeeScoutBackend.Api.Requests.Mappers;
+using CoffeeScoutBackend.Api.Responses.Mappers;
 using CoffeeScoutBackend.Bll;
 using CoffeeScoutBackend.Dal;
 using CoffeeScoutBackend.Dal.Config;
@@ -27,6 +30,9 @@ builder.Services
     .Configure<MailerSendSettings>(
         builder.Configuration.GetSection(nameof(MailerSendSettings)));
 
+ResponseMapperConfiguration.Configure();
+RequestMapperConfiguration.Configure();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
     {
@@ -37,6 +43,7 @@ builder.Services.AddSwaggerGen(options =>
             Type = SecuritySchemeType.ApiKey
         });
         options.OperationFilter<SecurityRequirementsOperationFilter>();
+        options.OperationFilter<AuthorizeCheckOperationFilter>();
 
         options.DocumentFilter<RemovePathsDocumentFilter>();
     }
@@ -64,9 +71,10 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddFluentValidationAutoValidation();
 
+builder.Services.AddHttpLogging(_ => { });
+
 var app = builder.Build();
 
-app.UseMiddleware<RequestResponseLoggingMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     using var scope = app.Services.CreateScope();
@@ -75,6 +83,8 @@ if (app.Environment.IsDevelopment())
     await dbContext.Database.MigrateAsync();
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    app.UseHttpLogging();
 }
 
 //app.UseHttpsRedirection();
