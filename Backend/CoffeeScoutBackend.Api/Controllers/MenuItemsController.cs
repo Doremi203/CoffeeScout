@@ -36,7 +36,7 @@ public class MenuItemsController(
         return Ok(menuItems.Adapt<IEnumerable<MenuItemResponse>>());
     }
 
-    [HttpPost("search")]
+    [HttpGet("search")]
     [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType<IReadOnlyCollection<MenuItemResponse>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> SearchMenuItems(

@@ -34,6 +34,16 @@ public class CafesController(
 
         return Ok(cafes.Adapt<IReadOnlyCollection<CafeResponse>>());
     }
+    
+    [HttpGet("info")]
+    [Authorize(Roles = nameof(Roles.CafeAdmin))]
+    [ProducesResponseType<CafeResponse>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetCafeForCafeAdmin()
+    {
+        var cafe = await cafeService.GetByAdminId(User.GetId());
+
+        return Ok(cafe.Adapt<CafeResponse>());
+    }
 
     [HttpPost]
     [Authorize(Roles = nameof(Roles.SuperAdmin))]
