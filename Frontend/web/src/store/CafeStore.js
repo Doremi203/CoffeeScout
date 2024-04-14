@@ -19,9 +19,9 @@ export default class CafeStore {
         }
     }
 
-    async addProduct(name, price, size, type) {
+    async addProduct(name, price, size, type, description) {
         try {
-            await CafeService.addProduct(name, price, size, type);
+            await CafeService.addProduct(name, price, size, type, description);
             window.location.reload();
         } catch (error) {
             switch (error.response.status) {
@@ -44,12 +44,31 @@ export default class CafeStore {
     }
 
     async getTypes() {
-        try{
+        try {
             const response = await CafeService.getTypes();
             return response.data;
-        } catch(error) {
+        } catch (error) {
             toast.error("Что-то пошло не так")
         }
     }
+
+    async getInfo() {
+        try {
+            const response = await CafeService.getInfo();
+            return response.data;
+        } catch (error) {
+            toast.error("Что-то пошло не так")
+        }
+    }
+
+    async changeInfo() {
+        try {
+
+        } catch (error) {
+
+        }
+
+    }
+
 
 }
