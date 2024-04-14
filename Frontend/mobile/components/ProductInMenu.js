@@ -1,22 +1,33 @@
 import {Image, StyleSheet, Text, TouchableWithoutFeedback, View} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Context} from "../index";
 
 
-export default function ProductInMenu({name, menuItemId}) {
+export default function ProductInMenu({name, menuItemId, price, size}) {
 
     const {product} = useContext(Context);
 
     const [isLiked, setIsLiked] = useState(false);
 
-    const like = async() => {
-        //toggleLike();
-        //const newLikeStatus = !isLiked;
-        //setIsLiked(newLikeStatus);
-        await product.likeProduct(menuItemId);
-        //saveLikeStatus(newLikeStatus);
+    useEffect(() => {
+        const fetchLiked = async () => {
+            const liked = await product.isProductLiked(menuItemId);
+            setIsLiked(liked);
+        };
+
+        fetchLiked();
+    }, []);
+
+    const like = async () => {
+        console.log(menuItemId)
+        if (isLiked) {
+            await product.dislikeMenuItem(menuItemId);
+        } else {
+            await product.likeProduct(menuItemId);
+        }
+        setIsLiked(!isLiked);
     }
 
     const {cart} = useContext(Context);
@@ -26,13 +37,13 @@ export default function ProductInMenu({name, menuItemId}) {
     }
 
     console.log(cart.cart)
-    return(
+    return (
         <View style={styles.square}>
             <Text style={styles.label}> {name}</Text>
 
             <View style={styles.priceAndSize}>
-                <Text style={styles.size}> 400 мл - </Text>
-                <Text style={styles.price}> 230₽ </Text>
+                <Text style={styles.size}> {size} мл - </Text>
+                <Text style={styles.price}> {price}₽ </Text>
             </View>
 
 
@@ -61,13 +72,10 @@ export default function ProductInMenu({name, menuItemId}) {
 }
 
 
-
 const styles = StyleSheet.create({
     container: {},
     square: {
-        //flex : 1,
         marginVertical: 10,
-        //flexDirection: 'row',
         width: RFValue(300),
         height: RFValue(150),
         backgroundColor: 'white',
@@ -80,7 +88,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.6,
         shadowRadius: 3.84,
         elevation: 5,
-        //overflow: 'hidden'
     },
 
     routeButton: {
@@ -89,43 +96,28 @@ const styles = StyleSheet.create({
         width: RFValue(140),
         height: RFValue(35),
         borderRadius: 20,
-
-        //top: '50%',
-        // right: RFValue(350),
-        //top : RFValue(-110),
-        //  marginLeft: '2%'
-
     },
     routeText: {
         fontSize: RFValue(13),
-        // marginTop: RFValue(5),
-        //marginLeft: RFValue(28),
         fontFamily: 'MontserratAlternates',
         textAlign: 'center',
         marginTop: RFValue(8),
     },
     image: {
-        // marginLeft: 20,
-        //marginTop: 10,
         top: RFValue(-40),
         width: RFValue(90),
         height: RFValue(90),
         left: '60%'
-        // right: RFValue(90)
     },
     label: {
         fontSize: RFPercentage(2.3),
         color: 'black',
         fontFamily: 'MontserratAlternatesMedium',
         marginTop: '2%'
-        //marginTop: 20,
-        //marginLeft: 20
     },
 
     priceAndSize: {
-        //position: 'relative',
         flexDirection: 'row',
-        //right: '50%',
         marginTop: '5%',
         marginLeft: '2%'
     },
@@ -142,12 +134,10 @@ const styles = StyleSheet.create({
     place: {
         fontFamily: 'MontserratAlternates',
         fontSize: RFValue(10),
-        // marginTop: '2%',
         marginLeft: '2%'
     },
 
     heart: {
-
         left: '88%',
         top: RFValue(-50),
     },
@@ -159,14 +149,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 20,
         elevation: 3,
-        // marginRight: 10,
-        //marginLeft: 10,
-        //backgroundColor: 'red',
-        //height: 50,
         width: RFValue(140),
-        //top : RFValue(-110),
-        //  marginLeft: '2%',
-        // marginTop: '3%'
         marginLeft: RFValue(20)
     },
     buttonText: {

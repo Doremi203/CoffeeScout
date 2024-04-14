@@ -19,9 +19,8 @@ export default class LocationStore {
         }
 
         let location = await Location.getCurrentPositionAsync({});
-        console.log(location.coords.longitude);
-        console.log(location.coords.latitude);
         this.location = location;
+        return location;
     }
 
     async getLocation() {

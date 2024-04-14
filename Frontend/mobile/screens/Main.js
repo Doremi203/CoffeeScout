@@ -53,7 +53,6 @@ export default function Main({navigation}) {
         };
     }, [location, executed]);
 
-
     return (
 
         <View style={styles.container}>
@@ -100,7 +99,7 @@ export default function Main({navigation}) {
                     <ScrollView horizontal={true} style={styles.scrollCont3}>
                         <View style={styles.pro3}>
                             {favTypes && favTypes.map((type) => (
-                                <Product key={type.id} name={type.name} navigation={navigation}/>
+                                <Product key={type.id} name={type.name} navigation={navigation} type={type}/>
                             ))}
 
                         </View>
