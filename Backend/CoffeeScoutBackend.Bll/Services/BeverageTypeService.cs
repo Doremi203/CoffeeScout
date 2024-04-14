@@ -8,47 +8,42 @@ namespace CoffeeScoutBackend.Bll.Services;
 public class BeverageTypeService(
     IBeverageTypeRepository beverageTypeRepository
 ) : IBeverageTypeService
-{
-    public async Task<BeverageType> GetBeverageTypeByNameAsync(string name)
+{ 
+    public async Task<BeverageType> GetById(long id)
     {
         return await beverageTypeRepository
-                   .GetBeverageTypeByName(name)
-               ?? throw new BeverageTypeNotFoundException(
-                   $"Beverage type with name {name} not found",
-                   name);
-    }
-
-    public async Task<BeverageType> GetBeverageTypeById(long id)
-    {
-        return await beverageTypeRepository
-                   .GetBeverageTypeById(id)
+                   .GetById(id)
                ?? throw new BeverageTypeNotFoundException(
                    $"Beverage type with id {id} not found",
                    id);
     }
 
-    public async Task<BeverageType> AddBeverageType(BeverageType beverageType)
+    public async Task<BeverageType> Add(BeverageType beverageType)
     {
-        return await beverageTypeRepository.AddBeverageType(beverageType);
+        return await beverageTypeRepository.Add(beverageType);
     }
 
-    public async Task UpdateBeverageTypeName(long id, string name)
+    public async Task Update(long id, BeverageType beverageType)
     {
-        var beverage = await GetBeverageTypeById(id);
+        var beverage = await GetById(id);
+        var updatedBeverage = beverage with
+        {
+            Name = beverageType.Name,
+            Description = beverageType.Description
+        };
         
-        await beverageTypeRepository.UpdateBeverageType(
-            beverage with { Name = name });
+        await beverageTypeRepository.Update(updatedBeverage);
     }
 
-    public async Task DeleteBeverageType(long id)
+    public async Task Delete(long id)
     {
-        var beverage = await GetBeverageTypeById(id);
+        var beverage = await GetById(id);
         
-        await beverageTypeRepository.DeleteBeverageType(beverage.Id);
+        await beverageTypeRepository.Delete(beverage.Id);
     }
 
-    public async Task<IReadOnlyCollection<BeverageType>> GetBeverageTypes(int pageSize, int pageNumber)
+    public async Task<IReadOnlyCollection<BeverageType>> GetPage(int pageSize, int pageNumber)
     {
-        return await beverageTypeRepository.GetBeverageTypes(pageSize, pageNumber);
+        return await beverageTypeRepository.GetPage(pageSize, pageNumber);
     }
 }

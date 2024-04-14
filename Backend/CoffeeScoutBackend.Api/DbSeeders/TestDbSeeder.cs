@@ -70,8 +70,16 @@ public class TestDbSeeder(
         {
             var beverageTypes = new List<BeverageTypeEntity>
             {
-                new() { Name = "Cappuccino" },
-                new() { Name = "Espresso" }
+                new()
+                {
+                    Name = "Капучино",
+                    Description = "Кофе с молоком и молочной пенкой"
+                },
+                new()
+                {
+                    Name = "Эспрессо",
+                    Description = "Крепкий кофе без добавок"
+                }
             };
             dbContext.BeverageTypes.AddRange(beverageTypes);
             await dbContext.SaveChangesAsync();
@@ -146,15 +154,18 @@ public class TestDbSeeder(
 
         if (!dbContext.MenuItems.Any())
         {
-            var coffeeCrew = await dbContext.Cafes.FirstAsync(c => c.Name == "Coffee Crew");
-            var starsCoffee = await dbContext.Cafes.FirstAsync(c => c.Name == "Stars Coffee");
-            var cappuccino = await dbContext.BeverageTypes.FirstAsync(b => b.Name == "Cappuccino");
+            var coffeeCrew = await dbContext.Cafes
+                .FirstAsync(c => c.Name == "Coffee Crew");
+            var starsCoffee = await dbContext.Cafes
+                .FirstAsync(c => c.Name == "Stars Coffee");
+            var cappuccino = await dbContext.BeverageTypes
+                .FirstAsync(b => b.Name == "Капучино");
+            
             var menuItems = new List<MenuItemEntity>
             {
                 new()
                 {
                     Name = "Капучино малый",
-                    Description = "Вкусный кофе",
                     Cafe = coffeeCrew,
                     CafeId = coffeeCrew.Id,
                     BeverageType = cappuccino,
@@ -167,7 +178,6 @@ public class TestDbSeeder(
                 new()
                 {
                     Name = "Капучино большой",
-                    Description = "Большой вкусный кофе",
                     Cafe = starsCoffee,
                     CafeId = starsCoffee.Id,
                     BeverageType = cappuccino,

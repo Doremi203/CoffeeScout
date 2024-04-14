@@ -32,42 +32,39 @@ public class MenuItemService(
         long beverageTypeId
     )
     {
-        var beverageType = await beverageTypeService.GetBeverageTypeById(beverageTypeId);
+        var beverageType = await beverageTypeService.GetById(beverageTypeId);
 
         return await menuItemRepository.GetAllInAreaByBeverageType(
             location, radiusInMeters, beverageType);
     }
     
-    public async Task<MenuItem> Add(string adminId, MenuItem menuItem)
+    public async Task<MenuItem> Add(AddMenuItemModel model)
     {
-        var beverageName = menuItem.BeverageType.Name;
-        var beverageType = await beverageTypeService.GetBeverageTypeByNameAsync(beverageName);
-        var cafe = await cafeService.GetByAdminId(adminId);
+        var beverageType = await beverageTypeService.GetById(model.BeverageTypeId);
+        var cafe = await cafeService.GetByAdminId(model.CafeAdminId);
 
         var newMenuItem = new MenuItem
         {
-            Name = menuItem.Name,
-            Description = menuItem.Description,
-            Price = menuItem.Price,
+            Name = model.Name,
+            Price = model.Price,
             BeverageType = beverageType,
             Cafe = cafe,
-            SizeInMl = menuItem.SizeInMl
+            SizeInMl = model.SizeInMl
         };
 
         return await menuItemRepository.Add(newMenuItem);
     }
 
-    public async Task Update(long id, MenuItem menuItem)
+    public async Task Update(UpdateMenuItemModel model)
     {
-        var existingMenuItem = await GetById(id);
-        var beverageType = 
-            await beverageTypeService.GetBeverageTypeByNameAsync(menuItem.BeverageType.Name);
+        var existingMenuItem = await GetById(model.Id);
+        var beverageType = await beverageTypeService.GetById(model.BeverageTypeId);
 
         var newMenuItem = existingMenuItem with
         {
-            Name = menuItem.Name,
-            Price = menuItem.Price,
-            SizeInMl = menuItem.SizeInMl,
+            Name = model.Name,
+            Price = model.Price,
+            SizeInMl = model.SizeInMl,
             BeverageType = beverageType
         };
 

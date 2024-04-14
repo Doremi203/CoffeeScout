@@ -62,7 +62,8 @@ namespace CoffeeScoutBackend.Dal.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: false)
+                    name = table.Column<string>(type: "text", nullable: false),
+                    description = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -264,7 +265,6 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     search_vector = table.Column<NpgsqlTsVector>(type: "tsvector", nullable: false)
                         .Annotation("Npgsql:TsVectorConfig", "russian")
                         .Annotation("Npgsql:TsVectorProperties", new[] { "name" }),
-                    description = table.Column<string>(type: "text", nullable: false),
                     price = table.Column<decimal>(type: "numeric", nullable: false),
                     size_in_ml = table.Column<int>(type: "integer", nullable: false)
                 },
