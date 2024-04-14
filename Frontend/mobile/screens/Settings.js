@@ -57,6 +57,13 @@ export default function Settings({navigation}) {
         await user.changeName(name);
     };
 
+
+    const logout = async () => {
+        await user.logOut()
+        navigation.navigate('registration')
+    }
+
+
     return (
         <View style={styles.container}>
             <View style={styles.main}>
@@ -110,7 +117,7 @@ export default function Settings({navigation}) {
                 <View style={styles.line}/>
 
 
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button} onPress={logout}>
                     <Text style={styles.out}> Выйти </Text>
                 </TouchableOpacity>
 

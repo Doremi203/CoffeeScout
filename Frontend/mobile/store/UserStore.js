@@ -56,6 +56,14 @@ export default class UserStore {
         }
     }
 
+    async logOut() {
+        try {
+            await SecureStorage.deleteItemAsync('accessToken');
+        } catch (error) {
+            Alert.alert('Ошибка', 'Что-то пошло не так')
+        }
+    }
+
 
     async getName() {
         try {
