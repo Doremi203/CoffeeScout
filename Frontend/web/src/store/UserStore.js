@@ -15,8 +15,11 @@ export default class UserStore {
 
             let accessTokenName = "accessToken";
             let accessToken = response.data[accessTokenName];
-
             localStorage.setItem('accessToken', accessToken)
+
+            let refreshTokenName = "refreshToken";
+            let refreshToken = response.data[refreshTokenName];
+            localStorage.setItem('refreshToken', refreshToken)
 
             navigate('/main')
 
