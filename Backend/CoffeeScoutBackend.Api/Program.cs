@@ -1,7 +1,10 @@
+using CoffeeScoutBackend.Api;
 using CoffeeScoutBackend.Api.Config;
 using CoffeeScoutBackend.Api.Config.Swager;
 using CoffeeScoutBackend.Api.DbSeeders;
 using CoffeeScoutBackend.Api.Identity;
+using CoffeeScoutBackend.Api.Identity.Services;
+using CoffeeScoutBackend.Api.Middlewares;
 using CoffeeScoutBackend.Api.Requests.Mappers;
 using CoffeeScoutBackend.Api.Responses.Mappers;
 using CoffeeScoutBackend.Bll;
@@ -9,6 +12,9 @@ using CoffeeScoutBackend.Dal;
 using CoffeeScoutBackend.Dal.Config;
 using CoffeeScoutBackend.Dal.Entities;
 using FluentValidation;
+using MailerSendNetCore.Common.Extensions;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
@@ -20,7 +26,10 @@ builder.Services
     .Configure<AdminSettings>(
         builder.Configuration.GetSection(nameof(AdminSettings)))
     .Configure<DatabaseSettings>(
-        builder.Configuration.GetSection(nameof(DatabaseSettings)));
+        builder.Configuration.GetSection(nameof(DatabaseSettings)))
+    .Configure<MailerSendSettings>(
+        builder.Configuration.GetSection(nameof(MailerSendSettings)));
+
 ResponseMapperConfiguration.Configure();
 RequestMapperConfiguration.Configure();
 
@@ -54,6 +63,11 @@ builder.Services
     .AddBllServices()
     .AddDalServices(databaseSettings);
 
+builder.Services.AddMailerSendEmailClient(
+    builder.Configuration.GetSection(nameof(MailerSendSettings)));
+
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddFluentValidationAutoValidation();
 
@@ -76,7 +90,7 @@ if (app.Environment.IsDevelopment())
 //app.UseHttpsRedirection();
 
 app
-    .MapGroup("api/v1/accounts")
+    .MapGroup(RoutesV1.Accounts)
     .WithTags("Accounts")
     .MapIdentityApi<AppUser>();
 

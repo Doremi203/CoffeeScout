@@ -5,33 +5,33 @@ using CoffeeScoutBackend.Domain.Exceptions;
 using CoffeeScoutBackend.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 
-namespace CoffeeScoutBackend.Bll.Services;
+namespace CoffeeScoutBackend.Api.Identity.Services;
 
 public class RoleRegistrationService(
-    UserManager<AppUser> userManager
+    UserManager<AppUser> userManager,
+    IEmailConfirmationService emailConfirmationService
 ) : IRoleRegistrationService
 {
     public async Task<AppUser> RegisterUser(AppUser user, string password, Roles role)
     {
         var errors = new Dictionary<string, string[]>();
         using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+        
         var result = await userManager.CreateAsync(user, password);
-
-        if (result.Succeeded)
-        {
-            var roleResult = await userManager.AddToRoleAsync(user, role.ToString());
-            if (roleResult.Succeeded)
-            {
-                scope.Complete();
-                return user;
-            }
-
+        if (!result.Succeeded) 
+            AddRegistrationErrors(result, errors);
+        
+        var roleResult = await userManager.AddToRoleAsync(user, role.ToString());
+        if (!roleResult.Succeeded) 
             AddRegistrationErrors(roleResult, errors);
-        }
 
-        AddRegistrationErrors(result, errors);
-
-        throw new RegistrationException("Registration failed", errors);
+        await emailConfirmationService.SendRegistrationConfirmationEmail(user);
+        
+        if (errors.Count != 0)
+            throw new RegistrationException("Registration failed", errors);
+        
+        scope.Complete();
+        return user;
     }
 
     private static void AddRegistrationErrors(IdentityResult result, Dictionary<string, string[]> errors)

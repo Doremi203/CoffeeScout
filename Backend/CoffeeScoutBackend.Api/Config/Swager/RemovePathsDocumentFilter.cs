@@ -7,7 +7,6 @@ public class RemovePathsDocumentFilter : IDocumentFilter
 {
     public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
     {
-        // List of paths to remove
         var pathsToRemove = new List<string>
         {
             "/api/v1/accounts/manage/2fa",
