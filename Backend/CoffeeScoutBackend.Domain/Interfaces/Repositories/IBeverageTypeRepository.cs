@@ -5,10 +5,10 @@ namespace CoffeeScoutBackend.Domain.Interfaces.Repositories;
 public interface IBeverageTypeRepository
 {
     Task<BeverageType?> GetBeverageTypeByName(string name);
-    Task<BeverageType?> GetBeverageTypeById(long id);
-    Task<BeverageType> AddBeverageType(BeverageType beverageType);
+    Task<BeverageType?> GetById(long id);
+    Task<BeverageType> Add(BeverageType beverageType);
     
-    Task UpdateBeverageType(BeverageType beverageType);
-    Task DeleteBeverageType(long id);
-    Task<IReadOnlyCollection<BeverageType>> GetBeverageTypes(int pageSize, int pageNumber);
+    Task Update(BeverageType beverageType);
+    Task Delete(long id);
+    Task<IReadOnlyCollection<BeverageType>> GetPage(int pageSize, int pageNumber);
 }

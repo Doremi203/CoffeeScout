@@ -114,6 +114,11 @@ namespace CoffeeScoutBackend.Dal.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text")
@@ -238,11 +243,6 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     b.Property<long>("CafeId")
                         .HasColumnType("bigint")
                         .HasColumnName("cafe_id");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("description");
 
                     b.Property<string>("Name")
                         .IsRequired()

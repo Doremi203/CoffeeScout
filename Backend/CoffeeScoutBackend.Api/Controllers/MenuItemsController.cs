@@ -54,18 +54,15 @@ public class MenuItemsController(
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> AddMenuItem(AddMenuItemRequest request)
     {
-        var newMenuItem = new MenuItem
-        {
-            Name = request.Name,
-            Description = request.Description,
-            Price = request.Price,
-            SizeInMl = request.SizeInMl,
-            BeverageType = new BeverageType
+        var menuItem = await menuItemService.Add(
+            new AddMenuItemModel
             {
-                Name = request.BeverageTypeName
-            }
-        };
-        var menuItem = await menuItemService.Add(User.GetId(), newMenuItem);
+                CafeAdminId = User.GetId(),
+                Name = request.Name,
+                Price = request.Price,
+                SizeInMl = request.SizeInMl,
+                BeverageTypeId = request.BeverageTypeId
+            });
 
         return Created($"{RoutesV1.MenuItems}/{menuItem.Id}", menuItem.Adapt<MenuItemResponse>());
     }
@@ -77,20 +74,15 @@ public class MenuItemsController(
     {
         if (!await IsMenuItemInCafe(id))
             return Forbid();
-
-        var menuItem = new MenuItem
+        
+        await menuItemService.Update(new UpdateMenuItemModel
         {
             Id = id,
             Name = request.Name,
-            Description = request.Description,
             Price = request.Price,
             SizeInMl = request.SizeInMl,
-            BeverageType = new BeverageType
-            {
-                Name = request.BeverageTypeName
-            }
-        };
-        await menuItemService.Update(id, menuItem);
+            BeverageTypeId = request.BeverageTypeId
+        });
 
         return NoContent();
     }

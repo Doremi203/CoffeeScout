@@ -154,9 +154,13 @@ public class TestDbSeeder(
 
         if (!dbContext.MenuItems.Any())
         {
-            var coffeeCrew = await dbContext.Cafes.FirstAsync(c => c.Name == "Coffee Crew");
-            var starsCoffee = await dbContext.Cafes.FirstAsync(c => c.Name == "Stars Coffee");
-            var cappuccino = await dbContext.BeverageTypes.FirstAsync(b => b.Name == "Cappuccino");
+            var coffeeCrew = await dbContext.Cafes
+                .FirstAsync(c => c.Name == "Coffee Crew");
+            var starsCoffee = await dbContext.Cafes
+                .FirstAsync(c => c.Name == "Stars Coffee");
+            var cappuccino = await dbContext.BeverageTypes
+                .FirstAsync(b => b.Name == "Капучино");
+            
             var menuItems = new List<MenuItemEntity>
             {
                 new()

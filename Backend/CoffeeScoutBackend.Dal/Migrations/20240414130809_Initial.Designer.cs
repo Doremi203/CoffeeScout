@@ -14,7 +14,7 @@ using NpgsqlTypes;
 namespace CoffeeScoutBackend.Dal.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240413220821_Initial")]
+    [Migration("20240414130809_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -116,6 +116,11 @@ namespace CoffeeScoutBackend.Dal.Migrations
                         .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("description");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -241,11 +246,6 @@ namespace CoffeeScoutBackend.Dal.Migrations
                     b.Property<long>("CafeId")
                         .HasColumnType("bigint")
                         .HasColumnName("cafe_id");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("description");
 
                     b.Property<string>("Name")
                         .IsRequired()
