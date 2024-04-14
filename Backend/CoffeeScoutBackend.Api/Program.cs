@@ -19,7 +19,9 @@ builder.Services
     .Configure<AdminSettings>(
         builder.Configuration.GetSection(nameof(AdminSettings)))
     .Configure<DatabaseSettings>(
-        builder.Configuration.GetSection(nameof(DatabaseSettings)));
+        builder.Configuration.GetSection(nameof(DatabaseSettings)))
+    .Configure<MailerSendSettings>(
+        builder.Configuration.GetSection(nameof(MailerSendSettings)));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
