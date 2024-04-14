@@ -1,6 +1,7 @@
 using CoffeeScoutBackend.Api.Extensions;
 using CoffeeScoutBackend.Api.Requests.V1.Cafes;
 using CoffeeScoutBackend.Api.Requests.V1.Customers;
+using CoffeeScoutBackend.Api.Requests.V1.MenuItems;
 using CoffeeScoutBackend.Api.Responses;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
@@ -15,7 +16,8 @@ namespace CoffeeScoutBackend.Api.Controllers;
 [Authorize(Roles = nameof(Roles.Customer))]
 public class CustomersController(
     ICustomerService customerService,
-    IOrderService orderService
+    IOrderService orderService,
+    IReviewService reviewService
 ) : ControllerBase
 {
     [HttpGet("info")]
@@ -110,5 +112,40 @@ public class CustomersController(
         await orderService.CustomerCancelOrder(User.GetId(), id);
 
         return NoContent();
+    }
+    
+    [HttpPatch("reviews/{reviewId:long}")]
+    [Authorize(Roles = nameof(Roles.Customer))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> UpdateReview(
+        [FromRoute] long reviewId,
+        UpdateReviewRequest request)
+    {
+        if (!await IsReviewOfCustomer(reviewId))
+            return Forbid();
+
+        await reviewService.UpdateReview(reviewId, request.Adapt<Review>());
+
+        return NoContent();
+    }
+    
+    [HttpDelete("reviews/{reviewId:long}")]
+    [Authorize(Roles = nameof(Roles.Customer))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> DeleteReview([FromRoute] long reviewId)
+    {
+        if (!await IsReviewOfCustomer(reviewId))
+            return Forbid();
+
+        await reviewService.Delete(reviewId);
+
+        return NoContent();
+    }
+    
+    private async Task<bool> IsReviewOfCustomer(long reviewId)
+    {
+        var review = await reviewService.GetById(reviewId);
+
+        return review.Customer.Id == User.GetId();
     }
 }
