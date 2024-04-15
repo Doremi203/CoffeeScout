@@ -15,8 +15,6 @@ const Profile = () => {
         navigate('/main')
     }
 
-
-    const [info, setInfo] = useState([])
     const [address, setAddress] = useState('');
     const [latitude, setLatitude] = useState('');
     const [longitude, setLongitude] = useState('');
@@ -25,7 +23,6 @@ const Profile = () => {
     useEffect(() => {
         const fetchInfo = async () => {
             const info = await cafe.getInfo();
-            setInfo(info)
             setAddress(info.address)
             setLatitude(info.location.latitude)
             setLongitude(info.location.longitude)
@@ -33,15 +30,15 @@ const Profile = () => {
             setName(info.name)
         }
 
-        fetchInfo();
+        fetchInfo().then();
     }, []);
 
-    console.log(info)
 
     const [editableAddress, setEditableAddress] = useState(false);
 
     const saveAddress = async () => {
         setEditableAddress(false);
+        await cafe.changeInfo(name, address, latitude, longitude, hours)
     };
 
     const changeAddress = () => {
@@ -52,9 +49,10 @@ const Profile = () => {
 
     const saveName = async () => {
         setEditableName(false);
+        await cafe.changeInfo(name, address, latitude, longitude, hours)
     };
 
-    const changeName = () => {
+    const changeName = async () => {
         setEditableName(true)
     }
 
@@ -93,13 +91,13 @@ const Profile = () => {
                     <input
                         className="boxCoord"
                         value={latitude}
-                        onChange={(e) => setAddress(e.target.value)}
+                        onChange={(e) => setLatitude(e.target.value)}
                         disabled={!editableAddress}
                     />
                     <input
                         className="boxCoord"
                         value={longitude}
-                        onChange={(e) => setAddress(e.target.value)}
+                        onChange={(e) => setLongitude(e.target.value)}
                         disabled={!editableAddress}
                     />
 
@@ -119,7 +117,8 @@ const Profile = () => {
                 </div>
 
                 {Array.isArray(hours) && hours.map((day) => (
-                    <Time day={day.dayOfWeek} openingTime={day.openingTime} closingTime={day.closingTime}/>
+                    <Time day={day.dayOfWeek} openingTime={day.openingTime} closingTime={day.closingTime}
+                    name={name} address={address} latitude={latitude} longitude={longitude} id={day.id} hours={hours}/>
                 ))}
 
             </div>

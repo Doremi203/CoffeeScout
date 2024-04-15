@@ -61,11 +61,12 @@ export default class CafeStore {
         }
     }
 
-    async changeInfo() {
+    async changeInfo(name, address, latitude, longitude, workingHours) {
         try {
-
+            const response = await CafeService.changeInfo(name, address, latitude, longitude, workingHours)
+            console.log(response.status)
         } catch (error) {
-
+            toast.error("Что-то пошло не так")
         }
 
     }

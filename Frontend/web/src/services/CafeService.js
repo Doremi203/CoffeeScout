@@ -28,8 +28,14 @@ export default class CafeService {
         return $api.get(`v1/cafes/info`)
     }
 
-    static async changeInfo() {
-        return $api.patch(`v1/cafes`)
+    static async changeInfo(name, address, latitude, longitude, workingHours) {
+        return $api.patch(`v1/cafes`, {
+            name: name,
+            address: address,
+            latitude : latitude,
+            longitude : longitude,
+            workingHours : workingHours
+        })
     }
 
 }
