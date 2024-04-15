@@ -2,21 +2,21 @@ namespace CoffeeScoutBackend.Domain.Exceptions;
 
 public class WorkingHoursNotFoundException : NotFoundException
 {
-    public long? Id { get; init; }
+    public DayOfWeek? DayOfWeek { get; init; }
 
-    public WorkingHoursNotFoundException(long? id)
+    public WorkingHoursNotFoundException(DayOfWeek? dayOfWeek)
     {
-        Id = id;
+        DayOfWeek = dayOfWeek;
     }
 
-    public WorkingHoursNotFoundException(string? message, long? id)
-        : this(message, id, null)
+    public WorkingHoursNotFoundException(string? message, DayOfWeek? dayOfWeek)
+        : this(message, dayOfWeek, null)
     {
     }
 
-    public WorkingHoursNotFoundException(string? message, long? id, Exception? innerException) : base(message,
+    public WorkingHoursNotFoundException(string? message, DayOfWeek? dayOfWeek, Exception? innerException) : base(message,
         innerException)
     {
-        Id = id;
+        DayOfWeek = dayOfWeek;
     }
 }

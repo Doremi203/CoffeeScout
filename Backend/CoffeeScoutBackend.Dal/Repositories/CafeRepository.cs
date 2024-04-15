@@ -77,7 +77,7 @@ public class CafeRepository(
         foreach (var workingHours in cafeData.WorkingHours)
         {
             var existingWorkingHours = cafeEntity.WorkingHours
-                .First(wh => wh.Id == workingHours.Id);
+                .First(wh => wh.DayOfWeek == workingHours.DayOfWeek);
 
             existingWorkingHours.OpeningTime = workingHours.OpeningTime;
             existingWorkingHours.ClosingTime = workingHours.ClosingTime;
