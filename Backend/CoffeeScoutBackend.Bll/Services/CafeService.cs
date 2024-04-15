@@ -74,12 +74,12 @@ public class CafeService(
         IReadOnlyCollection<WorkingHours> cafeWorkingHours
     )
     {
-        foreach (var workingHour in workingHours)
+        foreach (var workingHour in cafeWorkingHours)
         {
-            if (cafeWorkingHours.All(wh => wh.DayOfWeek != workingHour.DayOfWeek))
+            if (workingHours.All(wh => wh.Id != workingHour.Id))
                 throw new WorkingHoursNotFoundException(
-                    $"Working hours not found for {workingHour.DayOfWeek}",
-                    workingHour.DayOfWeek);
+                    "Working hours not found",
+                    workingHour.Id);
         }
     }
 
