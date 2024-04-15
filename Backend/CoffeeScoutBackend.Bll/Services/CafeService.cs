@@ -71,12 +71,12 @@ public class CafeService(
 
     private void AssertWorkingHoursExist(
         IReadOnlyCollection<WorkingHours> workingHours,
-        IReadOnlyCollection<WorkingHours> cafeWorkingHours
+        IReadOnlyCollection<WorkingHours> existingCafeWorkingHours
     )
     {
         foreach (var workingHour in workingHours)
         {
-            if (cafeWorkingHours.All(wh => wh.Id != workingHour.Id))
+            if (existingCafeWorkingHours.All(wh => wh.DayOfWeek != workingHour.DayOfWeek))
                 throw new WorkingHoursNotFoundException(
                     $"Working hours not found for {workingHour.DayOfWeek}",
                     workingHour.DayOfWeek);
