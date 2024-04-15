@@ -13,6 +13,7 @@ public class CafeResponse
 
     public record WorkingHoursResponse
     {
+        public required long Id { get; set; }
         public required DayOfWeek DayOfWeek { get; set; }
         public required TimeResponse OpeningTime { get; set; }
         public required TimeResponse ClosingTime { get; set; }
