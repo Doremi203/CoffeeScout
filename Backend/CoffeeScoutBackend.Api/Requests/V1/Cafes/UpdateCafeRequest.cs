@@ -7,5 +7,5 @@ public record UpdateCafeRequest(
     double Latitude,
     double Longitude,
     string Address,
-    UpdateWorkingHoursRequest[] WorkingHours
+    WorkingHoursRequest[] WorkingHours
 );
