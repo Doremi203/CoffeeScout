@@ -43,31 +43,50 @@ public class CafeService(
     public async Task<Cafe> AddCafe(Cafe cafe)
     {
         var coffeeChain = await coffeeChainService.GetById(cafe.CoffeeChain.Id);
-        
+
         var newCafe = cafe with
         {
             CoffeeChain = coffeeChain
         };
-        
+
         return await cafeRepository.Add(newCafe);
     }
 
     public async Task UpdateCafe(string cafeAdminId, Cafe cafe)
     {
         var existingCafe = await GetByAdminId(cafeAdminId);
+        var workingHours = existingCafe.WorkingHours;
+        AssertWorkingHoursExist(cafe.WorkingHours, workingHours);
+
         var modifiedCafe = existingCafe with
         {
             Name = cafe.Name,
-            Location = cafe.Location
+            Location = cafe.Location,
+            Address = cafe.Address,
+            WorkingHours = cafe.WorkingHours
         };
 
         await cafeRepository.Update(modifiedCafe);
     }
-    
+
+    private void AssertWorkingHoursExist(
+        IReadOnlyCollection<WorkingHours> workingHours,
+        IReadOnlyCollection<WorkingHours> cafeWorkingHours
+    )
+    {
+        foreach (var workingHour in cafeWorkingHours)
+        {
+            if (workingHours.All(wh => wh.Id != workingHour.Id))
+                throw new WorkingHoursNotFoundException(
+                    "Working hours not found",
+                    workingHour.Id);
+        }
+    }
+
     public async Task DeleteCafe(long id)
     {
         var cafe = await GetById(id);
-        
+
         await cafeRepository.Delete(cafe.Id);
     }
 }
