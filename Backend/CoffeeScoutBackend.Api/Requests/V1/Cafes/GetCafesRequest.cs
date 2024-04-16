@@ -1,7 +1,8 @@
+using CoffeeScoutBackend.Domain.Models;
+
 namespace CoffeeScoutBackend.Api.Requests.V1.Cafes;
 
 public record GetCafesRequest(
-    double Latitude,
-    double Longitude,
+    Location Location,
     double RadiusInMeters
 );

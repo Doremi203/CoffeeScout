@@ -26,11 +26,7 @@ public class CafesController(
     {
         var cafes =
             await cafeService.GetCafesInArea(
-                new Location
-                {
-                    Longitude = request.Longitude,
-                    Latitude = request.Latitude
-                },
+                request.Location,
                 request.RadiusInMeters);
 
         return Ok(cafes.Adapt<GetCafeResponse[]>());
@@ -54,11 +50,7 @@ public class CafesController(
         var cafe = new Cafe
         {
             Name = request.Name,
-            Location = new Location
-            {
-                Latitude = request.Latitude,
-                Longitude = request.Longitude
-            },
+            Location = request.Location,
             Address = request.Address,
             CoffeeChain = new CoffeeChain
             {
@@ -90,11 +82,7 @@ public class CafesController(
         var cafe = new Cafe
         {
             Name = request.Name,
-            Location = new Location
-            {
-                Latitude = request.Latitude,
-                Longitude = request.Longitude
-            },
+            Location = request.Location,
             Address = request.Address,
             WorkingHours = request.WorkingHours.Adapt<IReadOnlyCollection<WorkingHours>>()
         };
