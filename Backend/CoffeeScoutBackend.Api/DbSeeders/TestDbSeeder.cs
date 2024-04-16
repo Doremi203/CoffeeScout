@@ -102,7 +102,7 @@ public class TestDbSeeder(
                         55.698964, 37.499202),
                     Address = "ул. Ленинградская, 10",
                     CoffeeChain = new CoffeeChainEntity { Name = "Coffee Crew" },
-                    WorkingHours = new List<WorkingHoursEntity>()
+                    WorkingHours = new List<WorkingHoursEntity>
                     {
                         new()
                         {
@@ -115,7 +115,7 @@ public class TestDbSeeder(
                             DayOfWeek = DayOfWeek.Tuesday,
                             OpeningTime = new TimeOnly(8, 0),
                             ClosingTime = new TimeOnly(20, 0)
-                        },
+                        }
                     }
                 },
                 new()
@@ -125,7 +125,7 @@ public class TestDbSeeder(
                         55.697503, 37.500088),
                     Address = "ул. Ленинградская, 12",
                     CoffeeChain = new CoffeeChainEntity { Name = "Stars Coffee" },
-                    WorkingHours = new List<WorkingHoursEntity>()
+                    WorkingHours = new List<WorkingHoursEntity>
                     {
                         new()
                         {
@@ -138,7 +138,7 @@ public class TestDbSeeder(
                             DayOfWeek = DayOfWeek.Tuesday,
                             OpeningTime = new TimeOnly(8, 0),
                             ClosingTime = new TimeOnly(20, 0)
-                        },
+                        }
                     }
                 }
             };
@@ -160,7 +160,7 @@ public class TestDbSeeder(
                 .FirstAsync(c => c.Name == "Stars Coffee");
             var cappuccino = await dbContext.BeverageTypes
                 .FirstAsync(b => b.Name == "Капучино");
-            
+
             var menuItems = new List<MenuItemEntity>
             {
                 new()

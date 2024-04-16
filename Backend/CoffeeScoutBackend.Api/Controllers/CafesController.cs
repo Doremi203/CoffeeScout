@@ -1,7 +1,6 @@
 using CoffeeScoutBackend.Api.Extensions;
 using CoffeeScoutBackend.Api.Requests.V1.Cafes;
 using CoffeeScoutBackend.Api.Requests.V1.Orders;
-using CoffeeScoutBackend.Api.Responses;
 using CoffeeScoutBackend.Api.Responses.V1.Cafes;
 using CoffeeScoutBackend.Api.Responses.V1.Orders;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
@@ -22,7 +21,7 @@ public class CafesController(
 {
     [HttpGet]
     [Authorize(Roles = nameof(Roles.Customer))]
-    [ProducesResponseType<List<GetCafeResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<GetCafeResponse[]>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCafes([FromQuery] GetCafesRequest request)
     {
         var cafes =
@@ -34,9 +33,9 @@ public class CafesController(
                 },
                 request.RadiusInMeters);
 
-        return Ok(cafes.Adapt<IReadOnlyCollection<GetCafeResponse>>());
+        return Ok(cafes.Adapt<GetCafeResponse[]>());
     }
-    
+
     [HttpGet("info")]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
     [ProducesResponseType<GetCafeResponse>(StatusCodes.Status200OK)]
@@ -72,7 +71,7 @@ public class CafesController(
 
         return Created($"{RoutesV1.Cafes}/{newCafe.Id}", newCafe.Adapt<AddCafeResponse>());
     }
-    
+
     [HttpGet("{id:long}")]
     [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType<GetCafeResponse>(StatusCodes.Status200OK)]
@@ -136,7 +135,7 @@ public class CafesController(
 
     [HttpGet("orders")]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
-    [ProducesResponseType<IReadOnlyCollection<GetOrderResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<GetOrderResponse[]>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCafeOrders(
         [FromQuery] GetOrdersRequest request)
     {
@@ -150,7 +149,7 @@ public class CafesController(
                     PageNumber = request.PageNumber
                 });
 
-        return Ok(orders.Adapt<IReadOnlyCollection<GetOrderResponse>>());
+        return Ok(orders.Adapt<GetOrderResponse[]>());
     }
 
     [HttpPatch("orders/{id:long}/complete")]
@@ -172,24 +171,24 @@ public class CafesController(
 
         return NoContent();
     }
-    
+
     [HttpGet("{id:long}/menuItems")]
     [Authorize(Roles = nameof(Roles.Customer))]
-    [ProducesResponseType<IReadOnlyCollection<GetCafeMenuItemResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<GetCafeMenuItemResponse[]>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCafeMenuItems(long id)
     {
         var menuItems = await menuItemService.GetByCafeId(id);
 
-        return Ok(menuItems.Adapt<IReadOnlyCollection<GetCafeMenuItemResponse>>());
+        return Ok(menuItems.Adapt<GetCafeMenuItemResponse[]>());
     }
 
     [HttpGet("menuItems")]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
-    [ProducesResponseType<IReadOnlyCollection<GetCafeMenuItemResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<GetCafeMenuItemResponse[]>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCafeMenuItemsForCafeAdmin()
     {
         var menuItems = await menuItemService.GetByCafeAdmin(User.GetId());
 
-        return Ok(menuItems.Adapt<IReadOnlyCollection<GetCafeMenuItemResponse>>());
+        return Ok(menuItems.Adapt<GetCafeMenuItemResponse[]>());
     }
 }

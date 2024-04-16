@@ -16,14 +16,14 @@ public class EmailSender(
         var response = await mailerSendEmailClient.SendEmailAsync(new MailerSendEmailParameters
         {
             From = new MailerSendEmailRecipient(mailerSendSettings.Value.SenderEmail, "CoffeeScout"),
-            To = new List<MailerSendEmailRecipient>()
+            To = new List<MailerSendEmailRecipient>
             {
                 new(email, string.Empty)
             },
             Cc = ArraySegment<MailerSendEmailRecipient>.Empty,
             Bcc = ArraySegment<MailerSendEmailRecipient>.Empty,
             Subject = subject,
-            Html = htmlMessage,
+            Html = htmlMessage
         });
 
         if (response.Errors is not null && response.Errors.Count != 0)

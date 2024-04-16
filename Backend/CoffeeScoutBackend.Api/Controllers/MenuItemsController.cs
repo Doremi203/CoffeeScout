@@ -1,6 +1,5 @@
 using CoffeeScoutBackend.Api.Extensions;
 using CoffeeScoutBackend.Api.Requests.V1.MenuItems;
-using CoffeeScoutBackend.Api.Responses;
 using CoffeeScoutBackend.Api.Responses.V1.MenuItems;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
@@ -20,7 +19,7 @@ public class MenuItemsController(
 {
     [HttpGet]
     [Authorize(Roles = nameof(Roles.Customer))]
-    [ProducesResponseType<List<GetMenuItemResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<GetMenuItemResponse[]>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetMenuItemsByBeverageTypeInArea(
         [FromQuery] GetMenuItemsByBeverageTypeInAreaRequest request
     )
@@ -34,12 +33,12 @@ public class MenuItemsController(
             request.RadiusInMeters,
             request.BeverageTypeId);
 
-        return Ok(menuItems.Adapt<IEnumerable<GetMenuItemResponse>>());
+        return Ok(menuItems.Adapt<GetMenuItemResponse[]>());
     }
 
     [HttpGet("search")]
     [Authorize(Roles = nameof(Roles.Customer))]
-    [ProducesResponseType<IReadOnlyCollection<GetMenuItemResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<GetMenuItemResponse[]>(StatusCodes.Status200OK)]
     public async Task<IActionResult> SearchMenuItems(
         string name,
         int limit
@@ -47,7 +46,7 @@ public class MenuItemsController(
     {
         var menuItems = await menuItemService.Search(name, limit);
 
-        return Ok(menuItems.Adapt<IReadOnlyCollection<GetMenuItemResponse>>());
+        return Ok(menuItems.Adapt<GetMenuItemResponse[]>());
     }
 
     [HttpPost]
@@ -75,7 +74,7 @@ public class MenuItemsController(
     {
         if (!await IsMenuItemInCafe(id))
             return Forbid();
-        
+
         await menuItemService.Update(new UpdateMenuItemModel
         {
             Id = id,
@@ -119,12 +118,12 @@ public class MenuItemsController(
 
     [HttpGet("{menuItemId:long}/reviews")]
     [Authorize(Roles = $"{nameof(Roles.Customer)},{nameof(Roles.CafeAdmin)}")]
-    [ProducesResponseType<IReadOnlyCollection<GetReviewResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<GetReviewResponse[]>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetReviews(long menuItemId)
     {
         var reviews = await reviewService.GetByMenuItemId(menuItemId);
 
-        return Ok(reviews.Adapt<IReadOnlyCollection<GetReviewResponse>>());
+        return Ok(reviews.Adapt<GetReviewResponse[]>());
     }
 
     private async Task<bool> IsMenuItemInCafe(long menuItemId)

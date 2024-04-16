@@ -2,7 +2,6 @@ using CoffeeScoutBackend.Api.Extensions;
 using CoffeeScoutBackend.Api.Requests.V1.Cafes;
 using CoffeeScoutBackend.Api.Requests.V1.Customers;
 using CoffeeScoutBackend.Api.Requests.V1.MenuItems;
-using CoffeeScoutBackend.Api.Responses;
 using CoffeeScoutBackend.Api.Responses.V1.Beverages;
 using CoffeeScoutBackend.Api.Responses.V1.Customers;
 using CoffeeScoutBackend.Api.Responses.V1.MenuItems;
@@ -47,18 +46,18 @@ public class CustomersController(
     public async Task<IActionResult> AddFavoredMenuItem([FromQuery] long menuItemId)
     {
         await customerService.AddFavoredMenuItem(User.GetId(), menuItemId);
-        
+
         return Created($"{RoutesV1.Customers}/favored-menu-items/{menuItemId}", null);
     }
-    
+
     [HttpGet("favored-menu-items")]
-    [ProducesResponseType<IReadOnlyCollection<GetMenuItemResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<GetMenuItemResponse[]>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetFavoredMenuItems()
     {
         var favoredMenuItems =
             await customerService.GetFavoredMenuItems(User.GetId());
-        
-        return Ok(favoredMenuItems.Adapt<IReadOnlyCollection<GetMenuItemResponse>>());
+
+        return Ok(favoredMenuItems.Adapt<GetMenuItemResponse[]>());
     }
 
     [HttpDelete("favored-menu-items/{menuItemId:long}")]
@@ -66,26 +65,26 @@ public class CustomersController(
     public async Task<IActionResult> RemoveFavoredMenuItem(long menuItemId)
     {
         await customerService.RemoveFavoredMenuItem(User.GetId(), menuItemId);
-        
+
         return NoContent();
     }
 
     [HttpGet("favored-beverage-types")]
-    [ProducesResponseType<IReadOnlyCollection<GetBeverageTypeResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<GetBeverageTypeResponse[]>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetFavoredBeverageTypes()
     {
         var favoredBeverageTypes =
             await customerService.GetFavoredBeverageTypes(User.GetId());
-        
-        return Ok(favoredBeverageTypes.Adapt<GetBeverageTypeResponse>());
+
+        return Ok(favoredBeverageTypes.Adapt<GetBeverageTypeResponse[]>());
     }
-    
+
     [HttpGet("orders")]
-    [ProducesResponseType<IReadOnlyCollection<GetOrderResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<GetOrderResponse[]>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetOrders(
         [FromQuery] GetOrdersRequest request)
     {
-        var orders = 
+        var orders =
             await orderService.GetCustomerOrders(
                 User.GetId(),
                 new GetOrdersModel
@@ -95,9 +94,9 @@ public class CustomersController(
                     PageNumber = request.PageNumber
                 });
 
-        return Ok(orders.Adapt<IReadOnlyCollection<GetOrderResponse>>());
+        return Ok(orders.Adapt<GetOrderResponse[]>());
     }
-    
+
     [HttpPatch("orders/{id:long}/pay")]
     [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -107,7 +106,7 @@ public class CustomersController(
 
         return NoContent();
     }
-    
+
     [HttpPatch("orders/{id:long}/cancel")]
     [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -117,7 +116,7 @@ public class CustomersController(
 
         return NoContent();
     }
-    
+
     [HttpPatch("reviews/{reviewId:long}")]
     [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -132,7 +131,7 @@ public class CustomersController(
 
         return NoContent();
     }
-    
+
     [HttpDelete("reviews/{reviewId:long}")]
     [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -145,7 +144,7 @@ public class CustomersController(
 
         return NoContent();
     }
-    
+
     private async Task<bool> IsReviewOfCustomer(long reviewId)
     {
         var review = await reviewService.GetById(reviewId);

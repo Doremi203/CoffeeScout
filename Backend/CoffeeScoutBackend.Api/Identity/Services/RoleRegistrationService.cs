@@ -16,20 +16,20 @@ public class RoleRegistrationService(
     {
         var errors = new Dictionary<string, string[]>();
         using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-        
+
         var result = await userManager.CreateAsync(user, password);
-        if (!result.Succeeded) 
+        if (!result.Succeeded)
             AddRegistrationErrors(result, errors);
-        
+
         var roleResult = await userManager.AddToRoleAsync(user, role.ToString());
-        if (!roleResult.Succeeded) 
+        if (!roleResult.Succeeded)
             AddRegistrationErrors(roleResult, errors);
 
         await emailConfirmationService.SendRegistrationConfirmationEmail(user);
-        
+
         if (errors.Count != 0)
             throw new RegistrationException("Registration failed", errors);
-        
+
         scope.Complete();
         return user;
     }

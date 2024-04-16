@@ -17,22 +17,22 @@ public class EmailConfirmationService(
     {
         if (user.Email is null)
             throw new InvalidOperationException("User email is null");
-        
+
         var httpContext = httpContextAccessor.HttpContext;
         if (httpContext is null)
             throw new InvalidOperationException("Email cannot be sent outside of an HTTP request context");
-        
+
         var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
         var code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
-        
-        var values = new RouteValueDictionary()
+
+        var values = new RouteValueDictionary
         {
             ["userId"] = user.Id,
             ["code"] = code
         };
         const string confirmEndpoint = "MapIdentityApi-api/v1/accounts/confirmEmail";
-        
-        var callbackUrl = linkGenerator.GetUriByName(httpContext,confirmEndpoint, values);
+
+        var callbackUrl = linkGenerator.GetUriByName(httpContext, confirmEndpoint, values);
         await emailSender.SendConfirmationLinkAsync(user, user.Email, callbackUrl);
     }
 }
