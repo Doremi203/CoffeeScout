@@ -43,8 +43,7 @@ public class CafeRepository(
     {
         var area = locationProvider.CreateArea(location, radius);
 
-        var cafes = await dbContext.Cafes
-            .Include(c => c.MenuItems)
+        var cafes = await GetCafes()
             .Where(c => c.Location.Within(area))
             .ToListAsync();
 
