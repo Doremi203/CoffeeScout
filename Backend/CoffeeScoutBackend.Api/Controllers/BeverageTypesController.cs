@@ -32,7 +32,8 @@ public class BeverageTypesController(
     [ProducesResponseType<GetBeverageTypeResponse[]>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetBeverageTypes([FromQuery] GetBeverageTypesRequest request)
     {
-        var beverageTypes = await beverageTypeService.GetPage(request.PageSize, request.PageNumber);
+        var beverageTypes =
+            await beverageTypeService.GetPage(request.Pagination.PageSize, request.Pagination.PageNumber);
 
         return Ok(beverageTypes.Adapt<GetBeverageTypeResponse[]>());
     }
