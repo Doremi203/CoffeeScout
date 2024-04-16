@@ -1,3 +1,5 @@
+using CoffeeScoutBackend.Api.Responses.V1.Cafes;
+
 namespace CoffeeScoutBackend.Api.Responses;
 
 public record MenuItemResponse
@@ -7,5 +9,5 @@ public record MenuItemResponse
     public required decimal Price { get; init; }
     public required int SizeInMl { get; init; }
     public required BeverageTypeResponse BeverageType { get; init; }
-    public required CafeResponse Cafe { get; init; }
+    public required GetCafeResponse GetCafe { get; init; }
 }

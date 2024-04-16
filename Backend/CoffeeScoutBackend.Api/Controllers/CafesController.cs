@@ -2,6 +2,7 @@ using CoffeeScoutBackend.Api.Extensions;
 using CoffeeScoutBackend.Api.Requests.V1.Cafes;
 using CoffeeScoutBackend.Api.Requests.V1.Orders;
 using CoffeeScoutBackend.Api.Responses;
+using CoffeeScoutBackend.Api.Responses.V1.Cafes;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
 using Mapster;
@@ -20,7 +21,7 @@ public class CafesController(
 {
     [HttpGet]
     [Authorize(Roles = nameof(Roles.Customer))]
-    [ProducesResponseType<List<CafeResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<List<GetCafeResponse>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCafes([FromQuery] GetCafesRequest request)
     {
         var cafes =
@@ -32,22 +33,22 @@ public class CafesController(
                 },
                 request.RadiusInMeters);
 
-        return Ok(cafes.Adapt<IReadOnlyCollection<CafeResponse>>());
+        return Ok(cafes.Adapt<IReadOnlyCollection<GetCafeResponse>>());
     }
     
     [HttpGet("info")]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
-    [ProducesResponseType<CafeResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<GetCafeResponse>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCafeForCafeAdmin()
     {
         var cafe = await cafeService.GetByAdminId(User.GetId());
 
-        return Ok(cafe.Adapt<CafeResponse>());
+        return Ok(cafe.Adapt<GetCafeResponse>());
     }
 
     [HttpPost]
     [Authorize(Roles = nameof(Roles.SuperAdmin))]
-    [ProducesResponseType<CafeResponse>(StatusCodes.Status201Created)]
+    [ProducesResponseType<AddCafeResponse>(StatusCodes.Status201Created)]
     public async Task<IActionResult> AddCafe(AddCafeRequest request)
     {
         var cafe = new Cafe
@@ -68,17 +69,17 @@ public class CafesController(
 
         var newCafe = await cafeService.AddCafe(cafe);
 
-        return Created($"{RoutesV1.Cafes}/{newCafe.Id}", newCafe.Adapt<CafeResponse>());
+        return Created($"{RoutesV1.Cafes}/{newCafe.Id}", newCafe.Adapt<AddCafeResponse>());
     }
     
     [HttpGet("{id:long}")]
     [Authorize(Roles = nameof(Roles.Customer))]
-    [ProducesResponseType<CafeResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<GetCafeResponse>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCafe([FromRoute] long id)
     {
         var cafe = await cafeService.GetById(id);
 
-        return Ok(cafe.Adapt<CafeResponse>());
+        return Ok(cafe.Adapt<GetCafeResponse>());
     }
 
     [HttpPatch]

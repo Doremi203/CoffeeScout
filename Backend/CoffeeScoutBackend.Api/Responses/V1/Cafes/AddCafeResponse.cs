@@ -1,11 +1,11 @@
 using CoffeeScoutBackend.Domain.Models;
 
-namespace CoffeeScoutBackend.Api.Responses;
+namespace CoffeeScoutBackend.Api.Responses.V1.Cafes;
 
-public class CafeResponse
+public record AddCafeResponse
 {
     public required long Id { get; set; }
-    public required CoffeeChainResponse CoffeeChain { get; set; }
+    public required long CoffeeChainId { get; set; }
     public required string Name { get; set; }
     public required Location Location { get; set; }
     public required string Address { get; set; }
