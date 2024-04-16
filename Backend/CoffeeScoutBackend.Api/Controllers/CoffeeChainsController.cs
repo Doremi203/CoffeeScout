@@ -22,7 +22,9 @@ public class CoffeeChainsController(
     )
     {
         var coffeeChains =
-            await coffeeChainService.GetPage(request.PageSize, request.PageNumber);
+            await coffeeChainService.GetPage(
+                request.Pagination.PageSize,
+                request.Pagination.PageNumber);
 
         return Ok(coffeeChains.Adapt<GetCoffeeChainResponse[]>());
     }
