@@ -1,7 +1,7 @@
 using CoffeeScoutBackend.Api.Responses.V1.Beverages;
 using CoffeeScoutBackend.Api.Responses.V1.Cafes;
 
-namespace CoffeeScoutBackend.Api.Responses;
+namespace CoffeeScoutBackend.Api.Responses.V1.MenuItems;
 
 public record GetMenuItemResponse
 {

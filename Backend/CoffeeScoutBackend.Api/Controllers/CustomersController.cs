@@ -5,6 +5,7 @@ using CoffeeScoutBackend.Api.Requests.V1.MenuItems;
 using CoffeeScoutBackend.Api.Responses;
 using CoffeeScoutBackend.Api.Responses.V1.Beverages;
 using CoffeeScoutBackend.Api.Responses.V1.Customers;
+using CoffeeScoutBackend.Api.Responses.V1.MenuItems;
 using CoffeeScoutBackend.Api.Responses.V1.Orders;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;

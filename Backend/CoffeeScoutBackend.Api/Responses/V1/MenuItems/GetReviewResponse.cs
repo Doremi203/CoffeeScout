@@ -1,6 +1,6 @@
 using CoffeeScoutBackend.Api.Responses.V1.Customers;
 
-namespace CoffeeScoutBackend.Api.Responses;
+namespace CoffeeScoutBackend.Api.Responses.V1.MenuItems;
 
 public record GetReviewResponse
 {

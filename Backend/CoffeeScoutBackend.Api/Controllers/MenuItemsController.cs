@@ -1,6 +1,7 @@
 using CoffeeScoutBackend.Api.Extensions;
 using CoffeeScoutBackend.Api.Requests.V1.MenuItems;
 using CoffeeScoutBackend.Api.Responses;
+using CoffeeScoutBackend.Api.Responses.V1.MenuItems;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
 using Mapster;
@@ -51,7 +52,7 @@ public class MenuItemsController(
 
     [HttpPost]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType<AddMenuItemResponse>(StatusCodes.Status201Created)]
     public async Task<IActionResult> AddMenuItem(AddMenuItemRequest request)
     {
         var menuItem = await menuItemService.Add(
@@ -64,7 +65,7 @@ public class MenuItemsController(
                 BeverageTypeId = request.BeverageTypeId
             });
 
-        return Created($"{RoutesV1.MenuItems}/{menuItem.Id}", menuItem.Adapt<GetMenuItemResponse>());
+        return Created($"{RoutesV1.MenuItems}/{menuItem.Id}", menuItem.Adapt<AddMenuItemResponse>());
     }
 
     [HttpPatch("{id:long}")]
@@ -102,7 +103,7 @@ public class MenuItemsController(
 
     [HttpPost("{menuItemId:long}/reviews")]
     [Authorize(Roles = nameof(Roles.Customer))]
-    [ProducesResponseType<GetReviewResponse>(StatusCodes.Status201Created)]
+    [ProducesResponseType<AddReviewResponse>(StatusCodes.Status201Created)]
     public async Task<IActionResult> AddReview(long menuItemId, AddReviewRequest request)
     {
         var reviewToAdd = new Review
@@ -113,7 +114,7 @@ public class MenuItemsController(
 
         var review = await reviewService.Add(menuItemId, User.GetId(), reviewToAdd);
 
-        return Created($"{RoutesV1.MenuItems}/{menuItemId}/reviews/{review.Id}", review.Adapt<GetReviewResponse>());
+        return Created($"{RoutesV1.MenuItems}/{menuItemId}/reviews/{review.Id}", review.Adapt<AddReviewResponse>());
     }
 
     [HttpGet("{menuItemId:long}/reviews")]
