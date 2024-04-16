@@ -9,4 +9,5 @@ public static class RoutesV1
     public const string MenuItems = "api/v1/menu-items";
     public const string Orders = "api/v1/orders";
     public const string Customers = "api/v1/customers";
+    public const string CoffeeChains = "api/v1/coffee-chains";
 }
