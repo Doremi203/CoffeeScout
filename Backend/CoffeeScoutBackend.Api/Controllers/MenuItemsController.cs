@@ -25,11 +25,7 @@ public class MenuItemsController(
     )
     {
         var menuItems = await menuItemService.GetAllInAreaByBeverageType(
-            new Location
-            {
-                Latitude = request.Latitude,
-                Longitude = request.Longitude
-            },
+            request.Location,
             request.RadiusInMeters,
             request.BeverageTypeId);
 
