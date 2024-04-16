@@ -9,6 +9,11 @@ public class CoffeeChainService(
     ICoffeeChainRepository coffeeChainRepository
 ) : ICoffeeChainService
 {
+    public async Task<IReadOnlyCollection<CoffeeChain>> GetPage(int pageSize, int pageNumber)
+    {
+        return await coffeeChainRepository.GetPage(pageSize, pageNumber);
+    }
+
     public async Task<CoffeeChain> GetById(long id)
     {
         return await coffeeChainRepository.GetById(id)

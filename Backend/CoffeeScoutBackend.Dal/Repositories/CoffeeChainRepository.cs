@@ -10,6 +10,16 @@ public class CoffeeChainRepository(
     AppDbContext dbContext
 ) : ICoffeeChainRepository
 {
+    public async Task<IReadOnlyCollection<CoffeeChain>> GetPage(int pageSize, int pageNumber)
+    {
+        var coffeeChainEntities = await dbContext.CoffeeChains
+            .Skip(pageSize * (pageNumber - 1))
+            .Take(pageSize)
+            .ToListAsync();
+
+        return coffeeChainEntities.Adapt<IReadOnlyCollection<CoffeeChain>>();
+    }
+
     public async Task<CoffeeChain?> GetById(long id)
     {
         var coffeeChainEntity = await dbContext.CoffeeChains.FindAsync(id);
@@ -31,7 +41,9 @@ public class CoffeeChainRepository(
     {
         var coffeeChainEntity = await dbContext.CoffeeChains
             .FirstAsync(c => c.Id == id);
-
+        
+        coffeeChainEntity.Name = coffeeChain.Name;
+        
         dbContext.CoffeeChains.Update(coffeeChainEntity);
         await dbContext.SaveChangesAsync();
     }
