@@ -35,12 +35,10 @@ public class MenuItemsController(
     [HttpGet("search")]
     [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType<GetMenuItemResponse[]>(StatusCodes.Status200OK)]
-    public async Task<IActionResult> SearchMenuItems(
-        string name,
-        int limit
-    )
+    public async Task<IActionResult> SearchMenuItems(SearchMenuItemsRequest request)
     {
-        var menuItems = await menuItemService.Search(name, limit);
+        var menuItems = 
+            await menuItemService.Search(request.Name, request.Limit);
 
         return Ok(menuItems.Adapt<GetMenuItemResponse[]>());
     }
