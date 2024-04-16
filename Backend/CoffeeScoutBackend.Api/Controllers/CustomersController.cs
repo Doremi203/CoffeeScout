@@ -2,6 +2,7 @@ using CoffeeScoutBackend.Api.Extensions;
 using CoffeeScoutBackend.Api.Requests.V1.Cafes;
 using CoffeeScoutBackend.Api.Requests.V1.Customers;
 using CoffeeScoutBackend.Api.Requests.V1.MenuItems;
+using CoffeeScoutBackend.Api.Requests.V1.Orders;
 using CoffeeScoutBackend.Api.Responses.V1.Beverages;
 using CoffeeScoutBackend.Api.Responses.V1.Customers;
 using CoffeeScoutBackend.Api.Responses.V1.MenuItems;
@@ -90,8 +91,8 @@ public class CustomersController(
                 new GetOrdersModel
                 {
                     Status = request.Status,
-                    PageSize = request.PageSize,
-                    PageNumber = request.PageNumber
+                    PageSize = request.Pagination.PageSize,
+                    PageNumber = request.Pagination.PageNumber
                 });
 
         return Ok(orders.Adapt<GetOrderResponse[]>());

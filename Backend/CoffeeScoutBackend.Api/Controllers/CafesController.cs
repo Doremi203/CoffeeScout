@@ -133,8 +133,8 @@ public class CafesController(
                 new GetOrdersModel
                 {
                     Status = request.Status,
-                    PageSize = request.PageSize,
-                    PageNumber = request.PageNumber
+                    PageSize = request.Pagination.PageSize,
+                    PageNumber = request.Pagination.PageNumber
                 });
 
         return Ok(orders.Adapt<GetOrderResponse[]>());
