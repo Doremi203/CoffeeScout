@@ -1,7 +1,7 @@
 using CoffeeScoutBackend.Domain.Models;
 using FluentValidation;
 
-namespace CoffeeScoutBackend.Api.Validators;
+namespace CoffeeScoutBackend.Api.Validators.Cafes;
 
 public class LocationValidator : AbstractValidator<Location>
 {

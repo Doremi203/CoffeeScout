@@ -1,7 +1,7 @@
 using CoffeeScoutBackend.Api.Requests.V1.Accounts;
 using FluentValidation;
 
-namespace CoffeeScoutBackend.Api.Validators;
+namespace CoffeeScoutBackend.Api.Validators.Accounts;
 
 public class RegisterRequestValidator : AbstractValidator<RegisterCustomerRequest>
 {

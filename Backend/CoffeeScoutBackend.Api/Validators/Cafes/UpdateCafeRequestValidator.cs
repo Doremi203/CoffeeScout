@@ -2,14 +2,14 @@ using CoffeeScoutBackend.Api.Requests.V1.Cafes;
 using CoffeeScoutBackend.Domain.Models;
 using FluentValidation;
 
-namespace CoffeeScoutBackend.Api.Validators;
+namespace CoffeeScoutBackend.Api.Validators.Cafes;
 
-public class AddCafeRequestValidator : AbstractValidator<AddCafeRequest>
+public class UpdateCafeRequestValidator : AbstractValidator<UpdateCafeRequest>
 {
-    public AddCafeRequestValidator(
+    public UpdateCafeRequestValidator(
         IValidator<WorkingHoursRequest[]> workingHoursValidator,
         IValidator<Location> locationValidator
-        )
+    )
     {
         RuleFor(request => request.Name)
             .NotEmpty();
@@ -17,8 +17,6 @@ public class AddCafeRequestValidator : AbstractValidator<AddCafeRequest>
             .SetValidator(locationValidator);
         RuleFor(request => request.Address)
             .NotEmpty();
-        RuleFor(request => request.CoffeeChainId)
-            .GreaterThan(0);
         RuleFor(request => request.WorkingHours)
             .SetValidator(workingHoursValidator);
     }

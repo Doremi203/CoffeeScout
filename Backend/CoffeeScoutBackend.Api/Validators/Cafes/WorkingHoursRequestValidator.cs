@@ -2,7 +2,7 @@ using CoffeeScoutBackend.Api.Requests.V1.Cafes;
 using FluentValidation;
 using Mapster;
 
-namespace CoffeeScoutBackend.Api.Validators;
+namespace CoffeeScoutBackend.Api.Validators.Cafes;
 
 public class WorkingHoursRequestValidator : AbstractValidator<WorkingHoursRequest>
 {

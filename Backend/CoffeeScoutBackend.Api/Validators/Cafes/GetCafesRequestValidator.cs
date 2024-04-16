@@ -2,7 +2,7 @@ using CoffeeScoutBackend.Api.Requests.V1.Cafes;
 using CoffeeScoutBackend.Domain.Models;
 using FluentValidation;
 
-namespace CoffeeScoutBackend.Api.Validators;
+namespace CoffeeScoutBackend.Api.Validators.Cafes;
 
 public class GetCafesRequestValidator : AbstractValidator<GetCafesRequest>
 {

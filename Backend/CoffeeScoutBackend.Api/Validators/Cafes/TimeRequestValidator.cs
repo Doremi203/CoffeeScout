@@ -1,7 +1,7 @@
 using CoffeeScoutBackend.Api.Requests.V1.Cafes;
 using FluentValidation;
 
-namespace CoffeeScoutBackend.Api.Validators;
+namespace CoffeeScoutBackend.Api.Validators.Cafes;
 
 public class TimeRequestValidator : AbstractValidator<TimeRequest>
 {
