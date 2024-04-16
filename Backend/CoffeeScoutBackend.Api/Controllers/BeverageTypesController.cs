@@ -6,6 +6,7 @@ using CoffeeScoutBackend.Domain.Models;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using GetBeverageTypeResponse = CoffeeScoutBackend.Api.Responses.V1.Beverages.GetBeverageTypeResponse;
 
 namespace CoffeeScoutBackend.Api.Controllers;
 

@@ -3,6 +3,8 @@ using CoffeeScoutBackend.Api.Requests.V1.Cafes;
 using CoffeeScoutBackend.Api.Requests.V1.Customers;
 using CoffeeScoutBackend.Api.Requests.V1.MenuItems;
 using CoffeeScoutBackend.Api.Responses;
+using CoffeeScoutBackend.Api.Responses.V1.Beverages;
+using CoffeeScoutBackend.Api.Responses.V1.Customers;
 using CoffeeScoutBackend.Api.Responses.V1.Orders;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
@@ -22,12 +24,12 @@ public class CustomersController(
 ) : ControllerBase
 {
     [HttpGet("info")]
-    [ProducesResponseType<CustomerInfoResponse>(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetInfo()
+    [ProducesResponseType<GetCustomerInfoResponse>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetCustomerInfo()
     {
         var customer = await customerService.GetInfo(User.GetId());
 
-        return Ok(customer.Adapt<CustomerInfoResponse>());
+        return Ok(customer.Adapt<GetCustomerInfoResponse>());
     }
 
     [HttpPatch("info")]
@@ -49,13 +51,13 @@ public class CustomersController(
     }
     
     [HttpGet("favored-menu-items")]
-    [ProducesResponseType<IReadOnlyCollection<MenuItemResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<IReadOnlyCollection<GetMenuItemResponse>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetFavoredMenuItems()
     {
         var favoredMenuItems =
             await customerService.GetFavoredMenuItems(User.GetId());
         
-        return Ok(favoredMenuItems.Adapt<IReadOnlyCollection<MenuItemResponse>>());
+        return Ok(favoredMenuItems.Adapt<IReadOnlyCollection<GetMenuItemResponse>>());
     }
 
     [HttpDelete("favored-menu-items/{menuItemId:long}")]
@@ -68,13 +70,13 @@ public class CustomersController(
     }
 
     [HttpGet("favored-beverage-types")]
-    [ProducesResponseType<IReadOnlyCollection<BeverageType>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<IReadOnlyCollection<GetBeverageTypeResponse>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetFavoredBeverageTypes()
     {
         var favoredBeverageTypes =
             await customerService.GetFavoredBeverageTypes(User.GetId());
         
-        return Ok(favoredBeverageTypes);
+        return Ok(favoredBeverageTypes.Adapt<GetBeverageTypeResponse>());
     }
     
     [HttpGet("orders")]
