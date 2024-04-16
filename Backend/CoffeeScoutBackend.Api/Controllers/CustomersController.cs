@@ -3,6 +3,7 @@ using CoffeeScoutBackend.Api.Requests.V1.Cafes;
 using CoffeeScoutBackend.Api.Requests.V1.Customers;
 using CoffeeScoutBackend.Api.Requests.V1.MenuItems;
 using CoffeeScoutBackend.Api.Responses;
+using CoffeeScoutBackend.Api.Responses.V1.Orders;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
 using Mapster;
@@ -77,7 +78,7 @@ public class CustomersController(
     }
     
     [HttpGet("orders")]
-    [ProducesResponseType<IReadOnlyCollection<OrderResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<IReadOnlyCollection<GetOrderResponse>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetOrders(
         [FromQuery] GetOrdersRequest request)
     {
@@ -91,7 +92,7 @@ public class CustomersController(
                     PageNumber = request.PageNumber
                 });
 
-        return Ok(orders.Adapt<IReadOnlyCollection<OrderResponse>>());
+        return Ok(orders.Adapt<IReadOnlyCollection<GetOrderResponse>>());
     }
     
     [HttpPatch("orders/{id:long}/pay")]
