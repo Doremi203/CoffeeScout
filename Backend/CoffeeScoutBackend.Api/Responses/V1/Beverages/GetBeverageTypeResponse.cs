@@ -1,6 +1,6 @@
-namespace CoffeeScoutBackend.Api.Responses;
+namespace CoffeeScoutBackend.Api.Responses.V1.Beverages;
 
-public record BeverageTypeResponse
+public record GetBeverageTypeResponse
 {
     public required long Id { get; init; }
     public required string Name { get; init; }

@@ -1,6 +1,6 @@
 using CoffeeScoutBackend.Api.Extensions;
 using CoffeeScoutBackend.Api.Requests.V1.MenuItems;
-using CoffeeScoutBackend.Api.Responses;
+using CoffeeScoutBackend.Api.Responses.V1.MenuItems;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
 using Mapster;
@@ -19,7 +19,7 @@ public class MenuItemsController(
 {
     [HttpGet]
     [Authorize(Roles = nameof(Roles.Customer))]
-    [ProducesResponseType<List<MenuItemResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<GetMenuItemResponse[]>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetMenuItemsByBeverageTypeInArea(
         [FromQuery] GetMenuItemsByBeverageTypeInAreaRequest request
     )
@@ -33,12 +33,12 @@ public class MenuItemsController(
             request.RadiusInMeters,
             request.BeverageTypeId);
 
-        return Ok(menuItems.Adapt<IEnumerable<MenuItemResponse>>());
+        return Ok(menuItems.Adapt<GetMenuItemResponse[]>());
     }
 
     [HttpGet("search")]
     [Authorize(Roles = nameof(Roles.Customer))]
-    [ProducesResponseType<IReadOnlyCollection<MenuItemResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<GetMenuItemResponse[]>(StatusCodes.Status200OK)]
     public async Task<IActionResult> SearchMenuItems(
         string name,
         int limit
@@ -46,12 +46,12 @@ public class MenuItemsController(
     {
         var menuItems = await menuItemService.Search(name, limit);
 
-        return Ok(menuItems.Adapt<IReadOnlyCollection<MenuItemResponse>>());
+        return Ok(menuItems.Adapt<GetMenuItemResponse[]>());
     }
 
     [HttpPost]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType<AddMenuItemResponse>(StatusCodes.Status201Created)]
     public async Task<IActionResult> AddMenuItem(AddMenuItemRequest request)
     {
         var menuItem = await menuItemService.Add(
@@ -64,7 +64,7 @@ public class MenuItemsController(
                 BeverageTypeId = request.BeverageTypeId
             });
 
-        return Created($"{RoutesV1.MenuItems}/{menuItem.Id}", menuItem.Adapt<MenuItemResponse>());
+        return Created($"{RoutesV1.MenuItems}/{menuItem.Id}", menuItem.Adapt<AddMenuItemResponse>());
     }
 
     [HttpPatch("{id:long}")]
@@ -74,7 +74,7 @@ public class MenuItemsController(
     {
         if (!await IsMenuItemInCafe(id))
             return Forbid();
-        
+
         await menuItemService.Update(new UpdateMenuItemModel
         {
             Id = id,
@@ -102,7 +102,7 @@ public class MenuItemsController(
 
     [HttpPost("{menuItemId:long}/reviews")]
     [Authorize(Roles = nameof(Roles.Customer))]
-    [ProducesResponseType<ReviewResponse>(StatusCodes.Status201Created)]
+    [ProducesResponseType<AddReviewResponse>(StatusCodes.Status201Created)]
     public async Task<IActionResult> AddReview(long menuItemId, AddReviewRequest request)
     {
         var reviewToAdd = new Review
@@ -113,17 +113,17 @@ public class MenuItemsController(
 
         var review = await reviewService.Add(menuItemId, User.GetId(), reviewToAdd);
 
-        return Created($"{RoutesV1.MenuItems}/{menuItemId}/reviews/{review.Id}", review.Adapt<ReviewResponse>());
+        return Created($"{RoutesV1.MenuItems}/{menuItemId}/reviews/{review.Id}", review.Adapt<AddReviewResponse>());
     }
 
     [HttpGet("{menuItemId:long}/reviews")]
     [Authorize(Roles = $"{nameof(Roles.Customer)},{nameof(Roles.CafeAdmin)}")]
-    [ProducesResponseType<IReadOnlyCollection<ReviewResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<GetReviewResponse[]>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetReviews(long menuItemId)
     {
         var reviews = await reviewService.GetByMenuItemId(menuItemId);
 
-        return Ok(reviews.Adapt<IReadOnlyCollection<ReviewResponse>>());
+        return Ok(reviews.Adapt<GetReviewResponse[]>());
     }
 
     private async Task<bool> IsMenuItemInCafe(long menuItemId)
