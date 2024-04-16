@@ -12,5 +12,7 @@ public class RegisterCafeAdminRequestValidator : AbstractValidator<RegisterCafeA
             .EmailAddress();
         RuleFor(request => request.Password)
             .NotEmpty();
+        RuleFor(request => request.CafeId)
+            .GreaterThan(0);
     }
 }

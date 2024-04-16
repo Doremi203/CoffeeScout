@@ -8,7 +8,8 @@ public class RegisterCustomerRequestValidator : AbstractValidator<RegisterCustom
     public RegisterCustomerRequestValidator()
     {
         RuleFor(request => request.FirstName)
-            .NotEmpty();
+            .NotEmpty()
+            .MaximumLength(25);
         RuleFor(request => request.Email)
             .NotEmpty()
             .EmailAddress();
