@@ -31,13 +31,17 @@ export default class ProductService {
 
     static async leaveReview(menuItemId, content, rating) {
         return $api.post(`/v1/menu-items/${menuItemId}/reviews`, {
-            content : content,
-            rating : rating
+            content: content,
+            rating: rating
         })
     }
 
     static async search(name, limit) {
         return $api.get(`/v1/menu-items/search?name=${name}&limit=${limit}`)
+    }
+
+    static async getReviews(menuItemId) {
+        return $api.get(`/v1/menu-items/${menuItemId}/reviews`)
     }
 
 }
