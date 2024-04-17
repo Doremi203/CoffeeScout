@@ -72,7 +72,10 @@ export default class ProductStore {
             /*if (rating < 0 || rating > 5 || rating === undefined) {
                 throw new Error();
             }*/
-            await ProductService.leaveReview(menuItemId, content, rating);
+            console.log('kkk')
+            console.log(content, rating, menuItemId)
+            const response = await ProductService.leaveReview(menuItemId, content, rating);
+            console.log(response.status)
         } catch (error) {
             Alert.alert('Оценка должна быть от 1 до 5')
         }
@@ -81,6 +84,15 @@ export default class ProductStore {
     async search(name, limit) {
         try {
             const response = await ProductService.search(name, limit)
+            return response.data
+        } catch (error) {
+            Alert.alert('Ошибка', 'Что-то пошло не так')
+        }
+    }
+
+    async getReviews(menuItemId) {
+        try {
+            const response = await ProductService.getReviews(menuItemId)
             return response.data
         } catch (error) {
             Alert.alert('Ошибка', 'Что-то пошло не так')

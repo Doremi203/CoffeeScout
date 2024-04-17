@@ -8,6 +8,9 @@ import {Context} from "../index";
 export default function ProductScreen({navigation, route}) {
 
     const name = route.params.type.name
+    const description = route.params.type.description
+
+    const typeId = route.params.type.id
 
     const {product} = useContext(Context);
     const {loc} = useContext(Context);
@@ -18,7 +21,7 @@ export default function ProductScreen({navigation, route}) {
 
     useEffect(() => {
         const fetchProducts = async () => {
-            const products = await product.getNearbyProducts(location._j.longitude, location._j.latitude, 10000, 1);
+            const products = await product.getNearbyProducts(location._j.longitude, location._j.latitude, 10000, typeId);
             setNearProducts(products);
 
         };
@@ -29,19 +32,14 @@ export default function ProductScreen({navigation, route}) {
         <View style={styles.container}>
             <View style={styles.main}>
                 <Text style={styles.header}> {name} </Text>
-                <Text style={styles.description}>
-                    Капучино - это идеальное сочетание эспрессо и молока, создающее насыщенный вкус и неповторимую
-                    текстуру. Его аромат и бархатистая молочная пена станут настоящим утешением в любой момент
-                    дня.</Text>
+                <Text style={styles.description}> {description}</Text>
                 <Text style={styles.toOrder}>закажите:</Text>
                 <View style={styles.shops}>
                     <ScrollView style={styles.scroll}>
-
                         {nearProducts && nearProducts.map((product) => (
                             <ProductCard menuItemId={product.id} name={product.name} price={product.price}
                                          size={product.sizeInMl} cafe={product.cafe} key={product.id}/>
                         ))}
-
                     </ScrollView>
                 </View>
 

@@ -9,6 +9,7 @@ import {
 import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {Context} from "../index";
+import Reviews from "./Reviews";
 
 export default function ProductCard({menuItemId, name, price, size, cafe}) {
 
@@ -67,6 +68,9 @@ export default function ProductCard({menuItemId, name, price, size, cafe}) {
 
             <Image source={require('../assets/icons/coffee.png')} style={styles.image}/>
 
+
+            <Reviews menuItemId={menuItemId}/>
+
             <View style={styles.buttons}>
                 <View style={styles.routeButton}>
                     <TouchableWithoutFeedback onPress={onPress}>
@@ -108,7 +112,7 @@ const styles = StyleSheet.create({
         width: RFValue(140),
         height: RFValue(35),
         borderRadius: 20,
-
+        top: RFValue(-5)
     },
     routeText: {
         fontSize: RFValue(13),
@@ -162,6 +166,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         elevation: 3,
         width: RFValue(140),
+        top: RFValue(-5)
     },
     buttonText: {
         fontSize: RFValue(15),
@@ -173,6 +178,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         top: RFValue(-80),
         justifyContent: 'space-between',
-    }
+    },
+
 
 });
