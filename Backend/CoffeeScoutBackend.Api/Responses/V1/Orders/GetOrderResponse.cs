@@ -9,5 +9,5 @@ public record GetOrderResponse
     public required GetCafeResponse Cafe { get; init; }
     public required DateTime Date { get; init; }
     public required string Status { get; init; }
-    public required List<PlaceOrderItemResponse> OrderItems { get; init; }
+    public required List<GetOrderItemResponse> OrderItems { get; init; }
 }
