@@ -41,8 +41,12 @@ export default class UserStore {
 
             let accessTokenName = "accessToken";
             let accessToken = response.data[accessTokenName];
-
             SecureStorage.setItem('accessToken', accessToken);
+
+            let refreshTokenName = "refreshToken";
+            let refreshToken = response.data[refreshTokenName];
+            SecureStorage.setItem('refreshToken', refreshToken)
+
             navigation.navigate('main')
 
         } catch (error) {
@@ -78,8 +82,6 @@ export default class UserStore {
     async getEmail() {
         try {
             const response = await UserService.getEmail();
-            console.log('dddd')
-            console.log(response.data.email)
             return response.data.email;
         } catch (error) {
             Alert.alert('Ошибка', 'Что-то пошло не так')
@@ -96,10 +98,7 @@ export default class UserStore {
 
     async changeEmail(email) {
         try {
-            console.log('change')
-            const response = await UserService.changeEmail(email);
-            console.log(response.status)
-
+            await UserService.changeEmail(email);
         } catch (error) {
             Alert.alert('Ошибка', 'Что-то пошло не так')
         }

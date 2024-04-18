@@ -13,7 +13,7 @@ export default class ProductService {
 
 
     static async getNearbyProducts(longitude, latitude, radiusInMeters, beverageTypeId) {
-        return $api.get(`/v1/menu-items?latitude=${latitude}&longitude=${longitude}&radiusInMeters=${radiusInMeters}&beverageTypeId=${beverageTypeId}`)
+        return $api.get(`/v1/menu-items?Location.Latitude=${latitude}&Location.Longitude=${longitude}&RadiusInMeters=${radiusInMeters}&BeverageTypeId=${beverageTypeId}`)
     }
 
     static async getFavMenuItems() {
@@ -25,7 +25,7 @@ export default class ProductService {
     }
 
     static async getTypes() {
-        return $api.get(`/v1/beverage-types?PageSize=100&PageNumber=1`)
+        return $api.get(`/v1/beverage-types?Pagination.PageSize=100&Pagination.PageNumber=1`)
     }
 
 

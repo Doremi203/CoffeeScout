@@ -6,7 +6,6 @@ import {
 import {RFValue} from "react-native-responsive-fontsize";
 import React from "react";
 
-
 export default function Review({content, rating}) {
     return (
         <View style={styles.cont}>

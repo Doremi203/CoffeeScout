@@ -69,13 +69,7 @@ export default class ProductStore {
 
     async leaveReview(menuItemId, content, rating) {
         try {
-            /*if (rating < 0 || rating > 5 || rating === undefined) {
-                throw new Error();
-            }*/
-            console.log('kkk')
-            console.log(content, rating, menuItemId)
-            const response = await ProductService.leaveReview(menuItemId, content, rating);
-            console.log(response.status)
+            await ProductService.leaveReview(menuItemId, content, rating);
         } catch (error) {
             Alert.alert('Оценка должна быть от 1 до 5')
         }

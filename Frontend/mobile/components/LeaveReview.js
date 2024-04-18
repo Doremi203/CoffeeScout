@@ -13,7 +13,7 @@ import React, {useContext, useState} from "react";
 import {Context} from "../index";
 
 
-export default function ReviewButton({menuItemId}) {
+export default function LeaveReview({menuItemId}) {
 
     const {product} = useContext(Context)
 
@@ -42,8 +42,7 @@ export default function ReviewButton({menuItemId}) {
                 }}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <View style={styles.review}>
-
+                        <View>
                             <TextInput style={styles.input}
                                        placeholder="Введите отзыв"
                                        placeholderTextColor="gray"
@@ -141,7 +140,6 @@ const styles = StyleSheet.create({
         fontFamily: 'MontserratAlternates',
     },
 
-    review: {},
     rating: {
         marginTop: RFValue(15)
     }

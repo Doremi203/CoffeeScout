@@ -36,7 +36,6 @@ export default function ProductCard({menuItemId, name, price, size, cafe}) {
     }, []);
 
     const like = async () => {
-        console.log(menuItemId)
         if (isLiked) {
             await product.dislikeMenuItem(menuItemId);
         } else {

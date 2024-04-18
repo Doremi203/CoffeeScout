@@ -3,7 +3,7 @@ import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Product from "../components/Product";
 import Footer from "./Footer";
-import {RFPercentage} from 'react-native-responsive-fontsize';
+import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
 import {Context} from "../index";
 import Cafe from "../components/Cafe";
 
@@ -41,7 +41,7 @@ export default function Main({navigation}) {
     useEffect(() => {
         const fetchCafes = async () => {
             if (!executed && location._j.latitude !== 0) {
-                const cafes = await cafe.getNearbyCafes(location._j.longitude, location._j.latitude, 10000);
+                const cafes = await cafe.getNearbyCafes(location._j.longitude, location._j.latitude, 2000);
                 setCafes(cafes);
                 setExecuted(true);
             }
@@ -52,6 +52,7 @@ export default function Main({navigation}) {
         return () => {
         };
     }, [location, executed]);
+
 
     return (
 
@@ -96,14 +97,20 @@ export default function Main({navigation}) {
 
                     <Text style={[styles.header, {top: '1%'}]}> любимое </Text>
 
-                    <ScrollView horizontal={true} style={styles.scrollCont3}>
-                        <View style={styles.pro3}>
-                            {favTypes && favTypes.map((type) => (
-                                <Product key={type.id} name={type.name} navigation={navigation} type={type}/>
-                            ))}
-
+                    {favTypes.length === 0 ? (
+                        <View>
+                            <Text style={styles.nofav}> вы пока ничего не добавили в любимое :(</Text>
                         </View>
-                    </ScrollView>
+                    ) : (
+                        <ScrollView horizontal={true} style={styles.scrollCont3}>
+                            <View style={styles.pro3}>
+                                {favTypes && favTypes.map((type) => (
+                                    <Product key={type.id} name={type.name} navigation={navigation} type={type}/>
+                                ))}
+
+                            </View>
+                        </ScrollView>
+                    )}
                 </View>
             </View>
 
@@ -190,6 +197,19 @@ const styles = StyleSheet.create({
     },
     body: {
         marginTop: '18%'
+    },
+    image: {
+        width: RFValue(50),
+        height: RFValue(50),
+        marginTop: RFValue(0),
+        marginLeft: RFValue(260)
+    },
+
+    nofav: {
+        fontSize: RFPercentage(2),
+        fontFamily: 'MontserratAlternates',
+        marginTop: RFValue(10),
+        marginLeft: RFValue(20)
     }
 
 });

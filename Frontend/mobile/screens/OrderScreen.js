@@ -11,7 +11,6 @@ export default function OrderScreen({navigation, route}) {
     const items = route.params.items
     const totalPrice = route.params.totalPrice
 
-
     return (
         <View style={styles.container}>
             <View style={styles.main}>
@@ -25,7 +24,7 @@ export default function OrderScreen({navigation, route}) {
                 <View>
                     <ScrollView style={styles.scroll}>
                         {items && items.map((item) => (
-                            <ProductInHistory name={'Капучино'} price={item.pricePerItem} count={item.quantity}
+                            <ProductInHistory name={item.menuItem.name} price={item.pricePerItem} count={item.quantity}
                                               menuItemId={item.menuItemId}/>
                         ))}
 

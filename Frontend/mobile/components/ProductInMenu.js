@@ -21,7 +21,6 @@ export default function ProductInMenu({name, menuItemId, price, size}) {
     }, []);
 
     const like = async () => {
-        console.log(menuItemId)
         if (isLiked) {
             await product.dislikeMenuItem(menuItemId);
         } else {
@@ -36,7 +35,6 @@ export default function ProductInMenu({name, menuItemId, price, size}) {
         cart.addProductToCart(menuItemId, name);
     }
 
-    console.log(cart.cart)
     return (
         <View style={styles.square}>
             <Text style={styles.label}> {name}</Text>
@@ -51,29 +49,21 @@ export default function ProductInMenu({name, menuItemId, price, size}) {
                 <Icon name={isLiked ? 'heart' : 'heart-o'} size={RFValue(30)} color="#000" style={styles.heart}/>
             </TouchableWithoutFeedback>
 
-
             <Image source={require('../assets/icons/coffee.png')} style={styles.image}/>
 
-
             <View style={styles.buttons}>
-
                 <View style={styles.button}>
                     <TouchableWithoutFeedback onPress={addToCart}>
                         <Text style={styles.buttonText}> в корзину </Text>
                     </TouchableWithoutFeedback>
                 </View>
-
-
             </View>
-
-
         </View>
     );
 }
 
 
 const styles = StyleSheet.create({
-    container: {},
     square: {
         marginVertical: 10,
         width: RFValue(300),
