@@ -1,5 +1,6 @@
 import {makeAutoObservable} from "mobx";
 import CafeService from "../services/CafeService";
+import {Alert} from "react-native";
 
 export default class CafeStore {
 
@@ -12,29 +13,25 @@ export default class CafeStore {
             const response = await CafeService.getNearbyCafes(longitude, latitude, radius);
             return response.data;
         } catch (error) {
-            console.error('Error fetching data: NEAR cafe', error);
+            Alert.alert('Ошибка', 'Что-то пошло не так')
         }
     }
 
     async getMenu(cafeId) {
         try {
             const response = await CafeService.getMenu(cafeId);
-
-            console.log(response.status)
             return response.data;
         } catch (error) {
-            console.error('Error fetching data', error);
+            Alert.alert('Ошибка', 'Что-то пошло не так')
         }
     }
 
     async getInfo(cafeId) {
         try {
             const response = await CafeService.getInfo(cafeId);
-            console.log(response.status)
             return response.data;
         } catch (error) {
-            console.error('Error fetching data', error);
+            Alert.alert('Ошибка', 'Что-то пошло не так')
         }
     }
-
 }

@@ -10,10 +10,6 @@ export default function CafeScreen({navigation, route}) {
     const {cafe} = useContext(Context)
 
     const {cafeParam} = route.params;
-    console.log(cafeParam)
-
-    console.log(cafeParam.workingHours)
-    console.log(cafeParam.location)
 
     const {loc} = useContext(Context);
     const urlYandex = loc.getUrlYandex(cafeParam.location.latitude, cafeParam.location.longitude)._j;
@@ -26,7 +22,7 @@ export default function CafeScreen({navigation, route}) {
     const [menu, setMenu] = useState([])
     const [info, setInfo] = useState([])
     useEffect(() => {
-        const fetchMenu = async() => {
+        const fetchMenu = async () => {
             const menuu = await cafe.getMenu(cafeParam.id);
             setMenu(menuu)
             const infoo = await cafe.getInfo(cafeParam.id);
@@ -34,34 +30,34 @@ export default function CafeScreen({navigation, route}) {
         }
 
         fetchMenu();
-
     }, []);
 
 
+    const date = new Date();
+    const dayOfWeek = date.getDay();
 
-   // let hours = days[info.workingHours[0]]
+    function addLeadingZero(value) {
+        return value < 10 ? "0" + value : value;
+    }
 
-
-
-
-    /* {menu && menu.map((item) => (
-                            <ProductInMenu name={'Капучино'} menuItemId={1}/>
-                        ))} */
+    const time = addLeadingZero(cafeParam.workingHours[dayOfWeek].closingTime.hour) + ":" +
+        addLeadingZero(cafeParam.workingHours[dayOfWeek].closingTime.minute);
 
     return (
         <View style={styles.container}>
             <View style={styles.main}>
 
-                <Text style={styles.header}> {cafeParam.name} </Text>
-                <Text style={styles.info}> Адрес: {cafeParam.address}</Text>
-                <Text style={styles.info}> Часы работы: ПН-ВС 8:00 - 22:00</Text>
+                <Text style={styles.header}> {info.name} </Text>
+                <Text style={styles.info}> Адрес: {info.address}</Text>
+                <Text style={styles.info}> Сегодня работает до {time}</Text>
 
                 <Text style={styles.menu}> меню </Text>
 
                 <View style={styles.products}>
                     <ScrollView style={styles.scroll}>
                         {menu && menu.map((item) => (
-                        <ProductInMenu name={item.name} menuItemId={item.id} price={item.price} size={item.sizeInMl}/>
+                            <ProductInMenu name={item.name} menuItemId={item.id} price={item.price}
+                                           size={item.sizeInMl}/>
                         ))}
                     </ScrollView>
                 </View>
