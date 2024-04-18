@@ -3,7 +3,6 @@ import {StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
 import {RFValue} from "react-native-responsive-fontsize";
 import {Context} from "../index";
 
-
 const OrderComponent = ({navigation, status, number, items, date, cafe}) => {
 
     const parts = date.split("T")[0].split("-");

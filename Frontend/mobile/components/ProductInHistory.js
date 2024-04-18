@@ -1,19 +1,19 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {RFValue} from "react-native-responsive-fontsize";
-import ReviewButton from "./ReviewButton";
+import LeaveReview from "./LeaveReview";
 
 
 const ProductInHistory = ({name, price, count, menuItemId}) => {
-    return (
 
+    return (
         <View style={styles.container}>
             <View>
                 <Image source={require('../assets/icons/coffee.png')} style={styles.image}/>
                 <Text style={styles.label}>{name}</Text>
                 <Text style={styles.price}> {price}₽</Text>
                 <Text style={styles.count}> Кол-во: {count}</Text>
-                <ReviewButton menuItemId={menuItemId}/>
+                <LeaveReview menuItemId={menuItemId}/>
             </View>
             <View style={[styles.line]}/>
         </View>

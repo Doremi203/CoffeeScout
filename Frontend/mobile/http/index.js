@@ -22,10 +22,15 @@ $api.interceptors.response.use((config) => {
     if (error.response.status === 401 && error.config && !error.config._isRetry) {
         originalRequest._isRetry = true;
         try {
-            const response = await axios.get(`${API_URL}/v1/account/refresh`, {withCredentials: true})
+            const response = await axios.post(`${API_URL}/v1/account/refresh`, {refreshToken: SecureStorage.getItem('refreshToken')}, {withCredentials: true})
             let accessTokenName = "accessToken";
             let accessToken = response.data[accessTokenName];
             SecureStorage.setItem('accessToken', accessToken);
+
+            let refreshTokenName = "refreshToken";
+            let refreshToken = response.data[refreshTokenName];
+            SecureStorage.setItem('refreshToken', refreshToken)
+
             return $api.request(originalRequest);
         } catch (e) {
             console.log('НЕ АВТОРИЗОВАН')

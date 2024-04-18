@@ -47,7 +47,6 @@ export default function Profile({navigation}) {
     }, []);
 
 
-
     return (
         <View style={styles.container}>
             <View style={styles.main}>
