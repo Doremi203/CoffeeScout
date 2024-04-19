@@ -103,4 +103,20 @@ export default class UserStore {
             Alert.alert('Ошибка', 'Что-то пошло не так')
         }
     }
+
+    async forgotPassword(email) {
+        try {
+            await UserService.forgotPassword(email);
+        } catch (error) {
+            Alert.alert('Ошибка', 'Что-то пошло не так')
+        }
+    }
+
+    async resetPassword(email, code, newPassword) {
+        try {
+            await UserService.resetPassword(email, code, newPassword);
+        } catch (error) {
+            Alert.alert('Ошибка', 'Неправильный код')
+        }
+    }
 }

@@ -3,7 +3,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Registration from "./screens/Registration";
-import Login from "./screens/Login";
+import Auth from "./screens/Auth";
 import Profile from "./screens/Profile";
 import Main from "./screens/Main";
 import {useFonts} from "expo-font";
@@ -17,6 +17,8 @@ import {Context} from "./index";
 import CafeScreen from "./screens/CafeScreen";
 import Payment from "./screens/Payment";
 import Splash from "./screens/Splash";
+import ForgotPassword from "./screens/ForgotPassword";
+import ResetPassword from "./screens/ResetPassword";
 
 
 const Stack = createStackNavigator();
@@ -68,7 +70,17 @@ export default function App() {
                     />
                     <Stack.Screen
                         name="auth"
-                        component={Login}
+                        component={Auth}
+                        options={{headerShown: false}}
+                    />
+                    <Stack.Screen
+                        name="forgot"
+                        component={ForgotPassword}
+                        options={{headerShown: false}}
+                    />
+                    <Stack.Screen
+                        name="reset"
+                        component={ResetPassword}
                         options={{headerShown: false}}
                     />
                     <Stack.Screen
@@ -127,7 +139,6 @@ export default function App() {
         );
 
     }
-
 
 }
 
