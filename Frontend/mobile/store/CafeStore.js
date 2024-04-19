@@ -11,6 +11,7 @@ export default class CafeStore {
     async getNearbyCafes(longitude, latitude, radius) {
         try {
             const response = await CafeService.getNearbyCafes(longitude, latitude, radius);
+            console.log(response.data)
             return response.data;
         } catch (error) {
             Alert.alert('Ошибка', 'Что-то пошло не так')
@@ -33,5 +34,17 @@ export default class CafeStore {
         } catch (error) {
             Alert.alert('Ошибка', 'Что-то пошло не так')
         }
+    }
+
+    async getTime(workingHours) {
+        const date = new Date();
+        const dayOfWeek = date.getDay();
+
+        function addLeadingZero(value) {
+            return value < 10 ? "0" + value : value;
+        }
+
+        return addLeadingZero(workingHours[dayOfWeek].closingTime.hour) + ":" +
+            addLeadingZero(workingHours[dayOfWeek].closingTime.minute)
     }
 }

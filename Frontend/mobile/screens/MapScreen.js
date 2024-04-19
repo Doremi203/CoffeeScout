@@ -12,7 +12,6 @@ export default function MapScreen({navigation}) {
     const {cafe} = useContext(Context)
     const {loc} = useContext(Context)
 
-
     const [cafes, setCafes] = useState([]);
 
 
@@ -34,7 +33,9 @@ export default function MapScreen({navigation}) {
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
             name: cafe.name,
-            id: cafe.id
+            id: cafe.id,
+            address: cafe.address,
+            workingHours: cafe.workingHours
         })));
     }, [cafes]);
 
@@ -67,7 +68,8 @@ export default function MapScreen({navigation}) {
                         provider={PROVIDER_GOOGLE}
                         showsUserLocation>
                         {markers.map((marker, index) => (
-                            <MarkerMap index={index} marker={marker} key={marker.id}/>
+                            <MarkerMap index={index} marker={marker} key={marker.id} address={marker.address}
+                                       workingHours={marker.workingHours} />
                         ))}
                     </MapView>
                 )}
