@@ -38,4 +38,24 @@ export default class UserService {
         })
     }
 
+    static async confirmEmail(code) {
+        return $api.get('/v1/accounts/confirmEmail', {
+            code: code
+        })
+    }
+
+    static async forgotPassword(email) {
+        return $api.post('/v1/accounts/forgotPassword', {
+            email: email
+        })
+    }
+
+    static async resetPassword(email, code, newPassword) {
+        return $api.post('/v1/accounts/resetPassword', {
+            email: email,
+            resetCode: code,
+            newPassword: newPassword
+        })
+    }
+
 }

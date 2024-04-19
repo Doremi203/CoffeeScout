@@ -4,47 +4,38 @@ import {RFValue} from "react-native-responsive-fontsize";
 import {Context} from "../index";
 
 
-export default function Login({navigation}) {
+export default function ForgotPassword({navigation}) {
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
 
     const {user} = useContext(Context);
 
-    const click = async () => {
-        await user.login(email, password, navigation);
+    const getCode = async () => {
+        await user.forgotPassword(email)
+        navigation.navigate('reset', {email: email})
     }
+
 
     return (
         <View>
-            <Text style={styles.header}>войти</Text>
+            <Text style={styles.header}>укажите email, под которым вы регистрировались </Text>
 
-            <View style={{height: '35%', marginTop: '30%'}}>
-                <View style={[styles.box, {top: '13%'}]}>
+
+            <View style={{height: '35%', top: RFValue(250)}}>
+                <View style={[styles.box]}>
                     <TextInput style={styles.input}
                                placeholder="e-mail"
                                placeholderTextColor="gray"
                                onChangeText={text => setEmail(text)}/>
                 </View>
 
-                <View style={[styles.box, {top: '25%'}]}>
-                    <TextInput style={styles.input}
-                               placeholder="пароль"
-                               placeholderTextColor="gray"
-                               onChangeText={text => setPassword(text)}
-                               secureTextEntry={true}/>
-                </View>
             </View>
 
             <View style={styles.button}>
-                <TouchableWithoutFeedback onPress={click}>
-                    <Text style={styles.buttonText}> войти </Text>
+                <TouchableWithoutFeedback onPress={getCode}>
+                    <Text style={styles.buttonText}> получить код </Text>
                 </TouchableWithoutFeedback>
             </View>
 
-            <TouchableWithoutFeedback onPress={() => navigation.navigate('registration')}>
-                <Text style={styles.text}> нет аккаунта?<Text
-                    style={{fontFamily: 'MontserratAlternatesSemiBold'}}> зарегистрироваться</Text> </Text>
-            </TouchableWithoutFeedback>
         </View>
     );
 }
@@ -52,8 +43,8 @@ export default function Login({navigation}) {
 
 const styles = StyleSheet.create({
     header: {
-        fontSize: 36,
-        top: '23%',
+        fontSize: RFValue(17),
+        top: RFValue(230),
         left: 25,
         fontFamily: 'MontserratAlternates',
     },
@@ -66,6 +57,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 10,
         elevation: 3,
+        top: RFValue(200)
     },
     text: {
         top: '1%',
@@ -88,5 +80,11 @@ const styles = StyleSheet.create({
         fontSize: RFValue(15),
         color: 'white',
         fontFamily: 'MontserratAlternates',
+    },
+    forgot: {
+        textAlign: 'center',
+        top: RFValue(10),
+        fontFamily: 'MontserratAlternates',
+        opacity: 0.5
     }
 });
