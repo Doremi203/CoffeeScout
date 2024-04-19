@@ -21,27 +21,20 @@ export default function CafeScreen({navigation, route}) {
 
     const [menu, setMenu] = useState([])
     const [info, setInfo] = useState([])
+    const [time, setTime] = useState()
     useEffect(() => {
         const fetchMenu = async () => {
             const menuu = await cafe.getMenu(cafeParam.id);
             setMenu(menuu)
             const infoo = await cafe.getInfo(cafeParam.id);
             setInfo(infoo)
+            const timee = await cafe.getTime(cafeParam.workingHours);
+            setTime(timee)
         }
 
         fetchMenu();
     }, []);
 
-
-    const date = new Date();
-    const dayOfWeek = date.getDay();
-
-    function addLeadingZero(value) {
-        return value < 10 ? "0" + value : value;
-    }
-
-    const time = addLeadingZero(cafeParam.workingHours[dayOfWeek].closingTime.hour) + ":" +
-        addLeadingZero(cafeParam.workingHours[dayOfWeek].closingTime.minute);
 
     return (
         <View style={styles.container}>
