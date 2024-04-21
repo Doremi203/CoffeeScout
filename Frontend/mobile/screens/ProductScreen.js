@@ -28,6 +28,8 @@ export default function ProductScreen({navigation, route}) {
         fetchProducts();
     }, []);
 
+    console.log(nearProducts)
+
     return (
         <View style={styles.container}>
             <View style={styles.main}>

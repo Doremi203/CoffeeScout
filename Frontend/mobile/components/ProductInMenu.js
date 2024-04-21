@@ -6,7 +6,7 @@ import {Context} from "../index";
 import Reviews from "./Reviews";
 
 
-export default function ProductInMenu({name, menuItemId, price, size}) {
+export default function ProductInMenu({name, menuItemId, price, size, cafeId}) {
 
     const {product} = useContext(Context);
 
@@ -33,7 +33,7 @@ export default function ProductInMenu({name, menuItemId, price, size}) {
     const {cart} = useContext(Context);
 
     const addToCart = () => {
-        cart.addProductToCart(menuItemId, name);
+        cart.addProductToCart(menuItemId, name, price, cafeId);
     }
 
     return (
