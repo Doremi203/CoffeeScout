@@ -28,7 +28,6 @@
     "mobx": "^6.12.3",
     "react": "18.2.0",
     "react-native": "^0.73.6",
-    "react-native-custom-fonts": "^1.2.0-beta.1",
     "react-native-gesture-handler": "^2.14.0",
     "react-native-ico-material-design": "^5.1.2",
     "react-native-maps": "1.10.0",

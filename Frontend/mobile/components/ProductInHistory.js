@@ -11,7 +11,7 @@ const ProductInHistory = ({name, price, count, menuItemId}) => {
             <View>
                 <Image source={require('../assets/icons/coffee.png')} style={styles.image}/>
                 <Text style={styles.label}>{name}</Text>
-                <Text style={styles.price}> {price}₽</Text>
+                <Text style={styles.price}> {price * count}₽</Text>
                 <Text style={styles.count}> Кол-во: {count}</Text>
                 <LeaveReview menuItemId={menuItemId}/>
             </View>
