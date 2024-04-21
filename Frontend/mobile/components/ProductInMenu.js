@@ -3,6 +3,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
 import React, {useContext, useEffect, useState} from "react";
 import {Context} from "../index";
+import Reviews from "./Reviews";
 
 
 export default function ProductInMenu({name, menuItemId, price, size}) {
@@ -50,6 +51,8 @@ export default function ProductInMenu({name, menuItemId, price, size}) {
             </TouchableWithoutFeedback>
 
             <Image source={require('../assets/icons/coffee.png')} style={styles.image}/>
+
+            <Reviews menuItemId={menuItemId} />
 
             <View style={styles.buttons}>
                 <View style={styles.button}>
@@ -152,7 +155,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         top: RFValue(-80),
         justifyContent: 'space-between',
-    }
+    },
 
 });
 

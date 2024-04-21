@@ -71,7 +71,7 @@ export default class ProductStore {
         try {
             await ProductService.leaveReview(menuItemId, content, rating);
         } catch (error) {
-            Alert.alert('Оценка должна быть от 1 до 5')
+            Alert.alert('Ошибка', 'Некорректно введеные данные')
         }
     }
 

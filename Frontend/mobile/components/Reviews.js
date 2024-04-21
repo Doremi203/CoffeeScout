@@ -28,6 +28,9 @@ export default function Reviews({menuItemId}) {
 
     }, []);
 
+
+    console.log(reviews)
+
     return (
         <View style={styles.cont}>
             <Modal
@@ -45,11 +48,15 @@ export default function Reviews({menuItemId}) {
                         <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
                             <Image source={require('../assets/icons/close.png')} style={styles.image}/>
                         </TouchableWithoutFeedback>
-                        <ScrollView style={{marginTop: RFValue(-15)}}>
+                        {reviews.length > 0 ? (<ScrollView style={{marginTop: RFValue(-15)}}>
                             {reviews && reviews.map((review) => (
-                                <Review content={review.content} rating={review.rating}/>
+                                <Review content={review.content} rating={review.rating} key={review.id}/>
                             ))}
-                        </ScrollView>
+                        </ScrollView>) : (
+                            <View>
+                                <Text style={styles.norev}> пока нет ни одного отзыва :( </Text>
+                            </View>
+                        )}
 
                     </View>
                 </View>
@@ -109,6 +116,12 @@ const styles = StyleSheet.create({
         fontSize: RFValue(20),
         fontFamily: 'MontserratAlternates',
         textAlign: 'center',
+    },
+
+    norev: {
+        fontFamily: 'MontserratAlternates',
+        textAlign: 'center',
+        fontSize: RFValue(15),
     }
 
 });

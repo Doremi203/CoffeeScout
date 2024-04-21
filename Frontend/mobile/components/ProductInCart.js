@@ -34,14 +34,15 @@ const ProductInCart = ({menuItemId, name, price}) => {
     const handleDelete = () => {
         setIsVisible(false);
         cart.deleteProductFromCart(menuItemId);
-        console.log(cart.cart)
     };
 
     return (
         <View>
             {isVisible && <View style={styles.square}>
                 <Image source={require('../assets/icons/coffee.png')} style={styles.image}/>
-                <Text style={styles.label}>{name}</Text>
+                <View style={styles.labelcont}>
+                    <Text style={styles.label}>{name}</Text>
+                </View>
                 <View style={styles.plusminus}>
                     <TouchableOpacity onPress={decrementQuantity} style={styles.button}>
                         <View style={styles.box}><Text style={styles.buttonText}>-</Text></View>
@@ -79,6 +80,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.6,
         shadowRadius: 3.84,
         elevation: 5,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     },
     image: {
         marginLeft: 20,
@@ -90,8 +93,6 @@ const styles = StyleSheet.create({
         fontSize: RFPercentage(2.3),
         color: 'black',
         fontFamily: 'MontserratAlternates',
-        top: RFValue(-90),
-        marginLeft: RFValue(120)
     },
 
     button: {
@@ -114,9 +115,10 @@ const styles = StyleSheet.create({
     },
     plusminus: {
         flexDirection: 'row',
-        top: RFValue(-40),
-        width: RFValue(50),
-        marginLeft: RFValue(105),
+        flex: 1,
+        top: RFValue(75),
+        left: RFValue(-150),
+        minWidth: RFValue(50),
     },
     box: {
         width: RFValue(27),
@@ -129,18 +131,26 @@ const styles = StyleSheet.create({
     trash: {
         width: RFValue(20),
         height: RFValue(20),
-        top: RFValue(-135),
-        left: RFValue(270),
+        left: RFValue(-35),
+        top: RFValue(10)
 
     },
     priceAndTrash: {
         flexDirection: 'column',
+        flex: 1
     },
     price: {
-        top: RFValue(-80),
-        marginLeft: RFValue(250),
+        top: RFValue(80),
+        left: RFValue(-80),
         fontFamily: 'MontserratAlternates',
         fontSize: RFPercentage(2),
+    },
+
+    labelcont: {
+        maxHeight: RFValue(60),
+        flex: 1,
+        minWidth: RFValue(150),
+        top: RFValue(10)
     }
 
 });
