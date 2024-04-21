@@ -32,6 +32,7 @@ public class CoffeeChainsController(
     [HttpGet("{id:long}")]
     [Authorize(Roles = $"{nameof(Roles.SuperAdmin)},{nameof(Roles.CafeAdmin)},{nameof(Roles.Customer)}")]
     [ProducesResponseType<GetCoffeeChainResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetCoffeeChainById(long id)
     {
         var coffeeChain = await coffeeChainService.GetById(id);
@@ -42,6 +43,7 @@ public class CoffeeChainsController(
     [HttpPost]
     [Authorize(Roles = nameof(Roles.SuperAdmin))]
     [ProducesResponseType<AddCoffeeChainResponse>(StatusCodes.Status201Created)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> AddCoffeeChain(
         [FromBody] AddCoffeeChainRequest request
     )
@@ -57,6 +59,8 @@ public class CoffeeChainsController(
     [HttpPatch("{id:long}")]
     [Authorize(Roles = nameof(Roles.SuperAdmin))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateCoffeeChain(
         long id,
         [FromBody] UpdateCoffeeChainRequest request)
@@ -69,6 +73,7 @@ public class CoffeeChainsController(
     [HttpDelete("{id:long}")]
     [Authorize(Roles = nameof(Roles.SuperAdmin))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteCoffeeChain(long id)
     {
         await coffeeChainService.Delete(id);
