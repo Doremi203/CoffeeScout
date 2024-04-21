@@ -1,4 +1,5 @@
 using CoffeeScoutBackend.Domain.Exceptions;
+using CoffeeScoutBackend.Domain.Exceptions.NotFound;
 using CoffeeScoutBackend.Domain.Interfaces.Repositories;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
