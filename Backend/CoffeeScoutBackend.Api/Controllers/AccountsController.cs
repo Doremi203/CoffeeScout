@@ -12,7 +12,7 @@ namespace CoffeeScoutBackend.Api.Controllers;
 [Route(RoutesV1.Accounts)]
 public class AccountsController(
     ICustomerService customerService,
-    ISuperAdminService superAdminService
+    ICafeAdminService cafeAdminService
 ) : ControllerBase
 {
     [HttpPost("customer/register")]
@@ -42,9 +42,10 @@ public class AccountsController(
     [HttpPost("cafe-admin/register")]
     [Authorize(Roles = nameof(Roles.SuperAdmin))]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> RegisterCafeAdmin(RegisterCafeAdminRequest request)
     {
-        await superAdminService.AddCafeAdmin(
+        await cafeAdminService.AddCafeAdmin(
             request.Adapt<CafeAdminRegistrationData>());
 
         return Ok();

@@ -16,7 +16,8 @@ public class OrdersController(
     [HttpGet("{id:long}")]
     [Authorize(Roles = $"{nameof(Roles.Customer)},{nameof(Roles.CafeAdmin)},{nameof(Roles.SuperAdmin)}")]
     [ProducesResponseType<GetOrderResponse>(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetOrder(long id)
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetOrder([FromRoute] long id)
     {
         var order = await orderService.GetById(id);
 
