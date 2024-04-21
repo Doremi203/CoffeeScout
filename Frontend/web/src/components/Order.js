@@ -19,6 +19,8 @@ export const Order = ({number, status, orderItems}) => {
 
     }
 
+    console.log('order', orderItems)
+
 
     return (
         <Card>
@@ -28,21 +30,21 @@ export const Order = ({number, status, orderItems}) => {
                 <div className="productsInOrder">
                     <div>
                         {Array.isArray(orderItems) && orderItems.map((item) => (
-                            <Card.Text className="pro">
-                                имя напитка - размер ml - количество - 3
+                            <Card.Text className="pro" key={item.menuItem.id}>
+                                {item.menuItem.name} - {item.menuItem.sizeInMl} ml - количество - {item.quantity}
                             </Card.Text>
                         ))}
                     </div>
                     <div>
                         {Array.isArray(orderItems) && orderItems.map((item) => (
-                            <Card.Text className="pro">
-                                цена - 400 Rub
+                            <Card.Text className="pro" key={item.menuItem.id}>
+                                цена - {item.pricePerItem * item.quantity} Rub
                             </Card.Text>
                         ))}
                     </div>
 
                 </div>
-                <Card.Text className="totalPrice"> Сумма заказа - 1000 RUB</Card.Text>
+                <Card.Text className="totalPrice"> Сумма заказа - {order.totalPrice(orderItems)} RUB</Card.Text>
 
                 {(status === 'Pending' || status === 'InProgress') &&
                     <DropdownButton id="dropdown-basic-button" title="Изменить статус заказа">
