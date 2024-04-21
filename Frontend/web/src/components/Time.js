@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import './Time.css'
 import {Context} from "../index";
 
-function Time({day, openingTime, closingTime, name, address, latitude, longitude,  hours}) {
+function Time({day, openingTime, closingTime, name, address, latitude, longitude, hours}) {
 
     const {cafe} = useContext(Context)
 
@@ -32,10 +32,11 @@ function Time({day, openingTime, closingTime, name, address, latitude, longitude
         let close = closeTime.split(":");
         let hourClose = parseInt(close[0], 10);
         let minuteClose = parseInt(close[1], 10);
-        hours[day - 1].openingTime.hour = hourOpen
-        hours[day - 1].openingTime.minute = minuteOpen
-        hours[day - 1].closingTime.hour = hourClose
-        hours[day - 1].closingTime.hour = minuteClose
+
+        hours[day].openingTime.hour = hourOpen
+        hours[day].openingTime.minute = minuteOpen
+        hours[day].closingTime.hour = hourClose
+        hours[day].closingTime.minute = minuteClose
 
         await cafe.changeInfo(name, address, latitude, longitude, hours)
     };

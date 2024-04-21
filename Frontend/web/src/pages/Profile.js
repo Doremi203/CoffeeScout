@@ -37,11 +37,18 @@ const Profile = () => {
     const [editableAddress, setEditableAddress] = useState(false);
 
     const saveAddress = async () => {
+        if (address === '' || latitude === '' || longitude === '') {
+            alert('Все поля должны быть заполнены');
+            return;
+        }
         setEditableAddress(false);
         await cafe.changeInfo(name, address, latitude, longitude, hours)
     };
 
     const changeAddress = () => {
+        setAddress('')
+        setLongitude('')
+        setLatitude('')
         setEditableAddress(true)
     }
 
@@ -82,10 +89,9 @@ const Profile = () => {
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                         disabled={!editableAddress}
+                        required
                     />
-
                 </div>
-
 
                 <div>
                     <input
@@ -93,12 +99,14 @@ const Profile = () => {
                         value={latitude}
                         onChange={(e) => setLatitude(e.target.value)}
                         disabled={!editableAddress}
+                        required
                     />
                     <input
                         className="boxCoord"
                         value={longitude}
                         onChange={(e) => setLongitude(e.target.value)}
                         disabled={!editableAddress}
+                        required
                     />
 
                 </div>
@@ -118,7 +126,8 @@ const Profile = () => {
 
                 {Array.isArray(hours) && hours.map((day) => (
                     <Time day={day.dayOfWeek} openingTime={day.openingTime} closingTime={day.closingTime}
-                    name={name} address={address} latitude={latitude} longitude={longitude} id={day.id} hours={hours}/>
+                          name={name} address={address} latitude={latitude} longitude={longitude} id={day.id}
+                          hours={hours}/>
                 ))}
 
             </div>
