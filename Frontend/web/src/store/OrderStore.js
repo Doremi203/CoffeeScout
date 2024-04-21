@@ -65,4 +65,10 @@ export default class OrderStore {
         }
     }
 
+    totalPrice(items) {
+        let totalPrice = 0
+        items.map((item) => totalPrice += item.pricePerItem * item.quantity)
+        return totalPrice;
+    }
+
 }

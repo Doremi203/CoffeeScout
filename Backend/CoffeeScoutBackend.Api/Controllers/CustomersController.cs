@@ -1,5 +1,4 @@
 using CoffeeScoutBackend.Api.Extensions;
-using CoffeeScoutBackend.Api.Requests.V1.Cafes;
 using CoffeeScoutBackend.Api.Requests.V1.Customers;
 using CoffeeScoutBackend.Api.Requests.V1.MenuItems;
 using CoffeeScoutBackend.Api.Requests.V1.Orders;
@@ -35,7 +34,8 @@ public class CustomersController(
 
     [HttpPatch("info")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> UpdateInfo(UpdateCustomerInfoRequest request)
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> UpdateInfo([FromBody] UpdateCustomerInfoRequest request)
     {
         await customerService.UpdateInfo(User.GetId(), request.Adapt<CustomerInfo>());
 
@@ -44,6 +44,7 @@ public class CustomersController(
 
     [HttpPost("favored-menu-items")]
     [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> AddFavoredMenuItem([FromQuery] long menuItemId)
     {
         await customerService.AddFavoredMenuItem(User.GetId(), menuItemId);
@@ -63,7 +64,8 @@ public class CustomersController(
 
     [HttpDelete("favored-menu-items/{menuItemId:long}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> RemoveFavoredMenuItem(long menuItemId)
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> RemoveFavoredMenuItem([FromRoute] long menuItemId)
     {
         await customerService.RemoveFavoredMenuItem(User.GetId(), menuItemId);
 
@@ -82,6 +84,7 @@ public class CustomersController(
 
     [HttpGet("orders")]
     [ProducesResponseType<GetOrderResponse[]>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetOrders(
         [FromQuery] GetOrdersRequest request)
     {
@@ -101,7 +104,8 @@ public class CustomersController(
     [HttpPatch("orders/{id:long}/pay")]
     [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> PayOrder(long id)
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> PayOrder([FromRoute] long id)
     {
         await orderService.PayOrder(User.GetId(), id);
 
@@ -111,7 +115,8 @@ public class CustomersController(
     [HttpPatch("orders/{id:long}/cancel")]
     [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> CancelOrder(long id)
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> CancelOrder([FromRoute] long id)
     {
         await orderService.CustomerCancelOrder(User.GetId(), id);
 
@@ -121,9 +126,11 @@ public class CustomersController(
     [HttpPatch("reviews/{reviewId:long}")]
     [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateReview(
         [FromRoute] long reviewId,
-        UpdateReviewRequest request)
+        [FromBody] UpdateReviewRequest request)
     {
         if (!await IsReviewOfCustomer(reviewId))
             return Forbid();
@@ -136,6 +143,7 @@ public class CustomersController(
     [HttpDelete("reviews/{reviewId:long}")]
     [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteReview([FromRoute] long reviewId)
     {
         if (!await IsReviewOfCustomer(reviewId))

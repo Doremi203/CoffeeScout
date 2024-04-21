@@ -20,6 +20,7 @@ public class MenuItemsController(
     [HttpGet]
     [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType<GetMenuItemResponse[]>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetMenuItemsByBeverageTypeInArea(
         [FromQuery] GetMenuItemsByBeverageTypeInAreaRequest request
     )
@@ -35,6 +36,7 @@ public class MenuItemsController(
     [HttpGet("search")]
     [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType<GetMenuItemResponse[]>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> SearchMenuItems(
         [FromQuery] SearchMenuItemsRequest request
     )
@@ -48,7 +50,8 @@ public class MenuItemsController(
     [HttpPost]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
     [ProducesResponseType<AddMenuItemResponse>(StatusCodes.Status201Created)]
-    public async Task<IActionResult> AddMenuItem(AddMenuItemRequest request)
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> AddMenuItem([FromBody] AddMenuItemRequest request)
     {
         var menuItem = await menuItemService.Add(
             new AddMenuItemModel
@@ -66,7 +69,11 @@ public class MenuItemsController(
     [HttpPatch("{id:long}")]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> UpdateMenuItem(long id, UpdateMenuItemRequest request)
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateMenuItem(
+        [FromRoute] long id,
+        [FromBody] UpdateMenuItemRequest request)
     {
         if (!await IsMenuItemInCafe(id))
             return Forbid();
@@ -86,7 +93,8 @@ public class MenuItemsController(
     [HttpDelete("{id:long}")]
     [Authorize(Roles = nameof(Roles.CafeAdmin))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> DeleteMenuItem(long id)
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteMenuItem([FromRoute] long id)
     {
         if (!await IsMenuItemInCafe(id))
             return Forbid();
@@ -99,7 +107,11 @@ public class MenuItemsController(
     [HttpPost("{menuItemId:long}/reviews")]
     [Authorize(Roles = nameof(Roles.Customer))]
     [ProducesResponseType<AddReviewResponse>(StatusCodes.Status201Created)]
-    public async Task<IActionResult> AddReview(long menuItemId, AddReviewRequest request)
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> AddReview(
+        [FromRoute] long menuItemId, 
+        [FromBody] AddReviewRequest request)
     {
         var reviewToAdd = new Review
         {
@@ -115,7 +127,8 @@ public class MenuItemsController(
     [HttpGet("{menuItemId:long}/reviews")]
     [Authorize(Roles = $"{nameof(Roles.Customer)},{nameof(Roles.CafeAdmin)}")]
     [ProducesResponseType<GetReviewResponse[]>(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetReviews(long menuItemId)
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetReviews([FromRoute] long menuItemId)
     {
         var reviews = await reviewService.GetByMenuItemId(menuItemId);
 

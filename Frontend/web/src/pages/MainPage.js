@@ -69,7 +69,7 @@ const MainPage = () => {
                         {Array.isArray(menu) && menu.map((product) => (
                             <Product name={product.name} size={product.sizeInMl} price={product.price}
                                      type={product.beverageType.name} menuItemId={product.id}
-                                     description={product.description}/>
+                                     description={product.description} key={product.id}/>
                         ))}
 
                     </div>
@@ -81,7 +81,7 @@ const MainPage = () => {
             <h2 className="orders"> Заказы </h2>
             <div>
                 {Array.isArray(orders) && orders.map((order) => (
-                    <Order number={order.id} status={order.status} orderItems={order.orderItems}/>
+                    <Order number={order.id} status={order.status} orderItems={order.orderItems} key={order.id}/>
                 ))}
             </div>
             <ToastContainer/>

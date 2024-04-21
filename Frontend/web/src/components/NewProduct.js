@@ -81,7 +81,7 @@ function NewProduct() {
                                          onChange={(e) => setTypeId(e.target.value)}>
                                 <option>Тип напитка</option>
                                 {Array.isArray(types) && types.map((type) => (
-                                    <option value={type.id}> {type.name} </option>
+                                    <option value={type.id} key={type.id}> {type.name} </option>
                                 ))}
 
                             </Form.Select>

@@ -28,7 +28,8 @@ public class EmailSender(
 
         if (response.Errors is not null && response.Errors.Count != 0)
         {
-            var errors = string.Join(", ", response.Errors.Select(e => e.Value));
+            var errors = string.Join(", ", response.Errors
+                .Select(e => string.Join("\n", e.Value)));
             throw new InvalidOperationException($"Email could not be sent, errors: {errors}");
         }
     }

@@ -2,6 +2,7 @@ using System.Transactions;
 using CoffeeScoutBackend.Bll.Interfaces;
 using CoffeeScoutBackend.Dal.Entities;
 using CoffeeScoutBackend.Domain.Exceptions;
+using CoffeeScoutBackend.Domain.Exceptions.NotFound;
 using CoffeeScoutBackend.Domain.Interfaces.Repositories;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
@@ -65,7 +66,7 @@ public class CustomerService(
         var menuItem = await menuItemService.GetById(menuItemId);
 
         if (customer.FavoriteMenuItems.All(mi => mi.Id != menuItemId))
-            throw new MenuItemNotFavoredException(
+            throw new FavoredMenuItemNotFoundException(
                 $"Menu item with id:{menuItemId} is not favored by customer with id:{userId}",
                 menuItemId);
         

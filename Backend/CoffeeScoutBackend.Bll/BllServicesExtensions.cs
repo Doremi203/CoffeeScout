@@ -19,7 +19,7 @@ public static class BllServicesExtensions
             .AddScoped<ICoffeeChainService, CoffeeChainService>()
             .AddScoped<ICafeService, CafeService>()
             .AddScoped<IMenuItemService, MenuItemService>()
-            .AddScoped<ISuperAdminService, SuperAdminService>();
+            .AddScoped<ICafeAdminService, CafeAdminService>();
         
         services
             .AddScoped<IDateTimeProvider, DateTimeProvider>();

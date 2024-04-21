@@ -1,4 +1,4 @@
-namespace CoffeeScoutBackend.Domain.Exceptions;
+namespace CoffeeScoutBackend.Domain.Exceptions.NotFound;
 
 public class OrderNotFoundException : NotFoundException
 {

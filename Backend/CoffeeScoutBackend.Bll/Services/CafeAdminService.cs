@@ -6,10 +6,10 @@ using CoffeeScoutBackend.Domain.Models;
 
 namespace CoffeeScoutBackend.Bll.Services;
 
-public class SuperAdminService(
+public class CafeAdminService(
     IRoleRegistrationService roleRegistrationService,
     ICafeService cafeService
-) : ISuperAdminService
+) : ICafeAdminService
 {
     public async Task AddCafeAdmin(
         CafeAdminRegistrationData registrationData

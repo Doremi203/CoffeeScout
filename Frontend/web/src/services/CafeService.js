@@ -21,7 +21,7 @@ export default class CafeService {
     }
 
     static async getTypes() {
-        return $api.get(`v1/beverage-types?PageSize=100&PageNumber=1`)
+        return $api.get(`v1/beverage-types?Pagination.PageSize=100&Pagination.PageNumber=1`)
     }
 
     static async getInfo() {
@@ -31,10 +31,12 @@ export default class CafeService {
     static async changeInfo(name, address, latitude, longitude, workingHours) {
         return $api.patch(`v1/cafes`, {
             name: name,
+            location: {
+                latitude: latitude,
+                longitude: longitude
+            },
             address: address,
-            latitude : latitude,
-            longitude : longitude,
-            workingHours : workingHours
+            workingHours: workingHours
         })
     }
 

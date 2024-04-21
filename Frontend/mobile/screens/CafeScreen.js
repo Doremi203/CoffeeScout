@@ -34,10 +34,7 @@ export default function CafeScreen({navigation, route}) {
 
         fetchMenu();
     }, []);
-
-
-    console.log(menu)
-    console.log(cafeParam)
+    
 
     return (
         <View style={styles.container}>
@@ -53,7 +50,7 @@ export default function CafeScreen({navigation, route}) {
                     <ScrollView style={styles.scroll}>
                         {menu && menu.map((item) => (
                             <ProductInMenu name={item.name} menuItemId={item.id} price={item.price}
-                                           size={item.sizeInMl} key={item.id} cafeId={cafeParam.id}/>
+                                               size={item.sizeInMl} key={item.id} cafeId={cafeParam.id}/>
                         ))}
                     </ScrollView>
                 </View>

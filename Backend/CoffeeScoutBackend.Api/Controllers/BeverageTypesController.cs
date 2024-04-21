@@ -18,7 +18,8 @@ public class BeverageTypesController(
     [HttpPost]
     [Authorize(Roles = nameof(Roles.SuperAdmin))]
     [ProducesResponseType<AddBeverageTypeResponse>(StatusCodes.Status201Created)]
-    public async Task<IActionResult> AddBeverageType(AddBeverageTypeRequest request)
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> AddBeverageType([FromBody] AddBeverageTypeRequest request)
     {
         var addedBeverageType =
             await beverageTypeService.Add(request.Adapt<BeverageType>());
@@ -30,6 +31,7 @@ public class BeverageTypesController(
     [HttpGet]
     [Authorize(Roles = $"{nameof(Roles.SuperAdmin)},{nameof(Roles.CafeAdmin)},{nameof(Roles.Customer)}")]
     [ProducesResponseType<GetBeverageTypeResponse[]>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetBeverageTypes([FromQuery] GetBeverageTypesRequest request)
     {
         var beverageTypes =
@@ -41,9 +43,11 @@ public class BeverageTypesController(
     [HttpPatch("{id:long}")]
     [Authorize(Roles = nameof(Roles.SuperAdmin))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateBeverageType(
         [FromRoute] long id,
-        UpdateBeverageTypeRequest request)
+        [FromBody] UpdateBeverageTypeRequest request)
     {
         await beverageTypeService.Update(id, request.Adapt<BeverageType>());
 
@@ -53,6 +57,7 @@ public class BeverageTypesController(
     [HttpDelete("{id:long}")]
     [Authorize(Roles = nameof(Roles.SuperAdmin))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteBeverageType([FromRoute] long id)
     {
         await beverageTypeService.Delete(id);

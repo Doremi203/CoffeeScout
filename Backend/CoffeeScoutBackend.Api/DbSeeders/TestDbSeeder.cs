@@ -102,21 +102,14 @@ public class TestDbSeeder(
                         55.698964, 37.499202),
                     Address = "ул. Ленинградская, 10",
                     CoffeeChain = new CoffeeChainEntity { Name = "Coffee Crew" },
-                    WorkingHours = new List<WorkingHoursEntity>
-                    {
-                        new()
+                    WorkingHours = Enumerable.Range(0, 7)
+                        .Select(i => new WorkingHoursEntity
                         {
-                            DayOfWeek = DayOfWeek.Monday,
+                            DayOfWeek = (DayOfWeek)i,
                             OpeningTime = new TimeOnly(8, 0),
                             ClosingTime = new TimeOnly(20, 0)
-                        },
-                        new()
-                        {
-                            DayOfWeek = DayOfWeek.Tuesday,
-                            OpeningTime = new TimeOnly(8, 0),
-                            ClosingTime = new TimeOnly(20, 0)
-                        }
-                    }
+                        })
+                        .ToList()
                 },
                 new()
                 {
@@ -125,21 +118,14 @@ public class TestDbSeeder(
                         55.697503, 37.500088),
                     Address = "ул. Ленинградская, 12",
                     CoffeeChain = new CoffeeChainEntity { Name = "Stars Coffee" },
-                    WorkingHours = new List<WorkingHoursEntity>
-                    {
-                        new()
+                    WorkingHours = Enumerable.Range(0, 7)
+                        .Select(i => new WorkingHoursEntity
                         {
-                            DayOfWeek = DayOfWeek.Monday,
+                            DayOfWeek = (DayOfWeek)i,
                             OpeningTime = new TimeOnly(8, 0),
                             ClosingTime = new TimeOnly(20, 0)
-                        },
-                        new()
-                        {
-                            DayOfWeek = DayOfWeek.Tuesday,
-                            OpeningTime = new TimeOnly(8, 0),
-                            ClosingTime = new TimeOnly(20, 0)
-                        }
-                    }
+                        })
+                        .ToList()
                 }
             };
             dbContext.Cafes.AddRange(cafes);
