@@ -50,7 +50,7 @@ export default function CafeScreen({navigation, route}) {
                     <ScrollView style={styles.scroll}>
                         {menu && menu.map((item) => (
                             <ProductInMenu name={item.name} menuItemId={item.id} price={item.price}
-                                           size={item.sizeInMl}/>
+                                           size={item.sizeInMl} key={item.id}/>
                         ))}
                     </ScrollView>
                 </View>

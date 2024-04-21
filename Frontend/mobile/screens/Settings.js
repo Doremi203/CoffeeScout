@@ -34,7 +34,7 @@ export default function Settings({navigation}) {
 
 
     const handleSaveEmail = async () => {
-        // добавить логику для сохранения нового email
+        console.log(email)
         setEditableEmail(false);
         await user.changeEmail(email);
     };
@@ -117,14 +117,11 @@ export default function Settings({navigation}) {
                 <View style={styles.line}/>
 
 
-                <TouchableOpacity style={styles.button} onPress={logout}>
-                    <Text style={styles.out}> Выйти </Text>
-                </TouchableOpacity>
-
-
-                <TouchableOpacity>
-                    <Text style={styles.deleteAcc}> Удалить аккаунт </Text>
-                </TouchableOpacity>
+                <TouchableWithoutFeedback onPress={logout}>
+                    <View style={styles.button}>
+                        <Text style={styles.out}> Выйти </Text>
+                    </View>
+                </TouchableWithoutFeedback>
 
             </View>
 

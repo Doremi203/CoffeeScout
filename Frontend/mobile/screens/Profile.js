@@ -62,26 +62,35 @@ export default function Profile({navigation}) {
 
                 <Text style={styles.historyHeader}> История заказов </Text>
 
-                <ScrollView style={styles.scroll}>
-                    {orders1 && orders1.map((order) => (
-                        <OrderComponent navigation={navigation} status={order.status} number={order.id}
-                                        items={order.orderItems} key={order.id} date={order.date} cafe={order.cafe}/>
-                    ))}
-                    {orders2 && orders2.map((order) => (
-                        <OrderComponent navigation={navigation} status={order.status} number={order.id}
-                                        items={order.orderItems} key={order.id} date={order.date} cafe={order.cafe}/>
-                    ))}
-                    {orders3 && orders3.map((order) => (
-                        <OrderComponent navigation={navigation} status={order.status} number={order.id}
-                                        items={order.orderItems} key={order.id} date={order.date} cafe={order.cafe}/>
-                    ))}
-                    {orders4 && orders4.map((order) => (
-                        <OrderComponent navigation={navigation} status={order.status} number={order.id}
-                                        items={order.orderItems} key={order.id} date={order.date} cafe={order.cafe}/>
-                    ))}
+                {orders1.length === 0 && orders2.length === 0 && orders3.length === 0 && orders4.length === 0 ? (
+                    <View>
+                        <Text style={styles.noorders}> у вас пока нет ни одного заказа :( </Text>
+                    </View>
+                ) : (
+                    <ScrollView style={styles.scroll}>
+                        {orders1 && orders1.map((order) => (
+                            <OrderComponent navigation={navigation} status={order.status} number={order.id}
+                                            items={order.orderItems} key={order.id} date={order.date}
+                                            cafe={order.cafe}/>
+                        ))}
+                        {orders2 && orders2.map((order) => (
+                            <OrderComponent navigation={navigation} status={order.status} number={order.id}
+                                            items={order.orderItems} key={order.id} date={order.date}
+                                            cafe={order.cafe}/>
+                        ))}
+                        {orders3 && orders3.map((order) => (
+                            <OrderComponent navigation={navigation} status={order.status} number={order.id}
+                                            items={order.orderItems} key={order.id} date={order.date}
+                                            cafe={order.cafe}/>
+                        ))}
+                        {orders4 && orders4.map((order) => (
+                            <OrderComponent navigation={navigation} status={order.status} number={order.id}
+                                            items={order.orderItems} key={order.id} date={order.date}
+                                            cafe={order.cafe}/>
+                        ))}
 
-
-                </ScrollView>
+                    </ScrollView>
+                )}
             </View>
             <Footer navigation={navigation}/>
         </View>
@@ -137,5 +146,11 @@ const styles = StyleSheet.create({
         marginTop: '30%',
         right: '16%',
     },
+    noorders : {
+        fontFamily: 'MontserratAlternates',
+        textAlign:'center',
+        fontSize: RFValue(15),
+        marginTop: RFValue(15)
+    }
 
 });

@@ -25,7 +25,7 @@ export default function OrderScreen({navigation, route}) {
                     <ScrollView style={styles.scroll}>
                         {items && items.map((item) => (
                             <ProductInHistory name={item.menuItem.name} price={item.pricePerItem} count={item.quantity}
-                                              menuItemId={item.menuItemId}/>
+                                              menuItemId={item.menuItem.id} key={item.menuItem.id}/>
                         ))}
 
                         <View style={styles.paid}>
