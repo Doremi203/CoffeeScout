@@ -11,6 +11,7 @@ public static class WebApplicationExtensions
         app.UseMiddleware<InvalidOrderDataExceptionHandlingMiddleware>();
         app.UseMiddleware<InvalidOrderStatusExceptionHandlingMiddleware>();
         app.UseMiddleware<PaymentExceptionHandlingMiddleware>();
+        app.UseMiddleware<RegistrationExceptionHandlingMiddleware>();
         return app;
     }
 }
