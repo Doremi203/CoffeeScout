@@ -1,5 +1,4 @@
 using CoffeeScoutBackend.Api.Requests.V1.Accounts;
-using CoffeeScoutBackend.Domain.Exceptions;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
 using Mapster;
@@ -20,23 +19,10 @@ public class AccountsController(
     [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> RegisterCustomer(RegisterCustomerRequest request)
     {
-        try
-        {
-            await customerService.RegisterCustomer(
-                request.Adapt<CustomerRegistrationData>());
-            return Ok();
-        }
-        catch (RegistrationException e)
-        {
-            var validationProblemDetails = new ValidationProblemDetails(e.RegistrationErrors)
-            {
-                Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
-                Status = StatusCodes.Status400BadRequest,
-                Title = "One or more validation errors occurred."
-            };
-
-            return BadRequest(validationProblemDetails);
-        }
+        await customerService.RegisterCustomer(
+            request.Adapt<CustomerRegistrationData>());
+        
+        return Ok();
     }
 
     [HttpPost("cafe-admin/register")]

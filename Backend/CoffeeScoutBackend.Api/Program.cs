@@ -69,6 +69,14 @@ if (app.Environment.IsDevelopment())
     app.UseHttpLogging();
 }
 
+if (app.Environment.IsEnvironment("ApiTests"))
+{
+    using var scope = app.Services.CreateScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await dbContext.Database.EnsureDeletedAsync();
+    await dbContext.Database.MigrateAsync();
+}
+
 //app.UseHttpsRedirection();
 
 app
@@ -76,7 +84,7 @@ app
     .WithTags("Accounts")
     .MapIdentityApi<AppUser>();
 
-//app.UseAuthorization();
+app.UseAuthorization();
 
 app.AddExceptionHandlingMiddlewares();
 

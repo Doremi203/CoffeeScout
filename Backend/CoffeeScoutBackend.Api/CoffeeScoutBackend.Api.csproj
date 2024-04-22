@@ -32,8 +32,4 @@
         <ProjectReference Include="..\CoffeeScoutBackend.Bll\CoffeeScoutBackend.Bll.csproj"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="Identity\infrastructure\"/>
-    </ItemGroup>
-
 </Project>
