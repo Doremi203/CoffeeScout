@@ -4,7 +4,7 @@ import {RFValue} from "react-native-responsive-fontsize";
 import LeaveReview from "./LeaveReview";
 
 
-const ProductInHistory = ({name, price, count, menuItemId}) => {
+const ProductInHistory = ({name, price, count, menuItemId, status}) => {
 
     return (
         <View style={styles.container}>
@@ -13,7 +13,7 @@ const ProductInHistory = ({name, price, count, menuItemId}) => {
                 <Text style={styles.label}>{name}</Text>
                 <Text style={styles.price}> {price * count}₽</Text>
                 <Text style={styles.count}> Кол-во: {count}</Text>
-                <LeaveReview menuItemId={menuItemId}/>
+                {status === "Completed" ? (<LeaveReview menuItemId={menuItemId}/>) : (<View></View>)}
             </View>
             <View style={[styles.line]}/>
         </View>
