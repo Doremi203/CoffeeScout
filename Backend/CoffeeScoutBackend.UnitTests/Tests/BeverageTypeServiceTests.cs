@@ -1,9 +1,9 @@
-using AutoBogus;
 using CoffeeScoutBackend.Bll.Services;
 using CoffeeScoutBackend.Domain.Exceptions.NotFound;
 using CoffeeScoutBackend.Domain.Interfaces.Repositories;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
+using CoffeeScoutBackend.UnitTests.Fakers;
 using FluentAssertions;
 using Moq;
 
@@ -23,7 +23,7 @@ public class BeverageTypeServiceTests
     public async Task GetById_WhenBeverageTypeExists_ReturnsBeverageType()
     {
         // Arrange
-        var beverageType = new AutoFaker<BeverageType>().Generate();
+        var beverageType = BeverageTypeFaker.Generate()[0];
 
         _beverageTypeRepositoryFake
             .Setup(x => x.GetById(beverageType.Id))
@@ -42,7 +42,7 @@ public class BeverageTypeServiceTests
     public async Task GetById_WhenBeverageTypeDoesNotExist_ThrowsBeverageTypeNotFoundException()
     {
         // Arrange
-        var beverageType = new AutoFaker<BeverageType>().Generate();
+        var beverageType = BeverageTypeFaker.Generate()[0];
 
         _beverageTypeRepositoryFake
             .Setup(x => x.GetById(beverageType.Id))
@@ -62,7 +62,7 @@ public class BeverageTypeServiceTests
     public async Task Add_ReturnsAddedBeverageType()
     {
         // Arrange
-        var beverageType = new AutoFaker<BeverageType>().Generate();
+        var beverageType = BeverageTypeFaker.Generate()[0];
 
         _beverageTypeRepositoryFake
             .Setup(x => x.Add(beverageType))
@@ -81,7 +81,7 @@ public class BeverageTypeServiceTests
     public async Task Update_WhenBeverageTypeExists_UpdatesBeverageType()
     {
         // Arrange
-        var beverageType = new AutoFaker<BeverageType>().Generate();
+        var beverageType = BeverageTypeFaker.Generate()[0];
         var updatedBeverageTypeData = new BeverageType
         {
             Name = "Updated Name",
@@ -108,7 +108,7 @@ public class BeverageTypeServiceTests
     public async Task Update_WhenBeverageTypeDoesNotExist_ThrowsBeverageTypeNotFoundException()
     {
         // Arrange
-        var beverageType = new AutoFaker<BeverageType>().Generate();
+        var beverageType = BeverageTypeFaker.Generate()[0];
         var updatedBeverageTypeData = new BeverageType
         {
             Name = "Updated Name",
@@ -134,7 +134,7 @@ public class BeverageTypeServiceTests
     public async Task Delete_WhenBeverageTypeExists_DeletesBeverageType()
     {
         // Arrange
-        var beverageType = new AutoFaker<BeverageType>().Generate();
+        var beverageType = BeverageTypeFaker.Generate()[0];
 
         _beverageTypeRepositoryFake
             .Setup(x => x.GetById(beverageType.Id))
@@ -155,7 +155,7 @@ public class BeverageTypeServiceTests
     public async Task Delete_WhenBeverageTypeDoesNotExist_ThrowsBeverageTypeNotFoundException()
     {
         // Arrange
-        var beverageType = new AutoFaker<BeverageType>().Generate();
+        var beverageType = BeverageTypeFaker.Generate()[0];
 
         _beverageTypeRepositoryFake
             .Setup(x => x.GetById(beverageType.Id))
@@ -178,7 +178,7 @@ public class BeverageTypeServiceTests
         // Arrange
         const int pageSize = 3;
         const int pageNumber = 1;
-        var beverageTypes = new AutoFaker<BeverageType>().Generate(pageSize);
+        var beverageTypes = BeverageTypeFaker.Generate(pageSize);
 
         _beverageTypeRepositoryFake
             .Setup(x => x.GetPage(pageSize, pageNumber))
