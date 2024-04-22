@@ -1,4 +1,3 @@
-using AutoBogus;
 using CoffeeScoutBackend.Bll.Services;
 using CoffeeScoutBackend.Domain.Exceptions.NotFound;
 using CoffeeScoutBackend.Domain.Interfaces.Repositories;
@@ -8,7 +7,7 @@ using CoffeeScoutBackend.UnitTests.Fakers;
 using FluentAssertions;
 using Moq;
 
-namespace CoffeeScoutBackend.UnitTests;
+namespace CoffeeScoutBackend.UnitTests.Tests;
 
 public class CafeServiceTests
 {

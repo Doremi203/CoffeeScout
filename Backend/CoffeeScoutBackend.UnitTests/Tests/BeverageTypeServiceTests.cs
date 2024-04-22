@@ -7,7 +7,7 @@ using CoffeeScoutBackend.Domain.Models;
 using FluentAssertions;
 using Moq;
 
-namespace CoffeeScoutBackend.UnitTests;
+namespace CoffeeScoutBackend.UnitTests.Tests;
 
 public class BeverageTypeServiceTests
 {
