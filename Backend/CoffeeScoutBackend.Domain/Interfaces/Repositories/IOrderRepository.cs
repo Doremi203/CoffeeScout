@@ -8,5 +8,5 @@ public interface IOrderRepository
     Task<Order?> GetById(long orderId);
     Task<IReadOnlyCollection<Order>> GetByUserId(string userId, GetOrdersModel model);
     Task<IReadOnlyCollection<Order>> GetByCafeId(long cafeId, GetOrdersModel model);
-    Task UpdateStatus(long id, OrderStatus cancelled);
+    Task UpdateStatus(long id, OrderStatus status);
 }
