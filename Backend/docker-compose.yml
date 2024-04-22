@@ -1,41 +1,43 @@
 ﻿services:
   frontend:
-    platform: 
-      linux/amd64
+    image: mayaffia/coffee-scout-web
     depends_on:
       - backend
-    environment:
-      CHOKIDAR_USEPOLLING : "true"
-      WATCHPACK_POLLING : "true"
-    volumes:
-      - ../Frontend/web/src:/app/src
-
     restart:
       always
     networks:
       - app-network
     ports:
       - "3000:3000"
-    build:
-      context: ../Frontend/web
-      dockerfile: ./Dockerfile
-
 
   backend:
     depends_on:
-      - database
-    restart:
-      always
+      database:
+        condition: service_healthy
+    restart: always
     networks:
       - app-network
       - backend-network
-    image: doreml/coffee-scout-backend.api:dev
+    image: doreml/coffee-scout-backend.api
     env_file:
       - .env
     ports:
       - "8000:8080"
     environment:
-     - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_ENVIRONMENT=Production
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '1.0'
+          memory: 2G
+    logging:
+      driver: json-file
+      options:
+        max-size: "200m"
+        max-file: "10"
 
   database:
     networks:
@@ -47,6 +49,22 @@
       POSTGRES_DB: ${DATABASESETTINGS__DATABASE}
     ports:
       - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "${DATABASESETTINGS__USERID}" ]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 1500M
+        reservations:
+          cpus: '1.0'
+          memory: 1000M
   
   nginx:
     networks:
@@ -63,3 +81,7 @@ networks:
     driver: bridge
   backend-network:
     driver: bridge
+
+volumes:
+  db_data:
+    driver: local
