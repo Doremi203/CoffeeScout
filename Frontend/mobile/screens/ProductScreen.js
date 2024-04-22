@@ -28,13 +28,12 @@ export default function ProductScreen({navigation, route}) {
         fetchProducts();
     }, []);
 
-    console.log(nearProducts)
 
     return (
         <View style={styles.container}>
             <View style={styles.main}>
                 <Text style={styles.header}> {name} </Text>
-                <Text style={styles.description}> {description}</Text>
+                <Text style={styles.description}>{description}</Text>
                 <Text style={styles.toOrder}>закажите:</Text>
                 <View style={styles.shops}>
                     <ScrollView style={styles.scroll}>

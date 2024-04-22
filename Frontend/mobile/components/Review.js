@@ -9,8 +9,8 @@ import React from "react";
 export default function Review({content, rating}) {
     return (
         <View style={styles.cont}>
-            <Text style={styles.text}> {content}</Text>
-            <Text style={styles.mark}> Оценка: {rating}</Text>
+            <Text style={styles.text}>{content}</Text>
+            <Text style={styles.mark}>Оценка: {rating}</Text>
         </View>
     );
 }
