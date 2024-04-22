@@ -18,7 +18,12 @@ const OrderComponent = ({navigation, status, number, items, date, cafe}) => {
 
     return (
         <TouchableWithoutFeedback
-            onPress={() => navigation.navigate('orderScreen', {number: number, items: items, totalPrice: totalPrice})}>
+            onPress={() => navigation.navigate('orderScreen', {
+                number: number,
+                items: items,
+                totalPrice: totalPrice,
+                status: status
+            })}>
             <View style={styles.container}>
                 <Text style={styles.price}> {totalPrice}₽ </Text>
                 <Text style={styles.data}> {newDate} </Text>
