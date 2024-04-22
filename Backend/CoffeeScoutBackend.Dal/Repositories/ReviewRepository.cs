@@ -17,10 +17,10 @@ public class ReviewRepository(
             .FirstAsync(c => c.Id == review.Customer.Id);
         reviewEntity.MenuItem = await dbContext.MenuItems
             .FirstAsync(mi => mi.Id == review.MenuItem.Id);
-        
+
         await dbContext.Reviews.AddAsync(reviewEntity);
         await dbContext.SaveChangesAsync();
-        
+
         return reviewEntity.Adapt<Review>();
     }
 
@@ -30,7 +30,7 @@ public class ReviewRepository(
             .Include(r => r.Customer)
             .Include(r => r.MenuItem)
             .FirstOrDefaultAsync(r => r.Id == reviewId);
-        
+
         return reviewEntity?.Adapt<Review>();
     }
 
@@ -41,7 +41,7 @@ public class ReviewRepository(
             .Include(r => r.MenuItem)
             .Where(r => r.MenuItem.Id == menuItemId)
             .ToListAsync();
-        
+
         return reviews.Adapt<IReadOnlyCollection<Review>>();
     }
 
@@ -49,12 +49,12 @@ public class ReviewRepository(
     {
         var reviewEntity = await dbContext.Reviews
             .FirstAsync(r => r.Id == updatedReview.Id);
-        
+
         reviewEntity.Rating = updatedReview.Rating;
         reviewEntity.Content = updatedReview.Content;
-        
+
         dbContext.Reviews.Update(reviewEntity);
-        
+
         await dbContext.SaveChangesAsync();
     }
 
@@ -62,9 +62,9 @@ public class ReviewRepository(
     {
         var reviewEntity = await dbContext.Reviews
             .FirstAsync(r => r.Id == reviewId);
-        
+
         dbContext.Reviews.Remove(reviewEntity);
-        
+
         await dbContext.SaveChangesAsync();
     }
 }

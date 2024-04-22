@@ -1,4 +1,4 @@
-using CoffeeScoutBackend.Domain.Models;
+using CoffeeScoutBackend.Domain.ServiceModels;
 using FluentValidation;
 
 namespace CoffeeScoutBackend.Api.Validators.General;

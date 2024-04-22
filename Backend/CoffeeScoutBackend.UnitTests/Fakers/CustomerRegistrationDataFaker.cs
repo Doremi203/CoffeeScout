@@ -1,6 +1,6 @@
 using AutoBogus;
 using Bogus;
-using CoffeeScoutBackend.Domain.Models;
+using CoffeeScoutBackend.Domain.ServiceModels;
 
 namespace CoffeeScoutBackend.UnitTests.Fakers;
 
@@ -24,15 +24,21 @@ public static class CustomerRegistrationDataFaker
     public static CustomerRegistrationData WithFirstName(
         this CustomerRegistrationData customerRegistrationData,
         string firstName)
-        => customerRegistrationData with { FirstName = firstName };
+    {
+        return customerRegistrationData with { FirstName = firstName };
+    }
 
     public static CustomerRegistrationData WithEmail(
         this CustomerRegistrationData customerRegistrationData,
         string email)
-        => customerRegistrationData with { Email = email };
+    {
+        return customerRegistrationData with { Email = email };
+    }
 
     public static CustomerRegistrationData WithPassword(
         this CustomerRegistrationData customerRegistrationData,
         string password)
-        => customerRegistrationData with { Password = password };
+    {
+        return customerRegistrationData with { Password = password };
+    }
 }

@@ -97,7 +97,7 @@ public class CoffeeChainServiceTests
 
         _coffeeChainRepositoryFake.Verify(x => x.Add(coffeeChain), Times.Once);
     }
-    
+
     [Fact]
     public async Task Update_WhenCoffeeChainExists_UpdatesCoffeeChain()
     {
@@ -119,7 +119,7 @@ public class CoffeeChainServiceTests
         _coffeeChainRepositoryFake.Verify(x => x.Update(coffeeChain.Id, updatedCoffeeChain), Times.Once);
         _coffeeChainRepositoryFake.Verify(x => x.GetById(coffeeChain.Id), Times.Once);
     }
-    
+
     [Fact]
     public void Update_WhenCoffeeChainDoesNotExist_ThrowsCoffeeChainNotFoundException()
     {
@@ -132,7 +132,7 @@ public class CoffeeChainServiceTests
             .ReturnsAsync(default(CoffeeChain));
 
         // Act
-        Func<Task> act = async () => await _coffeeChainService.Update(coffeeChainId, updatedCoffeeChain);
+        var act = async () => await _coffeeChainService.Update(coffeeChainId, updatedCoffeeChain);
 
         // Assert
         act.Should().ThrowAsync<CoffeeChainNotFoundException>()
@@ -141,7 +141,7 @@ public class CoffeeChainServiceTests
         _coffeeChainRepositoryFake.Verify(x => x.GetById(coffeeChainId), Times.Once);
         _coffeeChainRepositoryFake.Verify(x => x.Update(It.IsAny<long>(), It.IsAny<CoffeeChain>()), Times.Never);
     }
-    
+
     [Fact]
     public async Task Delete_WhenCoffeeChainExists_DeletesCoffeeChain()
     {
@@ -162,7 +162,7 @@ public class CoffeeChainServiceTests
         _coffeeChainRepositoryFake.Verify(x => x.Delete(coffeeChain.Id), Times.Once);
         _coffeeChainRepositoryFake.Verify(x => x.GetById(coffeeChain.Id), Times.Once);
     }
-    
+
     [Fact]
     public void Delete_WhenCoffeeChainDoesNotExist_ThrowsCoffeeChainNotFoundException()
     {
@@ -174,7 +174,7 @@ public class CoffeeChainServiceTests
             .ReturnsAsync(default(CoffeeChain));
 
         // Act
-        Func<Task> act = async () => await _coffeeChainService.Delete(coffeeChainId);
+        var act = async () => await _coffeeChainService.Delete(coffeeChainId);
 
         // Assert
         act.Should().ThrowAsync<CoffeeChainNotFoundException>()

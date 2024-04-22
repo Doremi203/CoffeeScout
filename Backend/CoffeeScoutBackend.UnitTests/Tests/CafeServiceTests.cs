@@ -12,8 +12,8 @@ namespace CoffeeScoutBackend.UnitTests.Tests;
 public class CafeServiceTests
 {
     private readonly Mock<ICafeRepository> _cafeRepositoryFake = new(MockBehavior.Strict);
-    private readonly Mock<ICoffeeChainService> _coffeeChainServiceFake = new(MockBehavior.Strict);
     private readonly ICafeService _cafeService;
+    private readonly Mock<ICoffeeChainService> _coffeeChainServiceFake = new(MockBehavior.Strict);
 
     public CafeServiceTests()
     {
@@ -138,7 +138,7 @@ public class CafeServiceTests
             .ReturnsAsync(default(Cafe));
 
         // Act
-        Func<Task> act = async () => await _cafeService.AssignNewCafeAdmin(cafeAdmin.Id, cafe.Id);
+        var act = async () => await _cafeService.AssignNewCafeAdmin(cafeAdmin.Id, cafe.Id);
 
         // Assert
         await act.Should().ThrowAsync<CafeNotFoundException>()
@@ -253,7 +253,7 @@ public class CafeServiceTests
             .ReturnsAsync(default(Cafe));
 
         // Act
-        Func<Task> act = async () => await _cafeService.UpdateCafe(cafeAdmin[0].Id, cafe);
+        var act = async () => await _cafeService.UpdateCafe(cafeAdmin[0].Id, cafe);
 
         // Assert
         await act.Should().ThrowAsync<CafeNotFoundException>()
@@ -270,7 +270,7 @@ public class CafeServiceTests
         var cafe = CafeFaker.Generate()[0];
         var week = WorkingHoursFaker.GenerateWeek();
         cafe = cafe.WithWorkingHours(week);
-        var updatedCafe = cafe with { WorkingHours = week.Take(2).ToArray()};
+        var updatedCafe = cafe with { WorkingHours = week.Take(2).ToArray() };
         var cafeAdmin = CafeAdminFaker.Generate();
         cafeAdmin[0] = cafeAdmin[0].WithCafe(cafe);
         cafe = cafe.WithAdmins(cafeAdmin);
@@ -278,10 +278,10 @@ public class CafeServiceTests
         _cafeRepositoryFake
             .Setup(x => x.GetByAdminId(cafeAdmin[0].Id))
             .ReturnsAsync(cafe);
-        
+
 
         // Act
-        Func<Task> act = async () => await _cafeService.UpdateCafe(cafeAdmin[0].Id, updatedCafe);
+        var act = async () => await _cafeService.UpdateCafe(cafeAdmin[0].Id, updatedCafe);
 
         // Assert
         await act.Should().ThrowAsync<WorkingHoursNotFoundException>();
@@ -289,7 +289,7 @@ public class CafeServiceTests
         _cafeRepositoryFake.Verify(x => x.GetByAdminId(cafeAdmin[0].Id), Times.Once);
         _cafeRepositoryFake.Verify(x => x.Update(It.IsAny<Cafe>()), Times.Never);
     }
-    
+
     [Fact]
     public async Task DeleteCafe_WhenCafeExists_DeletesCafe()
     {
@@ -310,9 +310,9 @@ public class CafeServiceTests
         _cafeRepositoryFake.Verify(x => x.GetById(cafe.Id), Times.Once);
         _cafeRepositoryFake.Verify(x => x.Delete(cafe.Id), Times.Once);
     }
-    
+
     [Fact]
-public async Task DeleteCafe_WhenCafeDoesNotExist_ThrowsCafeNotFoundException()
+    public async Task DeleteCafe_WhenCafeDoesNotExist_ThrowsCafeNotFoundException()
     {
         // Arrange
         var cafe = CafeFaker.Generate()[0];
@@ -322,7 +322,7 @@ public async Task DeleteCafe_WhenCafeDoesNotExist_ThrowsCafeNotFoundException()
             .ReturnsAsync(default(Cafe));
 
         // Act
-        Func<Task> act = async () => await _cafeService.DeleteCafe(cafe.Id);
+        var act = async () => await _cafeService.DeleteCafe(cafe.Id);
 
         // Assert
         await act.Should().ThrowAsync<CafeNotFoundException>()

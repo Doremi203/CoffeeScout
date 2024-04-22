@@ -23,10 +23,7 @@ public static class CafeFaker
         lock (Lock)
         {
             var cafes = Faker.Generate(count).ToArray();
-            for (int i = 0; i < count; i++)
-            {
-                cafes[i] = cafes[i] with { WorkingHours = SetWorkingHours(cafes[i]) };
-            }
+            for (var i = 0; i < count; i++) cafes[i] = cafes[i] with { WorkingHours = SetWorkingHours(cafes[i]) };
 
             return cafes;
         }
@@ -35,31 +32,36 @@ public static class CafeFaker
     private static WorkingHours[] SetWorkingHours(Cafe cafe)
     {
         var workingHours = WorkingHoursFaker.GenerateWeek();
-        for (var i = 0; i < 7; i++)
-        {
-            workingHours[i] = workingHours[i] with { Cafe = cafe };
-        }
+        for (var i = 0; i < 7; i++) workingHours[i] = workingHours[i] with { Cafe = cafe };
 
         return workingHours;
     }
-    
+
     public static Cafe WithId(
         this Cafe cafe,
         long id)
-        => cafe with { Id = id };
+    {
+        return cafe with { Id = id };
+    }
 
     public static Cafe WithAdmins(
         this Cafe cafe,
         CafeAdmin[] admins)
-        => cafe with { Admins = admins };
-    
+    {
+        return cafe with { Admins = admins };
+    }
+
     public static Cafe WithWorkingHours(
         this Cafe cafe,
         WorkingHours[] workingHours)
-        => cafe with { WorkingHours = workingHours };
-    
+    {
+        return cafe with { WorkingHours = workingHours };
+    }
+
     public static Cafe WithMenuItems(
         this Cafe cafe,
         MenuItem[] menuItems)
-        => cafe with { MenuItems = menuItems };
+    {
+        return cafe with { MenuItems = menuItems };
+    }
 }

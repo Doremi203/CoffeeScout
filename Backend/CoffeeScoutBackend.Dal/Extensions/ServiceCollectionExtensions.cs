@@ -19,7 +19,7 @@ public static class ServiceCollectionExtensions
     {
         services.Configure<DatabaseSettings>(
             configuration.GetSection(nameof(DatabaseSettings)));
-        
+
         var databaseSettings = configuration
             .GetRequiredSection(nameof(DatabaseSettings))
             .Get<DatabaseSettings>()!;

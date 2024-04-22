@@ -20,19 +20,25 @@ public static class CustomerFaker
             return Faker.Generate(count).ToArray();
         }
     }
-    
+
     public static Customer WithFavoriteMenuItems(
         this Customer customer,
         MenuItem[] menuItems)
-        => customer with { FavoriteMenuItems = menuItems };
-    
+    {
+        return customer with { FavoriteMenuItems = menuItems };
+    }
+
     public static Customer WithId(
         this Customer customer,
         string id)
-        => customer with { Id = id };
-    
+    {
+        return customer with { Id = id };
+    }
+
     public static Customer WithFirstName(
         this Customer customer,
         string firstName)
-        => customer with { FirstName = firstName };
+    {
+        return customer with { FirstName = firstName };
+    }
 }

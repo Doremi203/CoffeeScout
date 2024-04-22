@@ -1,4 +1,3 @@
-using CoffeeScoutBackend.Domain.Exceptions;
 using CoffeeScoutBackend.Domain.Exceptions.NotFound;
 using CoffeeScoutBackend.Domain.Interfaces.Repositories;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
@@ -9,7 +8,7 @@ namespace CoffeeScoutBackend.Bll.Services;
 public class BeverageTypeService(
     IBeverageTypeRepository beverageTypeRepository
 ) : IBeverageTypeService
-{ 
+{
     public async Task<BeverageType> GetById(long id)
     {
         return await beverageTypeRepository
@@ -32,14 +31,14 @@ public class BeverageTypeService(
             Name = beverageType.Name,
             Description = beverageType.Description
         };
-        
+
         await beverageTypeRepository.Update(updatedBeverage);
     }
 
     public async Task Delete(long id)
     {
         var beverage = await GetById(id);
-        
+
         await beverageTypeRepository.Delete(beverage.Id);
     }
 

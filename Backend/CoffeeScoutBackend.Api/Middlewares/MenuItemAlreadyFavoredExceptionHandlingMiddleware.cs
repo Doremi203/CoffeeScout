@@ -23,7 +23,7 @@ public class MenuItemAlreadyFavoredExceptionHandlingMiddleware(
                 {
                     Title = "Menu item already favored",
                     Detail = ex.Message,
-                    Type = "https://datatracker.ietf.org/doc/html/rfc9110#section-15.5.1",
+                    Type = "https://datatracker.ietf.org/doc/html/rfc9110#section-15.5.1"
                 },
                 Exception = ex
             });

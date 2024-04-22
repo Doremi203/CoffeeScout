@@ -25,10 +25,7 @@ public static class WorkingHoursFaker
     public static WorkingHours[] GenerateWeek()
     {
         var days = Generate(7);
-        for (var i = 0; i < 7; i++)
-        {
-            days[i] = days[i] with { DayOfWeek = (DayOfWeek)i };
-        }
+        for (var i = 0; i < 7; i++) days[i] = days[i] with { DayOfWeek = (DayOfWeek)i };
 
         return days;
     }

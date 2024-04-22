@@ -27,30 +27,42 @@ public static class OrderFaker
     public static Order WithId(
         this Order order,
         long id)
-        => order with { Id = id };
+    {
+        return order with { Id = id };
+    }
 
     public static Order WithCustomer(
         this Order order,
         Customer customer)
-        => order with { Customer = customer };
+    {
+        return order with { Customer = customer };
+    }
 
     public static Order WithDate(
         this Order order,
         DateTime date)
-        => order with { Date = date };
+    {
+        return order with { Date = date };
+    }
 
     public static Order WithCafe(
         this Order order,
         Cafe cafe)
-        => order with { Cafe = cafe };
+    {
+        return order with { Cafe = cafe };
+    }
 
     public static Order WithOrderItems(
         this Order order,
         OrderItem[] orderItems)
-        => order with { OrderItems = orderItems.ToList() };
+    {
+        return order with { OrderItems = orderItems.ToList() };
+    }
 
     public static Order WithStatus(
         this Order order,
         OrderStatus status)
-        => order with { Status = status };
+    {
+        return order with { Status = status };
+    }
 }

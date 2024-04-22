@@ -5,7 +5,6 @@ using CoffeeScoutBackend.Domain.Models;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using Npgsql;
 
 namespace CoffeeScoutBackend.Dal.Repositories;
 
@@ -79,7 +78,7 @@ public class MenuItemRepository(
     public async Task<IReadOnlyCollection<MenuItem>> Search(string name, int limit)
     {
         var searchName = string.Join(" & ", name.Trim().Split().Select(w => $"{w}:*"));
-        
+
         var menuItems = await GetMenuItems()
             .Where(m => m.SearchVector.Matches(EF.Functions.ToTsQuery("russian", searchName)))
             .OrderByDescending(m => m.SearchVector.Rank(EF.Functions.ToTsQuery("russian", searchName)))
@@ -88,7 +87,7 @@ public class MenuItemRepository(
 
         return menuItems.Adapt<IReadOnlyCollection<MenuItem>>();
     }
-    
+
     private IIncludableQueryable<MenuItemEntity, CafeEntity> GetMenuItems()
     {
         return dbContext.MenuItems

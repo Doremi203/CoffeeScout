@@ -7,7 +7,7 @@ namespace CoffeeScoutBackend.UnitTests.Fakers;
 public static class MenuItemFaker
 {
     private static readonly object Lock = new();
-    
+
     private static readonly Faker<MenuItem> Faker = new AutoFaker<MenuItem>()
         .RuleFor(x => x.Id, f => f.Random.Long(1))
         .RuleFor(x => x.Name, f => f.Commerce.ProductName())
@@ -24,39 +24,53 @@ public static class MenuItemFaker
             return Faker.Generate(count).ToArray();
         }
     }
-    
+
     public static MenuItem WithId(
         this MenuItem menuItem,
         long id)
-        => menuItem with { Id = id };
-    
+    {
+        return menuItem with { Id = id };
+    }
+
     public static MenuItem WithName(
         this MenuItem menuItem,
         string name)
-        => menuItem with { Name = name };
-    
+    {
+        return menuItem with { Name = name };
+    }
+
     public static MenuItem WithBeverageType(
         this MenuItem menuItem,
         BeverageType beverageType)
-        => menuItem with { BeverageType = beverageType };
-    
+    {
+        return menuItem with { BeverageType = beverageType };
+    }
+
     public static MenuItem WithPrice(
         this MenuItem menuItem,
         decimal price)
-        => menuItem with { Price = price };
-    
+    {
+        return menuItem with { Price = price };
+    }
+
     public static MenuItem WithReviews(
         this MenuItem menuItem,
         Review[] reviews)
-        => menuItem with { Reviews = reviews };
-    
+    {
+        return menuItem with { Reviews = reviews };
+    }
+
     public static MenuItem WithCustomersFavoredBy(
         this MenuItem menuItem,
         Customer[] customers)
-        => menuItem with { CustomersFavoredBy = customers };
-    
+    {
+        return menuItem with { CustomersFavoredBy = customers };
+    }
+
     public static MenuItem WithCafe(
         this MenuItem menuItem,
         Cafe cafe)
-        => menuItem with { Cafe = cafe };
+    {
+        return menuItem with { Cafe = cafe };
+    }
 }

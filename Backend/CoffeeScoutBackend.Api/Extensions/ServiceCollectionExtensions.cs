@@ -23,7 +23,7 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
-    
+
     public static IServiceCollection AddApiInfrastructure(
         this IServiceCollection services,
         IConfiguration configuration
@@ -41,7 +41,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddValidatorsFromAssemblyContaining<Program>();
         services.AddFluentValidationAutoValidation();
-        
+
         return services;
     }
 

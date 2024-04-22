@@ -1,6 +1,7 @@
 using CoffeeScoutBackend.Api.Requests.V1.Accounts;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
+using CoffeeScoutBackend.Domain.ServiceModels;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +22,7 @@ public class AccountsController(
     {
         await customerService.RegisterCustomer(
             request.Adapt<CustomerRegistrationData>());
-        
+
         return Ok();
     }
 

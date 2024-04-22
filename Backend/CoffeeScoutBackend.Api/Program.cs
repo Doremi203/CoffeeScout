@@ -1,10 +1,8 @@
 using CoffeeScoutBackend.Api;
 using CoffeeScoutBackend.Api.DbSeeders;
 using CoffeeScoutBackend.Api.Extensions;
-using CoffeeScoutBackend.Api.Identity;
 using CoffeeScoutBackend.Api.Requests.Mappers;
 using CoffeeScoutBackend.Api.Responses.Mappers;
-using CoffeeScoutBackend.Bll;
 using CoffeeScoutBackend.Bll.Extensions;
 using CoffeeScoutBackend.Dal;
 using CoffeeScoutBackend.Dal.Entities;
@@ -31,6 +29,7 @@ if (builder.Environment.IsDevelopment())
     builder.Services.AddTransient<IDbSeeder, TestDbSeeder>();
     builder.Services.AddHttpLogging(_ => { });
 }
+
 builder.Services
     .AddIdentityServices()
     .AddBllServices()
@@ -51,10 +50,7 @@ if (app.Environment.IsDevelopment())
     app.UseHttpLogging();
 }
 
-if (app.Environment.IsEnvironment("ApiTests"))
-{
-    await dbContext.Database.EnsureDeletedAsync();
-}
+if (app.Environment.IsEnvironment("ApiTests")) await dbContext.Database.EnsureDeletedAsync();
 
 //app.UseHttpsRedirection();
 

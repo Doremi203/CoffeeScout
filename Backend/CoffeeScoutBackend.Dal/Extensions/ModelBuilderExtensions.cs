@@ -56,7 +56,7 @@ public static class ModelBuilderExtensions
                 m => new { m.Name })
             .HasIndex(m => m.SearchVector)
             .HasMethod("GIN");
-        
+
         return modelBuilder;
     }
 
@@ -75,14 +75,14 @@ public static class ModelBuilderExtensions
     {
         return modelBuilder;
     }
-    
+
     public static ModelBuilder ConfigureOrderItemEntity(this ModelBuilder modelBuilder)
     {
         var entity = modelBuilder.Entity<OrderItemEntity>();
-        
+
         entity
             .HasKey(o => new { o.OrderId, o.MenuItemId });
-        
+
         return modelBuilder;
     }
 }

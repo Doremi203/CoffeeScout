@@ -21,15 +21,15 @@ public class ReviewService(
             MenuItem = menuItem,
             Customer = customer
         };
-        
+
         return await reviewRepository.AddReview(reviewToAdd);
     }
 
     public async Task<Review> GetById(long reviewId)
     {
         var review = await reviewRepository.GetById(reviewId)
-            ?? throw new ReviewNotFoundException(
-                $"Review with id: {reviewId} not found", reviewId);
+                     ?? throw new ReviewNotFoundException(
+                         $"Review with id: {reviewId} not found", reviewId);
 
         return review;
     }
@@ -37,7 +37,7 @@ public class ReviewService(
     public async Task<IReadOnlyCollection<Review>> GetByMenuItemId(long menuItemId)
     {
         var menuItem = await menuItemService.GetById(menuItemId);
-        
+
         return await reviewRepository.GetByMenuItemId(menuItem.Id);
     }
 
@@ -54,11 +54,11 @@ public class ReviewService(
 
         await reviewRepository.UpdateReview(updatedReview);
     }
-    
+
     public async Task Delete(long reviewId)
     {
         var review = await GetById(reviewId);
-        
+
         await reviewRepository.DeleteReview(review.Id);
     }
 }

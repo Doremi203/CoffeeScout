@@ -19,7 +19,7 @@ public static class ServiceCollectionExtensions
             .AddScoped<ICafeService, CafeService>()
             .AddScoped<IMenuItemService, MenuItemService>()
             .AddScoped<ICafeAdminService, CafeAdminService>();
-        
+
         services
             .AddScoped<IDateTimeProvider, DateTimeProvider>();
 

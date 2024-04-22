@@ -5,6 +5,7 @@ using CoffeeScoutBackend.Domain.Exceptions.NotFound;
 using CoffeeScoutBackend.Domain.Interfaces.Repositories;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
+using CoffeeScoutBackend.Domain.ServiceModels;
 
 namespace CoffeeScoutBackend.Bll.Services;
 
@@ -21,10 +22,10 @@ public class OrderService(
     {
         var customer = await customerService.GetByUserId(orderData.CustomerId);
         var cafe = await cafeService.GetById(orderData.CafeId);
-        
+
         var orderItems = await FormOrderItems(
             orderData.MenuItems, orderData.CafeId);
-        
+
         var order = new Order
         {
             Customer = customer,
@@ -49,7 +50,7 @@ public class OrderService(
     public async Task<IReadOnlyCollection<Order>> GetCafeOrders(string adminId, GetOrdersModel model)
     {
         var cafe = await cafeService.GetByAdminId(adminId);
-        
+
         return await orderRepository.GetByCafeId(cafe.Id, model);
     }
 
@@ -89,7 +90,7 @@ public class OrderService(
 
         await orderRepository.UpdateStatus(id, OrderStatus.Cancelled);
     }
-    
+
     public async Task CustomerCancelOrder(string userId, long id)
     {
         var order = await GetById(id);
@@ -157,7 +158,7 @@ public class OrderService(
             {
                 MenuItem = menuItem,
                 Quantity = orderDataMenuItem.Quantity,
-                PricePerItem = menuItem.Price,
+                PricePerItem = menuItem.Price
             };
 
             orderItems.Add(orderItem);

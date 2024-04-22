@@ -69,24 +69,22 @@ public class CafeService(
         await cafeRepository.Update(modifiedCafe);
     }
 
+    public async Task DeleteCafe(long id)
+    {
+        var cafe = await GetById(id);
+
+        await cafeRepository.Delete(cafe.Id);
+    }
+
     private void AssertWorkingHoursExist(
         IReadOnlyCollection<WorkingHours> workingHours,
         IReadOnlyCollection<WorkingHours> existingCafeWorkingHours
     )
     {
         foreach (var workingHour in existingCafeWorkingHours)
-        {
             if (workingHours.All(wh => wh.DayOfWeek != workingHour.DayOfWeek))
                 throw new WorkingHoursNotFoundException(
                     $"Working hours not found for {workingHour.DayOfWeek}",
                     workingHour.DayOfWeek);
-        }
-    }
-
-    public async Task DeleteCafe(long id)
-    {
-        var cafe = await GetById(id);
-
-        await cafeRepository.Delete(cafe.Id);
     }
 }

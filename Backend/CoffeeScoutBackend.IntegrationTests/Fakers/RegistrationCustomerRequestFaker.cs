@@ -20,19 +20,25 @@ public static class RegistrationCustomerRequestFaker
             return Faker.Generate(count).ToArray();
         }
     }
-    
+
     public static RegisterCustomerRequest WithFirstName(
-        this RegisterCustomerRequest src, 
+        this RegisterCustomerRequest src,
         string firstName)
-        => src with { FirstName = firstName };
-    
+    {
+        return src with { FirstName = firstName };
+    }
+
     public static RegisterCustomerRequest WithEmail(
-        this RegisterCustomerRequest src, 
+        this RegisterCustomerRequest src,
         string email)
-        => src with { Email = email };
-    
+    {
+        return src with { Email = email };
+    }
+
     public static RegisterCustomerRequest WithPassword(
-        this RegisterCustomerRequest src, 
+        this RegisterCustomerRequest src,
         string password)
-        => src with { Password = password };
+    {
+        return src with { Password = password };
+    }
 }

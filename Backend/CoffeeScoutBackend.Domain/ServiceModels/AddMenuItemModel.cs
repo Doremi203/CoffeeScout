@@ -1,4 +1,4 @@
-namespace CoffeeScoutBackend.Domain.Models;
+namespace CoffeeScoutBackend.Domain.ServiceModels;
 
 public record AddMenuItemModel
 {

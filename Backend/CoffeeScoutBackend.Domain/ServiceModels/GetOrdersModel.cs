@@ -1,4 +1,6 @@
-namespace CoffeeScoutBackend.Domain.Models;
+using CoffeeScoutBackend.Domain.Models;
+
+namespace CoffeeScoutBackend.Domain.ServiceModels;
 
 public record GetOrdersModel
 {

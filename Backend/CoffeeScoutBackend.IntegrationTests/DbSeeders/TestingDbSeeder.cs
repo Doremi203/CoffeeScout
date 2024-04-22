@@ -28,7 +28,7 @@ public class TestingDbSeeder(
             if (!await roleManager.RoleExistsAsync(role))
                 await roleManager.CreateAsync(new IdentityRole(role));
     }
-    
+
     private async Task SeedSuperAdminAsync()
     {
         using var scope = serviceProvider.CreateScope();
