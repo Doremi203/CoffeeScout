@@ -19,7 +19,7 @@ export const Product = ({name, size, price, type, menuItemId}) => {
 
     return (
         <div>
-            {isVisible && <Card style={{width: '14rem'}}>
+            {isVisible && <Card style={{minWidth: 240, maxHeight: 350}}>
                 <Card.Img variant="top" src="./coffee.png" className="coffee"/>
                 <Card.Body>
                     <Card.Title>{name}</Card.Title>
