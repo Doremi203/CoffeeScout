@@ -2,7 +2,7 @@ namespace CoffeeScoutBackend.Domain.Models;
 
 public record CreateOrderData
 {
-    public class MenuItemData
+    public record MenuItemData
     {
         public required long Id { get; init; }
         public required int Quantity { get; init; }

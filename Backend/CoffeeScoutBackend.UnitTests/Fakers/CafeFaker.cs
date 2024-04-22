@@ -42,6 +42,11 @@ public static class CafeFaker
 
         return workingHours;
     }
+    
+    public static Cafe WithId(
+        this Cafe cafe,
+        long id)
+        => cafe with { Id = id };
 
     public static Cafe WithAdmins(
         this Cafe cafe,
