@@ -20,10 +20,11 @@ public class OrderService(
     public async Task<Order> CreateOrder(CreateOrderData orderData)
     {
         var customer = await customerService.GetByUserId(orderData.CustomerId);
-
+        var cafe = await cafeService.GetById(orderData.CafeId);
+        
         var orderItems = await FormOrderItems(
             orderData.MenuItems, orderData.CafeId);
-        var cafe = await cafeService.GetById(orderData.CafeId);
+        
         var order = new Order
         {
             Customer = customer,

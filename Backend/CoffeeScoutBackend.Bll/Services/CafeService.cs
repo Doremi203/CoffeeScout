@@ -1,4 +1,3 @@
-using CoffeeScoutBackend.Domain.Exceptions;
 using CoffeeScoutBackend.Domain.Exceptions.NotFound;
 using CoffeeScoutBackend.Domain.Interfaces.Repositories;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
@@ -75,9 +74,9 @@ public class CafeService(
         IReadOnlyCollection<WorkingHours> existingCafeWorkingHours
     )
     {
-        foreach (var workingHour in workingHours)
+        foreach (var workingHour in existingCafeWorkingHours)
         {
-            if (existingCafeWorkingHours.All(wh => wh.DayOfWeek != workingHour.DayOfWeek))
+            if (workingHours.All(wh => wh.DayOfWeek != workingHour.DayOfWeek))
                 throw new WorkingHoursNotFoundException(
                     $"Working hours not found for {workingHour.DayOfWeek}",
                     workingHour.DayOfWeek);

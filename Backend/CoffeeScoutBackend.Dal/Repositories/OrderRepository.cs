@@ -68,12 +68,12 @@ public class OrderRepository(
         return orderEntities.Adapt<IReadOnlyCollection<Order>>();
     }
 
-    public async Task UpdateStatus(long id, OrderStatus cancelled)
+    public async Task UpdateStatus(long id, OrderStatus status)
     {
         var orderEntity = await dbContext.Orders
             .FirstAsync(o => o.Id == id);
 
-        orderEntity.Status = cancelled;
+        orderEntity.Status = status;
 
         dbContext.Update(orderEntity);
 
