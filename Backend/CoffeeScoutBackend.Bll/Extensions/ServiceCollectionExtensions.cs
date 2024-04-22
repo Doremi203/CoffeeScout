@@ -1,12 +1,11 @@
 using CoffeeScoutBackend.Bll.Infrastructure;
-using CoffeeScoutBackend.Bll.Interfaces;
 using CoffeeScoutBackend.Bll.Services;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CoffeeScoutBackend.Bll;
+namespace CoffeeScoutBackend.Bll.Extensions;
 
-public static class BllServicesExtensions
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddBllServices(this IServiceCollection services)
     {

@@ -4,18 +4,26 @@ using CoffeeScoutBackend.Dal.Repositories;
 using CoffeeScoutBackend.Domain.Interfaces.Repositories;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NetTopologySuite.Geometries;
 using Location = CoffeeScoutBackend.Domain.Models.Location;
 
-namespace CoffeeScoutBackend.Dal;
+namespace CoffeeScoutBackend.Dal.Extensions;
 
-public static class DalServiceExtensions
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddDalServices(
         this IServiceCollection services,
-        DatabaseSettings databaseSettings)
+        IConfiguration configuration)
     {
+        services.Configure<DatabaseSettings>(
+            configuration.GetSection(nameof(DatabaseSettings)));
+        
+        var databaseSettings = configuration
+            .GetRequiredSection(nameof(DatabaseSettings))
+            .Get<DatabaseSettings>()!;
+
         services.AddDbContext<AppDbContext>(options =>
         {
             options
@@ -37,21 +45,21 @@ public static class DalServiceExtensions
         services
             .AddSingleton<ILocationProvider, GpsLocationProvider>();
 
-        var locationProvider = services.BuildServiceProvider().GetRequiredService<ILocationProvider>();
-        ConfigureMapping(locationProvider);
+        services.ConfigureMapsterMapping();
 
         return services;
     }
 
-    private static void ConfigureMapping(ILocationProvider locationProvider)
+    private static void ConfigureMapsterMapping(this IServiceCollection services)
     {
+        var locationProvider = services.BuildServiceProvider().GetRequiredService<ILocationProvider>();
         TypeAdapterConfig.GlobalSettings.Default.PreserveReference(true);
-        
+
         TypeAdapterConfig<Point, Location>.NewConfig()
-            .MapWith(dest => 
+            .MapWith(dest =>
                 new Location { Latitude = dest.Y, Longitude = dest.X });
         TypeAdapterConfig<Location, Point>.NewConfig()
-            .MapWith(dest => 
+            .MapWith(dest =>
                 locationProvider.CreatePoint(dest.Latitude, dest.Longitude));
     }
 }
