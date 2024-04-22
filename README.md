@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ## Покрытие тестами
-![Coverage Report](https://ibb.co/jv5frpz)
+[![image.png](https://i.postimg.cc/sDtLpStb/image.png)](https://postimg.cc/HV93mJWt)
 
 ## Описание
 
@@ -60,6 +60,12 @@ docker-compose pull frontend
 
 ```bash
 docker-compose logs backend
+```
+
+Остановить приложение:
+
+```bash
+docker-compose down
 ```
 
 ## Contributing
