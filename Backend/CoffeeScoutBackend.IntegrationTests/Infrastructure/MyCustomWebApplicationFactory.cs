@@ -1,7 +1,6 @@
 using CoffeeScoutBackend.Api.DbSeeders;
 using CoffeeScoutBackend.Domain.Interfaces.Repositories;
 using CoffeeScoutBackend.IntegrationTests.DbSeeders;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -13,6 +12,8 @@ namespace CoffeeScoutBackend.IntegrationTests.Infrastructure;
 
 public class MyCustomWebApplicationFactory<TEntryPoint> : WebApplicationFactory<TEntryPoint> where TEntryPoint : class
 {
+    public readonly Mock<IEmailSender> EmailSenderFake = new(MockBehavior.Strict);
+
     public IBeverageTypeRepository BeverageTypeRepository { get; set; }
     public ICafeRepository CafeRepository { get; set; }
     public ICoffeeChainRepository CoffeeChainRepository { get; set; }
@@ -20,12 +21,6 @@ public class MyCustomWebApplicationFactory<TEntryPoint> : WebApplicationFactory<
     public IMenuItemRepository MenuItemRepository { get; set; }
     public IOrderRepository OrderRepository { get; set; }
     public IReviewRepository ReviewRepository { get; set; }
-    
-    public readonly Mock<IEmailSender> EmailSenderFake = new(MockBehavior.Strict);
-
-    public MyCustomWebApplicationFactory()
-    {
-    }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -35,7 +30,8 @@ public class MyCustomWebApplicationFactory<TEntryPoint> : WebApplicationFactory<
                 services.Replace(new ServiceDescriptor(typeof(IEmailSender),
                     EmailSenderFake.Object));
 
-                services.Replace(new ServiceDescriptor(typeof(IDbSeeder), new TestingDbSeeder(services.BuildServiceProvider())));
+                services.Replace(new ServiceDescriptor(typeof(IDbSeeder),
+                    new TestingDbSeeder(services.BuildServiceProvider())));
             })
             .Configure(app =>
             {
@@ -51,7 +47,4 @@ public class MyCustomWebApplicationFactory<TEntryPoint> : WebApplicationFactory<
                 ReviewRepository = serviceProvider.GetRequiredService<IReviewRepository>();
             });
     }
-    
-    
-    
 }

@@ -3,6 +3,7 @@ using CoffeeScoutBackend.Bll.Interfaces;
 using CoffeeScoutBackend.Dal.Entities;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
+using CoffeeScoutBackend.Domain.ServiceModels;
 
 namespace CoffeeScoutBackend.Bll.Services;
 

@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using CoffeeScoutBackend.Domain.Exceptions;
 using CoffeeScoutBackend.Domain.Exceptions.NotFound;
 
 namespace CoffeeScoutBackend.Api.Extensions;

@@ -1,6 +1,5 @@
 using CoffeeScoutBackend.Dal.Entities;
 using CoffeeScoutBackend.Dal.Infrastructure;
-using CoffeeScoutBackend.Domain.Exceptions;
 using CoffeeScoutBackend.Domain.Interfaces.Repositories;
 using CoffeeScoutBackend.Domain.Models;
 using Mapster;
@@ -55,7 +54,7 @@ public class CafeRepository(
         var cafeEntity = cafe.Adapt<CafeEntity>();
         cafeEntity.CoffeeChain = await dbContext.CoffeeChains
             .FirstAsync(cc => cc.Id == cafe.CoffeeChain.Id);
-        
+
         await dbContext.Cafes.AddAsync(cafeEntity);
         await dbContext.SaveChangesAsync();
 
@@ -72,7 +71,7 @@ public class CafeRepository(
         cafeEntity.Name = cafeData.Name;
         cafeEntity.Location = cafeData.Location;
         cafeEntity.Address = cafeData.Address;
-        
+
         foreach (var workingHours in cafeData.WorkingHours)
         {
             var existingWorkingHours = cafeEntity.WorkingHours

@@ -5,7 +5,7 @@ using CoffeeScoutBackend.Dal.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 
-namespace CoffeeScoutBackend.Api.Identity;
+namespace CoffeeScoutBackend.Api.Extensions;
 
 public static class IdentityServiceExtensions
 {

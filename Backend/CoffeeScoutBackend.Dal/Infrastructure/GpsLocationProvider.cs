@@ -21,7 +21,7 @@ public class GpsLocationProvider : ILocationProvider
         var locationPoint = CreatePoint(location.Latitude, location.Longitude);
         var area = locationPoint.Buffer(degrees);
         area.SRID = 4326;
-        
+
         return area;
     }
 }

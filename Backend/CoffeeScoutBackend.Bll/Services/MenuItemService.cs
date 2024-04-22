@@ -2,6 +2,7 @@ using CoffeeScoutBackend.Domain.Exceptions.NotFound;
 using CoffeeScoutBackend.Domain.Interfaces.Repositories;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
+using CoffeeScoutBackend.Domain.ServiceModels;
 
 namespace CoffeeScoutBackend.Bll.Services;
 
@@ -37,7 +38,7 @@ public class MenuItemService(
         return await menuItemRepository.GetAllInAreaByBeverageType(
             location, radiusInMeters, beverageType);
     }
-    
+
     public async Task<MenuItem> Add(AddMenuItemModel model)
     {
         var beverageType = await beverageTypeService.GetById(model.BeverageTypeId);

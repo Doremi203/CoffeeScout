@@ -14,7 +14,7 @@ public class WorkingHoursRequestValidator : AbstractValidator<WorkingHoursReques
             .SetValidator(timeValidator);
         RuleFor(request => request.ClosingTime)
             .SetValidator(timeValidator);
-        
+
         RuleFor(request => request.OpeningTime)
             .Must((request, openingTime) =>
             {

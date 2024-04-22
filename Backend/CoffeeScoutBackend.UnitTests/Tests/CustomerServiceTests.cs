@@ -6,6 +6,7 @@ using CoffeeScoutBackend.Domain.Exceptions.NotFound;
 using CoffeeScoutBackend.Domain.Interfaces.Repositories;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
+using CoffeeScoutBackend.Domain.ServiceModels;
 using CoffeeScoutBackend.UnitTests.Fakers;
 using FluentAssertions;
 using Mapster;
@@ -16,10 +17,10 @@ namespace CoffeeScoutBackend.UnitTests.Tests;
 public class CustomerServiceTests
 {
     private readonly Mock<ICustomerRepository> _customerRepositoryFake = new(MockBehavior.Strict);
-    private readonly Mock<IMenuItemService> _menuItemServiceFake = new(MockBehavior.Strict);
-    private readonly Mock<IRoleRegistrationService> _roleRegistrationServiceFake = new(MockBehavior.Strict);
 
     private readonly ICustomerService _customerService;
+    private readonly Mock<IMenuItemService> _menuItemServiceFake = new(MockBehavior.Strict);
+    private readonly Mock<IRoleRegistrationService> _roleRegistrationServiceFake = new(MockBehavior.Strict);
 
     public CustomerServiceTests()
     {
@@ -41,7 +42,7 @@ public class CustomerServiceTests
         {
             Id = customer.Id,
             UserName = customerRegistrationData.Email,
-            Email = customerRegistrationData.Email,
+            Email = customerRegistrationData.Email
         };
 
         _roleRegistrationServiceFake
@@ -125,9 +126,10 @@ public class CustomerServiceTests
         _menuItemServiceFake.Verify(x => x.GetById(menuItemId), Times.Once);
         _customerRepositoryFake.Verify(x => x.AddFavoredMenuItem(customer, menuItem), Times.Once);
     }
-    
+
     [Fact]
-    public async Task AddFavoredMenuItem_WithExistingCustomerAndAlreadyFavoredMenuItem_ShouldThrowMenuItemAlreadyFavoredException()
+    public async Task
+        AddFavoredMenuItem_WithExistingCustomerAndAlreadyFavoredMenuItem_ShouldThrowMenuItemAlreadyFavoredException()
     {
         // Arrange
         var menuItem = MenuItemFaker.Generate().First();
@@ -143,7 +145,7 @@ public class CustomerServiceTests
             .ReturnsAsync(menuItem);
 
         // Act
-        Func<Task> act = async () => await _customerService.AddFavoredMenuItem(customer.Id, menuItemId);
+        var act = async () => await _customerService.AddFavoredMenuItem(customer.Id, menuItemId);
 
         // Assert
         await act.Should().ThrowAsync<MenuItemAlreadyFavoredException>()
@@ -152,7 +154,7 @@ public class CustomerServiceTests
         _customerRepositoryFake.Verify(x => x.GetById(customer.Id), Times.Once);
         _menuItemServiceFake.Verify(x => x.GetById(menuItemId), Times.Once);
     }
-    
+
     [Fact]
     public async Task AddFavoredMenuItem_WithNonExistingCustomer_ShouldThrowCustomerNotFoundException()
     {
@@ -166,7 +168,7 @@ public class CustomerServiceTests
             .ReturnsAsync(default(Customer));
 
         // Act
-        Func<Task> act = async () => await _customerService.AddFavoredMenuItem(userId, menuItemId);
+        var act = async () => await _customerService.AddFavoredMenuItem(userId, menuItemId);
 
         // Assert
         await act.Should().ThrowAsync<CustomerNotFoundException>()
@@ -174,7 +176,7 @@ public class CustomerServiceTests
 
         _customerRepositoryFake.Verify(x => x.GetById(userId), Times.Once);
     }
-    
+
     [Fact]
     public async Task AddFavoredMenuItem_WithNonExistingMenuItem_ShouldThrowMenuItemNotFoundException()
     {
@@ -192,7 +194,7 @@ public class CustomerServiceTests
             .ThrowsAsync(expectedException);
 
         // Act
-        Func<Task> act = async () => await _customerService.AddFavoredMenuItem(customer.Id, menuItemId);
+        var act = async () => await _customerService.AddFavoredMenuItem(customer.Id, menuItemId);
 
         // Assert
         await act.Should().ThrowAsync<MenuItemNotFoundException>()
@@ -201,7 +203,7 @@ public class CustomerServiceTests
         _customerRepositoryFake.Verify(x => x.GetById(customer.Id), Times.Once);
         _menuItemServiceFake.Verify(x => x.GetById(menuItemId), Times.Once);
     }
-    
+
     [Fact]
     public async Task GetFavoredMenuItems_WithExistingCustomer_ShouldReturnFavoredMenuItems()
     {
@@ -222,7 +224,7 @@ public class CustomerServiceTests
 
         _customerRepositoryFake.Verify(x => x.GetById(customer.Id), Times.Once);
     }
-    
+
     [Fact]
     public async Task GetFavoredMenuItems_WithNonExistingCustomer_ShouldThrowCustomerNotFoundException()
     {
@@ -242,7 +244,7 @@ public class CustomerServiceTests
 
         _customerRepositoryFake.Verify(x => x.GetById(userId), Times.Once);
     }
-    
+
     [Fact]
     public async Task RemoveFavoredMenuItem_WithExistingCustomerAndFavoredMenuItem_ShouldRemoveFavoredMenuItem()
     {
@@ -270,9 +272,10 @@ public class CustomerServiceTests
         _menuItemServiceFake.Verify(x => x.GetById(menuItemId), Times.Once);
         _customerRepositoryFake.Verify(x => x.RemoveFavoredMenuItem(customer, favoredMenuItem), Times.Once);
     }
-    
+
     [Fact]
-    public async Task RemoveFavoredMenuItem_WithExistingCustomerAndNonFavoredMenuItem_ShouldThrowFavoredMenuItemNotFoundException()
+    public async Task
+        RemoveFavoredMenuItem_WithExistingCustomerAndNonFavoredMenuItem_ShouldThrowFavoredMenuItemNotFoundException()
     {
         // Arrange
         var favoredMenuItem = MenuItemFaker.Generate().First();
@@ -287,7 +290,7 @@ public class CustomerServiceTests
             .ReturnsAsync(favoredMenuItem);
 
         // Act
-        Func<Task> act = async () => await _customerService.RemoveFavoredMenuItem(customer.Id, menuItemId);
+        var act = async () => await _customerService.RemoveFavoredMenuItem(customer.Id, menuItemId);
 
         // Assert
         await act.Should().ThrowAsync<FavoredMenuItemNotFoundException>()
@@ -296,7 +299,7 @@ public class CustomerServiceTests
         _customerRepositoryFake.Verify(x => x.GetById(customer.Id), Times.Once);
         _menuItemServiceFake.Verify(x => x.GetById(menuItemId), Times.Once);
     }
-    
+
     [Fact]
     public async Task RemoveFavoredMenuItem_WithNonExistingCustomer_ShouldThrowCustomerNotFoundException()
     {
@@ -309,7 +312,7 @@ public class CustomerServiceTests
             .ReturnsAsync(default(Customer));
 
         // Act
-        Func<Task> act = async () => await _customerService.RemoveFavoredMenuItem(userId, menuItemId);
+        var act = async () => await _customerService.RemoveFavoredMenuItem(userId, menuItemId);
 
         // Assert
         await act.Should().ThrowAsync<CustomerNotFoundException>()
@@ -317,7 +320,7 @@ public class CustomerServiceTests
 
         _customerRepositoryFake.Verify(x => x.GetById(userId), Times.Once);
     }
-    
+
     [Fact]
     public async Task RemoveFavoredMenuItem_WithNonExistingMenuItem_ShouldThrowMenuItemNotFoundException()
     {
@@ -335,7 +338,7 @@ public class CustomerServiceTests
             .ThrowsAsync(expectedException);
 
         // Act
-        Func<Task> act = async () => await _customerService.RemoveFavoredMenuItem(customer.Id, menuItemId);
+        var act = async () => await _customerService.RemoveFavoredMenuItem(customer.Id, menuItemId);
 
         // Assert
         await act.Should().ThrowAsync<MenuItemNotFoundException>()
@@ -344,7 +347,7 @@ public class CustomerServiceTests
         _customerRepositoryFake.Verify(x => x.GetById(customer.Id), Times.Once);
         _menuItemServiceFake.Verify(x => x.GetById(menuItemId), Times.Once);
     }
-    
+
     [Fact]
     public async Task GetFavoredBeverageTypes_WithExistingCustomer_ShouldReturnFavoredBeverageTypes()
     {
@@ -365,7 +368,7 @@ public class CustomerServiceTests
 
         _customerRepositoryFake.Verify(x => x.GetById(customer.Id), Times.Once);
     }
-    
+
     [Fact]
     public async Task GetFavoredBeverageTypes_WithNonExistingCustomer_ShouldThrowCustomerNotFoundException()
     {
@@ -385,7 +388,7 @@ public class CustomerServiceTests
 
         _customerRepositoryFake.Verify(x => x.GetById(userId), Times.Once);
     }
-    
+
     [Fact]
     public async Task GetInfo_WithExistingCustomer_ShouldReturnCustomerInfo()
     {
@@ -405,7 +408,7 @@ public class CustomerServiceTests
 
         _customerRepositoryFake.Verify(x => x.GetById(customer.Id), Times.Once);
     }
-    
+
     [Fact]
     public async Task GetInfo_WithNonExistingCustomer_ShouldThrowCustomerNotFoundException()
     {
@@ -425,7 +428,7 @@ public class CustomerServiceTests
 
         _customerRepositoryFake.Verify(x => x.GetById(userId), Times.Once);
     }
-    
+
     [Fact]
     public async Task UpdateInfo_WithExistingCustomer_ShouldUpdateCustomerInfo()
     {
@@ -447,7 +450,7 @@ public class CustomerServiceTests
         _customerRepositoryFake.Verify(x => x.GetById(customer.Id), Times.Once);
         _customerRepositoryFake.Verify(x => x.Update(It.IsAny<Customer>()), Times.Once);
     }
-    
+
     [Fact]
     public async Task UpdateInfo_WithNonExistingCustomer_ShouldThrowCustomerNotFoundException()
     {
@@ -460,7 +463,7 @@ public class CustomerServiceTests
             .ReturnsAsync(default(Customer));
 
         // Act
-        Func<Task> act = async () => await _customerService.UpdateInfo(userId, customerInfo);
+        var act = async () => await _customerService.UpdateInfo(userId, customerInfo);
 
         // Assert
         await act.Should().ThrowAsync<CustomerNotFoundException>()

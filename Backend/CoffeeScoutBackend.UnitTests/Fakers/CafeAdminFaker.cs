@@ -19,9 +19,11 @@ public static class CafeAdminFaker
             return Faker.Generate(count).ToArray();
         }
     }
-    
+
     public static CafeAdmin WithCafe(
         this CafeAdmin cafeAdmin,
         Cafe cafe)
-        => cafeAdmin with { Cafe = cafe };
+    {
+        return cafeAdmin with { Cafe = cafe };
+    }
 }

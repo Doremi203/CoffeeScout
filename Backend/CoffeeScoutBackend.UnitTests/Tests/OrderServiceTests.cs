@@ -5,6 +5,7 @@ using CoffeeScoutBackend.Domain.Exceptions.NotFound;
 using CoffeeScoutBackend.Domain.Interfaces.Repositories;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
+using CoffeeScoutBackend.Domain.ServiceModels;
 using CoffeeScoutBackend.UnitTests.Fakers;
 using FluentAssertions;
 using Mapster;
@@ -14,13 +15,13 @@ namespace CoffeeScoutBackend.UnitTests.Tests;
 
 public class OrderServiceTests
 {
-    private readonly Mock<IOrderRepository> _orderRepositoryMock = new(MockBehavior.Strict);
-    private readonly Mock<ICustomerService> _customerServiceMock = new(MockBehavior.Strict);
-    private readonly Mock<IMenuItemService> _menuItemServiceMock = new(MockBehavior.Strict);
     private readonly Mock<ICafeService> _cafeServiceMock = new(MockBehavior.Strict);
-    private readonly Mock<IPaymentService> _paymentServiceMock = new(MockBehavior.Strict);
+    private readonly Mock<ICustomerService> _customerServiceMock = new(MockBehavior.Strict);
     private readonly Mock<IDateTimeProvider> _dateTimeProviderMock = new(MockBehavior.Strict);
+    private readonly Mock<IMenuItemService> _menuItemServiceMock = new(MockBehavior.Strict);
+    private readonly Mock<IOrderRepository> _orderRepositoryMock = new(MockBehavior.Strict);
     private readonly IOrderService _orderService;
+    private readonly Mock<IPaymentService> _paymentServiceMock = new(MockBehavior.Strict);
 
     public OrderServiceTests()
     {
@@ -63,7 +64,7 @@ public class OrderServiceTests
         _cafeServiceMock
             .Setup(x => x.GetById(cafe.Id))
             .ReturnsAsync(cafe);
-        for (int i = 0; i < menuItems.Length; i++)
+        for (var i = 0; i < menuItems.Length; i++)
         {
             menuItems[i] = menuItems[i].WithCafe(cafe);
             var menuItem = menuItems[i];
@@ -87,10 +88,7 @@ public class OrderServiceTests
 
         _customerServiceMock.Verify(x => x.GetByUserId(customer.Id), Times.Once);
         _cafeServiceMock.Verify(x => x.GetById(cafe.Id), Times.Once);
-        foreach (var menuItem in menuItems)
-        {
-            _menuItemServiceMock.Verify(x => x.GetById(menuItem.Id), Times.Once);
-        }
+        foreach (var menuItem in menuItems) _menuItemServiceMock.Verify(x => x.GetById(menuItem.Id), Times.Once);
 
         _dateTimeProviderMock.Verify(x => x.UtcNow, Times.Once);
         _orderRepositoryMock.Verify(x => x.Add(It.IsAny<Order>()), Times.Once);
@@ -170,7 +168,7 @@ public class OrderServiceTests
         _cafeServiceMock
             .Setup(x => x.GetById(cafe.Id))
             .ReturnsAsync(cafe);
-        for (int i = 0; i < menuItems.Length; i++)
+        for (var i = 0; i < menuItems.Length; i++)
         {
             menuItems[i] = menuItems[i].WithCafe(cafe);
             var menuItem = menuItems[i];
@@ -219,13 +217,10 @@ public class OrderServiceTests
         _cafeServiceMock
             .Setup(x => x.GetById(cafe.Id))
             .ReturnsAsync(cafe);
-        for (int i = 0; i < menuItems.Length; i++)
+        for (var i = 0; i < menuItems.Length; i++)
         {
             menuItems[i] = menuItems[i].WithCafe(cafe);
-            if (i == 0)
-            {
-                menuItems[i] = menuItems[i].WithCafe(otherCafe);
-            }
+            if (i == 0) menuItems[i] = menuItems[i].WithCafe(otherCafe);
 
             var menuItem = menuItems[i];
             _menuItemServiceMock
@@ -423,7 +418,7 @@ public class OrderServiceTests
             .ReturnsAsync(default(Order));
 
         // Act
-        Func<Task> act = async () => await _orderService.CompleteOrder(cafeAdmin.Id, orderId);
+        var act = async () => await _orderService.CompleteOrder(cafeAdmin.Id, orderId);
 
         // Assert
         await act.Should().ThrowAsync<OrderNotFoundException>()
@@ -450,7 +445,7 @@ public class OrderServiceTests
             .ReturnsAsync(order);
 
         // Act
-        Func<Task> act = async () => await _orderService.CompleteOrder(cafeAdmin.Id, order.Id);
+        var act = async () => await _orderService.CompleteOrder(cafeAdmin.Id, order.Id);
 
         // Assert
         await act.Should().ThrowAsync<InvalidOrderStatusException>()
@@ -484,7 +479,7 @@ public class OrderServiceTests
             .ReturnsAsync(cafe);
 
         // Act
-        Func<Task> act = async () => await _orderService.CompleteOrder(cafeAdmin[0].Id, order.Id);
+        var act = async () => await _orderService.CompleteOrder(cafeAdmin[0].Id, order.Id);
 
         // Assert
         await act.Should().ThrowAsync<OrderNotFoundException>()
@@ -537,7 +532,7 @@ public class OrderServiceTests
             .ReturnsAsync(default(Order));
 
         // Act
-        Func<Task> act = async () => await _orderService.CafeCancelOrder(cafeAdmin.Id, orderId);
+        var act = async () => await _orderService.CafeCancelOrder(cafeAdmin.Id, orderId);
 
         // Assert
         await act.Should().ThrowAsync<OrderNotFoundException>()
@@ -563,7 +558,7 @@ public class OrderServiceTests
             .ReturnsAsync(order);
 
         // Act
-        Func<Task> act = async () => await _orderService.CafeCancelOrder(cafeAdmin.Id, order.Id);
+        var act = async () => await _orderService.CafeCancelOrder(cafeAdmin.Id, order.Id);
 
         // Assert
         await act.Should().ThrowAsync<InvalidOrderStatusException>()
@@ -597,7 +592,7 @@ public class OrderServiceTests
             .ReturnsAsync(cafe);
 
         // Act
-        Func<Task> act = async () => await _orderService.CafeCancelOrder(cafeAdmin[0].Id, order.Id);
+        var act = async () => await _orderService.CafeCancelOrder(cafeAdmin[0].Id, order.Id);
 
         // Assert
         await act.Should().ThrowAsync<OrderNotFoundException>()
@@ -644,7 +639,7 @@ public class OrderServiceTests
             .ReturnsAsync(default(Order));
 
         // Act
-        Func<Task> act = async () => await _orderService.CustomerCancelOrder(customerId, orderId);
+        var act = async () => await _orderService.CustomerCancelOrder(customerId, orderId);
 
         // Assert
         await act.Should().ThrowAsync<OrderNotFoundException>()
@@ -670,7 +665,7 @@ public class OrderServiceTests
             .ReturnsAsync(order);
 
         // Act
-        Func<Task> act = async () => await _orderService.CustomerCancelOrder(customer.Id, order.Id);
+        var act = async () => await _orderService.CustomerCancelOrder(customer.Id, order.Id);
 
         // Assert
         await act.Should().ThrowAsync<InvalidOrderStatusException>()
@@ -696,7 +691,7 @@ public class OrderServiceTests
             .ReturnsAsync(order);
 
         // Act
-        Func<Task> act = async () => await _orderService.CustomerCancelOrder(customer.Id, order.Id);
+        var act = async () => await _orderService.CustomerCancelOrder(customer.Id, order.Id);
 
         // Assert
         await act.Should().ThrowAsync<OrderNotFoundException>()
@@ -704,7 +699,7 @@ public class OrderServiceTests
 
         _orderRepositoryMock.Verify(x => x.GetById(order.Id), Times.Once);
     }
-    
+
     [Fact]
     public async Task PayOrder_WithExistingOrderPending_ShouldPayOrder()
     {
@@ -731,7 +726,7 @@ public class OrderServiceTests
         _orderRepositoryMock.Verify(x => x.GetById(order.Id), Times.Once);
         _paymentServiceMock.Verify(x => x.ProcessPayment(getId, totalAmount), Times.Once);
     }
-    
+
     [Fact]
     public async Task PayOrder_WithNonExistingOrder_ShouldThrowOrderNotFoundException()
     {
@@ -746,7 +741,7 @@ public class OrderServiceTests
             .ReturnsAsync(default(Order));
 
         // Act
-        Func<Task> act = async () => await _orderService.PayOrder(getId, orderId);
+        var act = async () => await _orderService.PayOrder(getId, orderId);
 
         // Assert
         await act.Should().ThrowAsync<OrderNotFoundException>()
@@ -755,7 +750,7 @@ public class OrderServiceTests
         _orderRepositoryMock.Verify(x => x.GetById(orderId), Times.Once);
         _paymentServiceMock.Verify(x => x.ProcessPayment(getId, It.IsAny<decimal>()), Times.Never);
     }
-    
+
     [Fact]
     public async Task PayOrder_WithOrderNotPending_ShouldThrowInvalidOrderStatusException()
     {
@@ -772,7 +767,7 @@ public class OrderServiceTests
             .ReturnsAsync(order);
 
         // Act
-        Func<Task> act = async () => await _orderService.PayOrder(getId, order.Id);
+        var act = async () => await _orderService.PayOrder(getId, order.Id);
 
         // Assert
         await act.Should().ThrowAsync<InvalidOrderStatusException>()

@@ -2,6 +2,7 @@ using System.Transactions;
 using CoffeeScoutBackend.Dal.Entities;
 using CoffeeScoutBackend.Domain.Interfaces.Repositories;
 using CoffeeScoutBackend.Domain.Models;
+using CoffeeScoutBackend.Domain.ServiceModels;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
@@ -16,7 +17,7 @@ public class OrderRepository(
     {
         using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
         var orderEntity = order.Adapt<OrderEntity>();
-        
+
         orderEntity.Cafe = await dbContext.Cafes
             .FirstAsync(c => c.Id == order.Cafe.Id);
 

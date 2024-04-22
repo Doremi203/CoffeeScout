@@ -14,7 +14,7 @@ public class BeverageTypeRepository(
     {
         var beverageType = await dbContext.BeverageTypes
             .FirstOrDefaultAsync(bt => bt.Name == name);
-        
+
         return beverageType?.Adapt<BeverageType>();
     }
 
@@ -22,17 +22,17 @@ public class BeverageTypeRepository(
     {
         var beverageType = await dbContext.BeverageTypes
             .FirstOrDefaultAsync(bt => bt.Id == id);
-        
+
         return beverageType?.Adapt<BeverageType>();
     }
 
     public async Task<BeverageType> Add(BeverageType beverageType)
     {
         var beverageTypeEntity = beverageType.Adapt<BeverageTypeEntity>();
-        
+
         await dbContext.BeverageTypes.AddAsync(beverageTypeEntity);
         await dbContext.SaveChangesAsync();
-        
+
         return beverageTypeEntity.Adapt<BeverageType>();
     }
 
@@ -41,9 +41,9 @@ public class BeverageTypeRepository(
         var beverageTypeEntity = await dbContext.BeverageTypes
             .FirstAsync(bt => bt.Id == beverageType.Id);
         beverageTypeEntity.Name = beverageType.Name;
-        
+
         dbContext.BeverageTypes.Update(beverageTypeEntity);
-        
+
         await dbContext.SaveChangesAsync();
     }
 
@@ -51,9 +51,9 @@ public class BeverageTypeRepository(
     {
         var beverageType = await dbContext.BeverageTypes
             .FirstAsync(bt => bt.Id == id);
-        
+
         dbContext.BeverageTypes.Remove(beverageType);
-        
+
         await dbContext.SaveChangesAsync();
     }
 
@@ -63,7 +63,7 @@ public class BeverageTypeRepository(
             .Skip(pageSize * (pageNumber - 1))
             .Take(pageSize)
             .ToListAsync();
-        
+
         return beverageTypes.Adapt<IReadOnlyCollection<BeverageType>>();
     }
 }

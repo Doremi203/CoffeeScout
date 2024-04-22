@@ -120,7 +120,7 @@ public class BeverageTypeServiceTests
             .ReturnsAsync(default(BeverageType));
 
         // Act
-        Func<Task> act = async () => await _beverageTypeService.Update(beverageType.Id, updatedBeverageTypeData);
+        var act = async () => await _beverageTypeService.Update(beverageType.Id, updatedBeverageTypeData);
 
         // Assert
         await act.Should().ThrowAsync<BeverageTypeNotFoundException>()
@@ -162,7 +162,7 @@ public class BeverageTypeServiceTests
             .ReturnsAsync(default(BeverageType));
 
         // Act
-        Func<Task> act = async () => await _beverageTypeService.Delete(beverageType.Id);
+        var act = async () => await _beverageTypeService.Delete(beverageType.Id);
 
         // Assert
         await act.Should().ThrowAsync<BeverageTypeNotFoundException>()

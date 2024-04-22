@@ -19,15 +19,15 @@ public class AccountsControllerTests(
         var client = webApplicationFactory.CreateClient();
         var request = RegistrationCustomerRequestFaker.Generate()[0];
         request.WithEmail("maxim@gmail.com");
-                
+
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/accounts/customer/register", request);
-        
+
         // Assert
         var content = await response.Content.ReadAsStringAsync();
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
-    
+
     [Fact]
     public async Task RegisterCustomer_WithInvalidEmail_ReturnsBadRequest()
     {
@@ -35,10 +35,10 @@ public class AccountsControllerTests(
         var client = webApplicationFactory.CreateClient();
         var request = RegistrationCustomerRequestFaker.Generate()[0];
         request.WithEmail("invalid-email");
-        
+
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/accounts/customer/register", request);
-        
+
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }

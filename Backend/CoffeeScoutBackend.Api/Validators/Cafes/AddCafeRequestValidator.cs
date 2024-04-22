@@ -9,7 +9,7 @@ public class AddCafeRequestValidator : AbstractValidator<AddCafeRequest>
     public AddCafeRequestValidator(
         IValidator<WorkingHoursRequest[]> workingHoursValidator,
         IValidator<Location> locationValidator
-        )
+    )
     {
         RuleFor(request => request.Name)
             .NotEmpty();

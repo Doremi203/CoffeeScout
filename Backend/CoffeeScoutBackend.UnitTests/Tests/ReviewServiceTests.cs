@@ -11,8 +11,8 @@ namespace CoffeeScoutBackend.UnitTests.Tests;
 
 public class ReviewServiceTests
 {
-    private readonly Mock<IMenuItemService> _menuItemServiceFake = new(MockBehavior.Strict);
     private readonly Mock<ICustomerService> _customerServiceFake = new(MockBehavior.Strict);
+    private readonly Mock<IMenuItemService> _menuItemServiceFake = new(MockBehavior.Strict);
     private readonly Mock<IReviewRepository> _reviewRepositoryFake = new(MockBehavior.Strict);
     private readonly IReviewService _reviewService;
 
@@ -52,12 +52,12 @@ public class ReviewServiceTests
 
         // Assert
         result.Should().BeEquivalentTo(review);
-        
+
         _menuItemServiceFake.Verify(x => x.GetById(menuItem.Id), Times.Once);
         _customerServiceFake.Verify(x => x.GetByUserId(customer.Id), Times.Once);
         _reviewRepositoryFake.Verify(x => x.AddReview(It.IsAny<Review>()), Times.Once);
     }
-    
+
     [Fact]
     public async Task Add_WithNonExistingMenuItem_ThrowsMenuItemNotFoundException()
     {
@@ -85,7 +85,7 @@ public class ReviewServiceTests
         _customerServiceFake.Verify(x => x.GetByUserId(customer.Id), Times.Never);
         _reviewRepositoryFake.Verify(x => x.AddReview(It.IsAny<Review>()), Times.Never);
     }
-    
+
     [Fact]
     public async Task Add_WithNonExistingCustomer_ThrowsCustomerNotFoundException()
     {
@@ -117,13 +117,13 @@ public class ReviewServiceTests
         _customerServiceFake.Verify(x => x.GetByUserId(customer.Id), Times.Once);
         _reviewRepositoryFake.Verify(x => x.AddReview(It.IsAny<Review>()), Times.Never);
     }
-    
+
     [Fact]
     public async Task GetById_WithExistingReview_ReturnsReview()
     {
         // Arrange
         var review = ReviewFaker.Generate()[0];
-        
+
         _reviewRepositoryFake
             .Setup(x => x.GetById(review.Id))
             .ReturnsAsync(review);
@@ -133,10 +133,10 @@ public class ReviewServiceTests
 
         // Assert
         result.Should().BeEquivalentTo(review);
-        
+
         _reviewRepositoryFake.Verify(x => x.GetById(review.Id), Times.Once);
     }
-    
+
     [Fact]
     public async Task GetById_WithNonExistingReview_ThrowsReviewNotFoundException()
     {
@@ -144,7 +144,7 @@ public class ReviewServiceTests
         var review = ReviewFaker.Generate()[0];
         var expectedException = new ReviewNotFoundException(
             $"Review with id: {review.Id} not found", review.Id);
-        
+
         _reviewRepositoryFake
             .Setup(x => x.GetById(review.Id))
             .ReturnsAsync(default(Review));
@@ -155,10 +155,10 @@ public class ReviewServiceTests
         // Assert
         await act.Should().ThrowAsync<ReviewNotFoundException>()
             .WithMessage(expectedException.Message);
-        
+
         _reviewRepositoryFake.Verify(x => x.GetById(review.Id), Times.Once);
     }
-    
+
     [Fact]
     public async Task GetByMenuItemId_WithExistingMenuItem_ReturnsReviews()
     {
@@ -166,11 +166,11 @@ public class ReviewServiceTests
         var reviews = ReviewFaker.Generate(3);
         var menuItem = MenuItemFaker.Generate()[0]
             .WithReviews(reviews);
-        
+
         _menuItemServiceFake
             .Setup(x => x.GetById(menuItem.Id))
             .ReturnsAsync(menuItem);
-        
+
         _reviewRepositoryFake
             .Setup(x => x.GetByMenuItemId(menuItem.Id))
             .ReturnsAsync(reviews);
@@ -180,11 +180,11 @@ public class ReviewServiceTests
 
         // Assert
         result.Should().BeEquivalentTo(reviews);
-        
+
         _menuItemServiceFake.Verify(x => x.GetById(menuItem.Id), Times.Once);
         _reviewRepositoryFake.Verify(x => x.GetByMenuItemId(menuItem.Id), Times.Once);
     }
-    
+
     [Fact]
     public async Task GetByMenuItemId_WithNonExistingMenuItem_ThrowsMenuItemNotFoundException()
     {
@@ -192,7 +192,7 @@ public class ReviewServiceTests
         var menuItem = MenuItemFaker.Generate()[0];
         var expectedException = new MenuItemNotFoundException(
             $"MenuItem with id: {menuItem.Id} not found", menuItem.Id);
-        
+
         _menuItemServiceFake
             .Setup(x => x.GetById(menuItem.Id))
             .ThrowsAsync(expectedException);
@@ -203,17 +203,17 @@ public class ReviewServiceTests
         // Assert
         await act.Should().ThrowAsync<MenuItemNotFoundException>()
             .WithMessage(expectedException.Message);
-        
+
         _menuItemServiceFake.Verify(x => x.GetById(menuItem.Id), Times.Once);
         _reviewRepositoryFake.Verify(x => x.GetByMenuItemId(menuItem.Id), Times.Never);
     }
-    
+
     [Fact]
     public async Task UpdateReview_WithExistingReview_UpdatesReview()
     {
         // Arrange
         var review = ReviewFaker.Generate()[0];
-        
+
         _reviewRepositoryFake
             .Setup(x => x.GetById(review.Id))
             .ReturnsAsync(review);
@@ -229,7 +229,7 @@ public class ReviewServiceTests
         _reviewRepositoryFake.Verify(x => x.GetById(review.Id), Times.Once);
         _reviewRepositoryFake.Verify(x => x.UpdateReview(It.IsAny<Review>()), Times.Once);
     }
-    
+
     [Fact]
     public async Task UpdateReview_WithNonExistingReview_ThrowsReviewNotFoundException()
     {
@@ -237,28 +237,28 @@ public class ReviewServiceTests
         var review = ReviewFaker.Generate()[0];
         var expectedException = new ReviewNotFoundException(
             $"Review with id: {review.Id} not found", review.Id);
-        
+
         _reviewRepositoryFake
             .Setup(x => x.GetById(review.Id))
             .ReturnsAsync(default(Review));
 
         // Act
-        Func<Task> act = async () => await _reviewService.UpdateReview(review.Id, review);
+        var act = async () => await _reviewService.UpdateReview(review.Id, review);
 
         // Assert
         await act.Should().ThrowAsync<ReviewNotFoundException>()
             .WithMessage(expectedException.Message);
-        
+
         _reviewRepositoryFake.Verify(x => x.GetById(review.Id), Times.Once);
         _reviewRepositoryFake.Verify(x => x.UpdateReview(It.IsAny<Review>()), Times.Never);
     }
-    
+
     [Fact]
     public async Task Delete_WithExistingReview_DeletesReview()
     {
         // Arrange
         var review = ReviewFaker.Generate()[0];
-        
+
         _reviewRepositoryFake
             .Setup(x => x.GetById(review.Id))
             .ReturnsAsync(review);
@@ -274,7 +274,7 @@ public class ReviewServiceTests
         _reviewRepositoryFake.Verify(x => x.GetById(review.Id), Times.Once);
         _reviewRepositoryFake.Verify(x => x.DeleteReview(review.Id), Times.Once);
     }
-    
+
     [Fact]
     public async Task Delete_WithNonExistingReview_ThrowsReviewNotFoundException()
     {
@@ -282,18 +282,18 @@ public class ReviewServiceTests
         var review = ReviewFaker.Generate()[0];
         var expectedException = new ReviewNotFoundException(
             $"Review with id: {review.Id} not found", review.Id);
-        
+
         _reviewRepositoryFake
             .Setup(x => x.GetById(review.Id))
             .ReturnsAsync(default(Review));
 
         // Act
-        Func<Task> act = async () => await _reviewService.Delete(review.Id);
+        var act = async () => await _reviewService.Delete(review.Id);
 
         // Assert
         await act.Should().ThrowAsync<ReviewNotFoundException>()
             .WithMessage(expectedException.Message);
-        
+
         _reviewRepositoryFake.Verify(x => x.GetById(review.Id), Times.Once);
         _reviewRepositoryFake.Verify(x => x.DeleteReview(review.Id), Times.Never);
     }

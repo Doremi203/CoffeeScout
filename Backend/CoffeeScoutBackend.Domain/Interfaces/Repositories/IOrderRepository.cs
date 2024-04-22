@@ -1,4 +1,5 @@
 using CoffeeScoutBackend.Domain.Models;
+using CoffeeScoutBackend.Domain.ServiceModels;
 
 namespace CoffeeScoutBackend.Domain.Interfaces.Repositories;
 

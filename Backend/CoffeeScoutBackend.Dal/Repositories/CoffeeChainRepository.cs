@@ -41,9 +41,9 @@ public class CoffeeChainRepository(
     {
         var coffeeChainEntity = await dbContext.CoffeeChains
             .FirstAsync(c => c.Id == id);
-        
+
         coffeeChainEntity.Name = coffeeChain.Name;
-        
+
         dbContext.CoffeeChains.Update(coffeeChainEntity);
         await dbContext.SaveChangesAsync();
     }
@@ -53,7 +53,7 @@ public class CoffeeChainRepository(
         await dbContext.CoffeeChains
             .Where(c => c.Id == id)
             .ExecuteDeleteAsync();
-        
+
         await dbContext.SaveChangesAsync();
     }
 }

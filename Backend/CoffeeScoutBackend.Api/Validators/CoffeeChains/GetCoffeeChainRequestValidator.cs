@@ -1,6 +1,5 @@
 using CoffeeScoutBackend.Api.Requests.V1.CoffeeChains;
-using CoffeeScoutBackend.Api.Validators.General;
-using CoffeeScoutBackend.Domain.Models;
+using CoffeeScoutBackend.Domain.ServiceModels;
 using FluentValidation;
 
 namespace CoffeeScoutBackend.Api.Validators.CoffeeChains;

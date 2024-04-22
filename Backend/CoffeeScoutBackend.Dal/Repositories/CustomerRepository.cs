@@ -15,11 +15,11 @@ public class CustomerRepository(
         var customer = await dbContext.Customers
             .Include(c => c.User)
             .Include(c => c.FavoriteMenuItems)
-                .ThenInclude(mi => mi.BeverageType)
+            .ThenInclude(mi => mi.BeverageType)
             .Include(c => c.FavoriteMenuItems)
-                .ThenInclude(mi => mi.Cafe)
+            .ThenInclude(mi => mi.Cafe)
             .FirstOrDefaultAsync(c => c.Id == userId);
-        
+
         return customer?.Adapt<Customer>();
     }
 

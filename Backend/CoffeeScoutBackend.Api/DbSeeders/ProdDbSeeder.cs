@@ -1,15 +1,13 @@
 using System.Transactions;
 using CoffeeScoutBackend.Api.Config;
-using CoffeeScoutBackend.Api.DbSeeders;
 using CoffeeScoutBackend.Dal.Entities;
 using CoffeeScoutBackend.Domain.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace CoffeeScoutBackend.IntegrationTests.DbSeeders;
+namespace CoffeeScoutBackend.Api.DbSeeders;
 
-public class TestingDbSeeder(
+public class ProdDbSeeder(
     IServiceProvider serviceProvider
 ) : IDbSeeder
 {

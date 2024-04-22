@@ -1,5 +1,5 @@
 using CoffeeScoutBackend.Api.Requests.V1.Orders;
-using CoffeeScoutBackend.Domain.Models;
+using CoffeeScoutBackend.Domain.ServiceModels;
 using FluentValidation;
 
 namespace CoffeeScoutBackend.Api.Validators.Orders;

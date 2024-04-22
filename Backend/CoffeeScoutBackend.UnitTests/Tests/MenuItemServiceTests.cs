@@ -3,6 +3,7 @@ using CoffeeScoutBackend.Domain.Exceptions.NotFound;
 using CoffeeScoutBackend.Domain.Interfaces.Repositories;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
+using CoffeeScoutBackend.Domain.ServiceModels;
 using CoffeeScoutBackend.UnitTests.Fakers;
 using FluentAssertions;
 using Moq;
@@ -11,9 +12,9 @@ namespace CoffeeScoutBackend.UnitTests.Tests;
 
 public class MenuItemServiceTests
 {
-    private readonly Mock<IMenuItemRepository> _menuItemRepositoryMock = new(MockBehavior.Strict);
-    private readonly Mock<ICafeService> _cafeServiceMock = new(MockBehavior.Strict);
     private readonly Mock<IBeverageTypeService> _beverageTypeServiceMock = new(MockBehavior.Strict);
+    private readonly Mock<ICafeService> _cafeServiceMock = new(MockBehavior.Strict);
+    private readonly Mock<IMenuItemRepository> _menuItemRepositoryMock = new(MockBehavior.Strict);
     private readonly IMenuItemService _menuItemService;
 
     public MenuItemServiceTests()
@@ -336,7 +337,7 @@ public class MenuItemServiceTests
             .ReturnsAsync(default(MenuItem));
 
         // Act
-        Func<Task> act = async () => await _menuItemService.Update(model);
+        var act = async () => await _menuItemService.Update(model);
 
         // Assert
         await act.Should().ThrowAsync<MenuItemNotFoundException>()
@@ -346,7 +347,7 @@ public class MenuItemServiceTests
         _beverageTypeServiceMock.Verify(x => x.GetById(model.BeverageTypeId), Times.Never);
         _menuItemRepositoryMock.Verify(x => x.Update(It.IsAny<MenuItem>()), Times.Never);
     }
-    
+
     [Fact]
     public async Task Update_WhenBeverageTypeDoesNotExist_ThrowsBeverageTypeNotFoundException()
     {
@@ -373,7 +374,7 @@ public class MenuItemServiceTests
             .ThrowsAsync(expectedException);
 
         // Act
-        Func<Task> act = async () => await _menuItemService.Update(model);
+        var act = async () => await _menuItemService.Update(model);
 
         // Assert
         await act.Should().ThrowAsync<BeverageTypeNotFoundException>()
@@ -383,7 +384,7 @@ public class MenuItemServiceTests
         _beverageTypeServiceMock.Verify(x => x.GetById(model.BeverageTypeId), Times.Once);
         _menuItemRepositoryMock.Verify(x => x.Update(It.IsAny<MenuItem>()), Times.Never);
     }
-    
+
     [Fact]
     public async Task GetByCafeAdmin_ReturnsMenuItems()
     {
@@ -392,7 +393,7 @@ public class MenuItemServiceTests
         var cafe = CafeFaker.Generate()[0];
         var menuItems = MenuItemFaker.Generate(3);
         cafe.MenuItems = menuItems;
-        
+
         _cafeServiceMock
             .Setup(x => x.GetByAdminId(cafeAdmin.Id))
             .ReturnsAsync(cafe);
@@ -405,13 +406,13 @@ public class MenuItemServiceTests
 
         _cafeServiceMock.Verify(x => x.GetByAdminId(cafeAdmin.Id), Times.Once);
     }
-    
+
     [Fact]
     public async Task Delete_WhenMenuItemExists_DeletesMenuItem()
     {
         // Arrange
         var menuItem = MenuItemFaker.Generate()[0];
-        
+
         _menuItemRepositoryMock
             .Setup(x => x.GetById(menuItem.Id))
             .ReturnsAsync(menuItem);
@@ -427,7 +428,7 @@ public class MenuItemServiceTests
         _menuItemRepositoryMock.Verify(x => x.GetById(menuItem.Id), Times.Once);
         _menuItemRepositoryMock.Verify(x => x.Delete(menuItem.Id), Times.Once);
     }
-    
+
     [Fact]
     public async Task Delete_WhenMenuItemDoesNotExist_ThrowsMenuItemNotFoundException()
     {
@@ -441,7 +442,7 @@ public class MenuItemServiceTests
             .ReturnsAsync(default(MenuItem));
 
         // Act
-        Func<Task> act = async () => await _menuItemService.Delete(menuItem.Id);
+        var act = async () => await _menuItemService.Delete(menuItem.Id);
 
         // Assert
         await act.Should().ThrowAsync<MenuItemNotFoundException>()
@@ -450,7 +451,7 @@ public class MenuItemServiceTests
         _menuItemRepositoryMock.Verify(x => x.GetById(menuItem.Id), Times.Once);
         _menuItemRepositoryMock.Verify(x => x.Delete(menuItem.Id), Times.Never);
     }
-    
+
     [Fact]
     public async Task Search_WhenMenuItemsExist_ReturnsMenuItems()
     {
@@ -458,7 +459,7 @@ public class MenuItemServiceTests
         var searchQuery = "coffee";
         const int limit = 3;
         var menuItems = MenuItemFaker.Generate(3);
-        
+
         _menuItemRepositoryMock
             .Setup(x => x.Search(searchQuery, limit))
             .ReturnsAsync(menuItems);

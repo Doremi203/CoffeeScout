@@ -11,7 +11,7 @@ public static class AddBeverageTypeRequestFaker
     private static readonly Faker<AddBeverageTypeRequest> Faker = new AutoFaker<AddBeverageTypeRequest>()
         .RuleFor(x => x.Name, f => f.Commerce.ProductName())
         .RuleFor(x => x.Description, f => f.Lorem.Sentence());
-    
+
     public static AddBeverageTypeRequest[] Generate(int count = 1)
     {
         lock (Lock)
@@ -19,14 +19,18 @@ public static class AddBeverageTypeRequestFaker
             return Faker.Generate(count).ToArray();
         }
     }
-    
+
     public static AddBeverageTypeRequest WithName(
-        this AddBeverageTypeRequest src, 
+        this AddBeverageTypeRequest src,
         string name)
-        => src with { Name = name };
-    
+    {
+        return src with { Name = name };
+    }
+
     public static AddBeverageTypeRequest WithDescription(
-        this AddBeverageTypeRequest src, 
+        this AddBeverageTypeRequest src,
         string description)
-        => src with { Description = description };
+    {
+        return src with { Description = description };
+    }
 }

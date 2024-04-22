@@ -6,6 +6,7 @@ using CoffeeScoutBackend.Domain.Exceptions.NotFound;
 using CoffeeScoutBackend.Domain.Interfaces.Repositories;
 using CoffeeScoutBackend.Domain.Interfaces.Services;
 using CoffeeScoutBackend.Domain.Models;
+using CoffeeScoutBackend.Domain.ServiceModels;
 using Mapster;
 
 namespace CoffeeScoutBackend.Bll.Services;
@@ -49,7 +50,7 @@ public class CustomerService(
             throw new MenuItemAlreadyFavoredException(
                 $"Menu item with id:{menuItemId} is already favored by customer with id:{userId}",
                 menuItemId);
-        
+
         await customerRepository.AddFavoredMenuItem(customer, menuItem);
     }
 
@@ -69,7 +70,7 @@ public class CustomerService(
             throw new FavoredMenuItemNotFoundException(
                 $"Menu item with id:{menuItemId} is not favored by customer with id:{userId}",
                 menuItemId);
-        
+
         await customerRepository.RemoveFavoredMenuItem(customer, menuItem);
     }
 
@@ -84,7 +85,7 @@ public class CustomerService(
 
         return favoredBeverageTypes.ToList();
     }
-    
+
     public async Task<CustomerInfo> GetInfo(string userId)
     {
         var customer = await GetByUserId(userId);

@@ -26,25 +26,35 @@ public static class ReviewFaker
     public static Review WithId(
         this Review review,
         long id)
-        => review with { Id = id };
+    {
+        return review with { Id = id };
+    }
 
     public static Review WithCustomer(
         this Review review,
         Customer customer)
-        => review with { Customer = customer };
+    {
+        return review with { Customer = customer };
+    }
 
     public static Review WithMenuItem(
         this Review review,
         MenuItem menuItem)
-        => review with { MenuItem = menuItem };
+    {
+        return review with { MenuItem = menuItem };
+    }
 
     public static Review WithRating(
         this Review review,
         int rating)
-        => review with { Rating = rating };
+    {
+        return review with { Rating = rating };
+    }
 
     public static Review WithComment(
         this Review review,
         string content)
-        => review with { Content = content };
+    {
+        return review with { Content = content };
+    }
 }
