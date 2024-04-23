@@ -19,6 +19,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwagger();
 builder.Services.AddControllers();
 builder.Services.AddProblemDetails();
+builder.Services.AddHealthChecks();
 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorizationBuilder();
@@ -58,6 +59,8 @@ app
     .MapGroup(RoutesV1.Accounts)
     .WithTags("Accounts")
     .MapIdentityApi<AppUser>();
+// map health check endpoint
+app.MapHealthChecks("/api/v1/health");
 
 app.UseAuthorization();
 
