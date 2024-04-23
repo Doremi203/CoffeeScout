@@ -5,8 +5,10 @@
 <summary>Docker Image Links</summary>
 <p>
 
-- **Latest Stable Version**: [![Docker Image Version](https://img.shields.io/docker/v/doreml/coffee-scout-backend.api/latest)](https://hub.docker.com/layers/doreml/coffee-scout-backend.api/latest/images/sha256-6f8f951859511022701a01af835b21c6875b2a90db076d7b658bf7f63fbe2f44?context=repo)
-- **Development Version**: [![Docker Image Version](https://img.shields.io/docker/v/doreml/coffee-scout-backend.api/dev)](https://hub.docker.com/layers/doreml/coffee-scout-backend.api/dev/images/sha256-6f8f951859511022701a01af835b21c6875b2a90db076d7b658bf7f63fbe2f44?context=repo)
+- **Backend Latest Stable Version**: [![Docker Image Version](https://img.shields.io/docker/v/doreml/coffee-scout-backend.api/latest)](https://hub.docker.com/layers/doreml/coffee-scout-backend.api/latest/images/sha256-6f8f951859511022701a01af835b21c6875b2a90db076d7b658bf7f63fbe2f44?context=repo)
+- **Backend Development Version**: [![Docker Image Version](https://img.shields.io/docker/v/doreml/coffee-scout-backend.api/dev)](https://hub.docker.com/layers/doreml/coffee-scout-backend.api/dev/images/sha256-6f8f951859511022701a01af835b21c6875b2a90db076d7b658bf7f63fbe2f44?context=repo)
+- **Frontend Latest Stable Version**: [![Docker Image Version](https://img.shields.io/docker/v/mayaffia/coffee-scout-web/latest)](https://hub.docker.com/layers/mayaffia/coffee-scout-web/latest/images/sha256-6c8374925937f0327fc6ca79cdbfb92cde3a034217e7474092e726837667f089?context=repo)
+- **Frontend Development Version**: [![Docker Image Version](https://img.shields.io/docker/v/mayaffia/coffee-scout-web/dev)](https://hub.docker.com/layers/mayaffia/coffee-scout-web/dev/images/sha256-d51ee769fef4145c1dd290a80d8e281e34623dde4d59588716256fab9342097d?context=repo)
 
 </p>
 </details>
